@@ -4,6 +4,10 @@
 
 Please review the API Documentation [here](https://hackmd.io/FAaAECxeQpKwfSBbkIRW6A).
 
+## Architecture Haiku
+
+Please review the architecture haiku [here](https://docs.google.com/document/d/1wtcVfIZTQdThSHfUntw8accwkPUaRFBS/edit?usp=sharing&ouid=116506808424154350020&rtpof=true&sd=true).
+
 ## Git Workflow
 
 Please do not directly push to main branch. We should follow the pull request workflow where all new changes are reviewed by at least one team member before and then merged with main. 
