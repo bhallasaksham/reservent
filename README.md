@@ -8,6 +8,10 @@ Please review the API Documentation [here](https://hackmd.io/FAaAECxeQpKwfSBbkIR
 
 Please review the Architecture Haiku [here](https://docs.google.com/document/d/1wtcVfIZTQdThSHfUntw8accwkPUaRFBS/edit?usp=sharing&ouid=116506808424154350020&rtpof=true&sd=true).
 
+## UI Prototypes 
+
+Please review the UI Design prototypes [here](https://www.figma.com/file/AhcHxAZcDttB2oJM5bDnmj/Untitled?node-id=0%3A1&t=zSJevP3CWC03RgGh-1).
+
 ## Git Workflow
 
 Please do not directly push to main branch. We should follow the pull request workflow where all new changes are reviewed by at least one team member before and then merged with main. 
