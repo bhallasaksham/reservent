@@ -6,7 +6,7 @@ Please review the API Documentation [here](https://hackmd.io/FAaAECxeQpKwfSBbkIR
 
 ## Architecture Haiku
 
-Please review the architecture haiku [here](https://docs.google.com/document/d/1wtcVfIZTQdThSHfUntw8accwkPUaRFBS/edit?usp=sharing&ouid=116506808424154350020&rtpof=true&sd=true).
+Please review the Architecture Haiku [here](https://docs.google.com/document/d/1wtcVfIZTQdThSHfUntw8accwkPUaRFBS/edit?usp=sharing&ouid=116506808424154350020&rtpof=true&sd=true).
 
 ## Git Workflow
 
