@@ -24,8 +24,8 @@ Please review [Github Workflow](https://docs.github.com/en/get-started/quickstar
  
 ### Branch Name
  
- feature/my-new-feature
- bugfix/my-new-bugfix
+ - feature/my-new-feature  
+ - bugfix/my-new-bugfix
  
 ### [Commit Message](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)
 
