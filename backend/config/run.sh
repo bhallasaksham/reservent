@@ -1,0 +1,1 @@
+uvicorn main:user_management_app --reload --host 0.0.0.0 --port 5000 & uvicorn main:room_reservation_app --reload --host 0.0.0.0 --port 8000 & uvicorn main:event_app --reload --host 0.0.0.0 --port 8080 & uvicorn main:admin_app --reload --host 0.0.0.0 --port 9000
