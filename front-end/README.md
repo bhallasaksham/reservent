@@ -1,0 +1,39 @@
+# Front End of Reservent (Team 6)
+
+CMU 18653
+
+## Tech Stack
+
+React + JavaScript + Bootstrap
+
+## How to Run This App
+
+1. git clone this repo and have `node.js` installed (should support v15 or later)
+2. run following command
+```
+cd front-end
+npm install
+npm start
+```
+3. go to `localhost:3000`
+
+## Task Checklist (last update: 03/22)
+
+### feature/frontend-setup
+
+- [x] creat react app
+- [ ] header & footer
+- [ ] global css
+- [ ] UI for authentication page
+- [ ] UI for event details page
+- [ ] UI for show rooms page
+
+
+
+
+
+
+
+
+
+

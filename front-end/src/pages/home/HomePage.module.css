@@ -1,0 +1,5 @@
+.loading-spinner {
+  display: flex !important;
+  margin: 0 auto;
+  color: var(--peach);
+}
