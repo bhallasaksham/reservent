@@ -1,1 +1,10 @@
 /backend/env
+backend/__pycache__/
+backend/adminService/__pycache__/
+backend/adminService/api/__pycache__/
+backend/eventService/__pycache__/
+backend/eventService/api/__pycache__/
+backend/roomReservationService/__pycache__/
+backend/roomReservationService/api/__pycache__/
+backend/userManagementService/__pycache__/
+backend/userManagementService/api/__pycache__/
