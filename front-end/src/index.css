@@ -1,29 +1,29 @@
 html,
 :root {
-  --primary: #61C0BF;
-  --secondary: #BBDED6;
-  --text: #2d806c;
-  --back: #FCFDF2;
-  --peach: #FFB6B9;
+  --primary: #dbe2ef;
+  --secondary: #112d4e;
+  --back: #f9f7f7;
+  --button: #3f72af;
+  --text-light: #ffffff;
+  --text-dark: #000000;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
 span {
   vertical-align: middle;
-  color: var(--text);
 }
 
 svg {
@@ -39,4 +39,13 @@ h1 {
 a {
   color: inherit !important;
   text-decoration: none !important;
+}
+
+.btn-primary {
+  background-color: var(--button) !important;
+  color: var(--text-light) !important;
+}
+
+.card {
+  background-color: var(--primary) !important;
 }

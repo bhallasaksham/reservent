@@ -7,7 +7,7 @@ export const Header = () => {
     <Navbar className={styles["header"]} expand="lg">
       <Container className={styles["nav-container"]}>
         <Navbar.Brand className={styles["brand"]} href="/">
-        <CalendarWeek /><span style={{ color: 'black' }}>Reservent</span>
+        <CalendarWeek /><span>Reservent</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

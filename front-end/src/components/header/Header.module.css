@@ -1,5 +1,6 @@
 .header {
-  background-color: var(--peach);
+  background-color: var(--secondary);
+  color: var(--text-light);
 }
 
 .nav-container {

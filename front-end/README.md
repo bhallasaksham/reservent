@@ -1,6 +1,6 @@
 # Front End of Reservent (Team 6)
 
-CMU 18653
+CMU 18653 Course Project
 
 ## Tech Stack
 
@@ -23,7 +23,7 @@ npm start
 
 - [x] creat react app
 - [ ] header & footer
-- [ ] global css
+- [x] global css
 - [ ] UI for authentication page
 - [ ] UI for event details page
 - [ ] UI for show rooms page

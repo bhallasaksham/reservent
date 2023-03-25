@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from '../../layouts';
 import axios from 'axios';
-import { Spinner } from 'react-bootstrap';
+import { Spinner, Button, Card } from 'react-bootstrap';
 import styles from './HomePage.module.css';
 
 export const HomePage = () => {
@@ -30,9 +30,17 @@ export const HomePage = () => {
     <MainLayout>
       <h1>HomePage</h1>
       {loading && <Spinner className={styles["loading-spinner"]} animation="border" />}
-      {!loading && <div>{content}</div>}
+      {!loading &&
+        <Card style={{ width: '18rem' }}>
+          <Card.Body>
+            <Card.Title>Card Title</Card.Title>
+            <Card.Text>
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </Card.Text>
+            <Button variant="primary">Go somewhere</Button>
+          </Card.Body>
+        </Card>}
     </MainLayout>
   )
 };
-
-
