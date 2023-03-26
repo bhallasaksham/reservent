@@ -28,7 +28,7 @@ export const HomePage = () => {
 
   return (
     <MainLayout>
-      <h1>HomePage</h1>
+      <h1 className="page-title">Home (Content TBD)</h1>
       {loading && (
         <Spinner className={styles["loading-spinner"]} animation="border" />
       )}

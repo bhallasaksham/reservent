@@ -7,7 +7,7 @@ import styles from "./AddEventPage.module.css";
 export const AddEventPage = () => {
   return (
     <MainLayout>
-      <h1>AddEventPage</h1>
+      <h1 className="page-title">Add New Event</h1>
     </MainLayout>
   );
 };

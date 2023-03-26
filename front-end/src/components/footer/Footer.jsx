@@ -12,7 +12,7 @@ export const Footer = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav>
               <Nav.Link>
-                <span>Author @Team 6</span>
+                <span>SDA @Team 6</span>
               </Nav.Link>
               <Nav.Link href="https://github.com/bhallasaksham/sda-reservent-t6/">
                 <Github />

@@ -1,0 +1,18 @@
+.signin-container {
+  width: 70rem !important;
+  padding: 10rem 0;
+  margin-top: 0;
+}
+
+.product-title {
+  font-size: 80px;
+  font-style: italic;
+  margin-bottom: 2rem;
+}
+
+.signin-card {
+  width: fit-content;
+  height: fit-content;
+  margin: 2rem auto;
+  padding: 1rem;
+}
