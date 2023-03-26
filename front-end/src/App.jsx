@@ -1,6 +1,6 @@
-import styles from './App.module.css';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { HomePage, SignInPage, AddEventPage } from './pages';
+import styles from "./App.module.css";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { HomePage, SignInPage, AddEventPage } from "./pages";
 
 function App() {
   return (

@@ -1,5 +1,5 @@
-import styles from './MainLayout.module.css';
-import { Header, Footer } from '../../components';
+import styles from "./MainLayout.module.css";
+import { Header, Footer } from "../../components";
 
 export const MainLayout = ({ children }) => {
   return (

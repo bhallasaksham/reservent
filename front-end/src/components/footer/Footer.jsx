@@ -1,6 +1,6 @@
-import { Container, Nav, Navbar } from 'react-bootstrap';
-import styles from './Footer.module.css'
-import { Github } from 'react-bootstrap-icons';
+import { Container, Nav, Navbar } from "react-bootstrap";
+import styles from "./Footer.module.css";
+import { Github } from "react-bootstrap-icons";
 
 export const Footer = () => {
   return (
@@ -10,16 +10,18 @@ export const Footer = () => {
         <Container className={styles["nav-container"]}>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav >
-              <Nav.Link><span>Author @Team 6</span></Nav.Link>
+            <Nav>
+              <Nav.Link>
+                <span>Author @Team 6</span>
+              </Nav.Link>
               <Nav.Link href="https://github.com/bhallasaksham/sda-reservent-t6/">
-                <Github /><span>GitHub</span>
+                <Github />
+                <span>GitHub</span>
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
     </div>
-
   );
 };
