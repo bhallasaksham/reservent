@@ -22,11 +22,11 @@ npm start
 ### feature/frontend-setup
 
 - [x] creat react app
-- [ ] header & footer
+- [x] header & footer
 - [x] global css
-- [ ] UI for authentication page
-- [ ] UI for event details page
-- [ ] UI for show rooms page
+- [ ] UI for sign in page
+- [ ] UI for add event page
+- [ ] connect backend
 
 
 

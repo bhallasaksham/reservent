@@ -13,6 +13,8 @@ export const Header = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav>
             <Nav.Link href="/"><span>Home</span></Nav.Link>
+            <Nav.Link href="/addEvent"><span>Event</span></Nav.Link>
+            <Nav.Link href="/signIn"><span>SignIn</span></Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
