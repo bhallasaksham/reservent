@@ -28,4 +28,4 @@ npm start
 - [x] global css
 - [x] UI for sign in page
 - [x] UI for add event page
-- [ ] connect backend
+- [x] connect backend
