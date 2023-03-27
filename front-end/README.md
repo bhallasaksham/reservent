@@ -19,7 +19,7 @@ npm start
 
 3. go to `localhost:3000`
 
-## Task Checklist (last update: 03/25)
+## Task Checklist (last update: 03/26)
 
 ### feature/frontend-setup
 
@@ -27,5 +27,5 @@ npm start
 - [x] header & footer
 - [x] global css
 - [x] UI for sign in page
-- [ ] UI for add event page
+- [x] UI for add event page
 - [ ] connect backend

@@ -6,6 +6,10 @@ import styles from "./SignInPage.module.css";
 import { Google } from "react-bootstrap-icons";
 
 export const SignInPage = () => {
+  const handleClick = () => {
+    alert("sign in button clicked");
+  };
+
   return (
     <MainLayout>
       <Container className={styles["signin-container"]}>
@@ -19,7 +23,11 @@ export const SignInPage = () => {
             <Card className={styles["signin-card"]}>
               <Card.Body>
                 <Card.Text>Please sign in with you andrew email</Card.Text>
-                <Button variant="primary" style={{ width: "100%" }}>
+                <Button
+                  variant="primary"
+                  style={{ width: "100%" }}
+                  onClick={handleClick}
+                >
                   <Google />
                   <span>Sign In</span>
                 </Button>
@@ -34,4 +42,4 @@ export const SignInPage = () => {
 
 // TODO: remove MainLayout when signin is ready
 // TODO: fancy title text
-// add more content (carousel, about us, etc)
+// TODO: add more content (carousel, about us, etc)
