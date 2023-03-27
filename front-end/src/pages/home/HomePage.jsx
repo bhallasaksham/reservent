@@ -11,12 +11,11 @@ export const HomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      console.log(loading);
       try {
-        // const { data: response } = await axios.get('/content');
-        // const responseJSON = JSON.parse(response)
-        // setContent(responseJSON);
-        setContent("this is content");
+        const { data: response } = await axios.get("http://0.0.0.0:8000");
+        setContent(response["message"]);
+        // const responseJSON = JSON.parse(response);
+        // setContent(responseJSON["message"]);
       } catch (error) {
         console.error(error);
       }
@@ -35,11 +34,8 @@ export const HomePage = () => {
       {!loading && (
         <Card style={{ width: "18rem" }}>
           <Card.Body>
-            <Card.Title>Card Title</Card.Title>
-            <Card.Text>
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </Card.Text>
+            <Card.Title>message from 8000:</Card.Title>
+            <Card.Text>{content}</Card.Text>
             <Button variant="primary">Go somewhere</Button>
           </Card.Body>
         </Card>
