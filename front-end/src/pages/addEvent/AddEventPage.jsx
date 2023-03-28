@@ -7,12 +7,23 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export const AddEventPage = () => {
+  const getRoundedDate = (date) => {
+    const coeff = 1000 * 60 * 30; // 30 minutes
+    const roundedDate = new Date(Math.ceil(date.getTime() / coeff) * coeff); // round up to the nearest 30 minutes
+    return roundedDate;
+  };
+
+  const addMinutes = (date, diff) => {
+    const coeff = 1000 * 60; // 1 minute
+    return new Date(date.getTime() + diff * coeff);
+  };
+
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
   const [startDate, setStartDate] = useState(new Date());
-  const [startTime, setStartTime] = useState(new Date());
+  const [startTime, setStartTime] = useState(getRoundedDate(new Date()));
   const [endTime, setEndTime] = useState(
-    new Date().setHours(new Date().getHours() + 1)
+    addMinutes(getRoundedDate(new Date()), 60)
   );
   const [numOfParticipant, setNumOfParticipant] = useState();
 
