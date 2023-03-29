@@ -44,7 +44,7 @@ export const SignInPage = () => {
   const foo = () => {
     const jwt = localStorage.getItem("jwt");
 
-    const useToken = async () => {
+    const baz = async () => {
       try {
         const { data: response } = await axios.get("https://url/info", {
           headers: {
@@ -57,7 +57,7 @@ export const SignInPage = () => {
       }
     };
 
-    useToken();
+    baz();
   };
 
   return (
