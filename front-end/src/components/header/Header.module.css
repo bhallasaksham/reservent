@@ -1,0 +1,9 @@
+.header {
+  background-color: var(--secondary);
+  color: var(--text-light);
+}
+
+.nav-container {
+  margin-left: 5% !important;
+  margin-right: 5% !important;
+}

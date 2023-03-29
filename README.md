@@ -56,3 +56,16 @@ Format: `<type>(<scope>): <subject>`
   - Room Reservation Service: http://0.0.0.0:8000
   - Event Service: http://0.0.0.0:8080
   - Admin Service: http://0.0.0.0:9000
+
+## Frontend Setup
+
+1. `git clone` this repo and have `node.js` installed (should support v15 or later)
+2. run following command
+
+```
+cd front-end
+npm install
+npm start
+```
+
+3. Front-end application: http://localhost:3000/
