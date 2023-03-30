@@ -69,3 +69,15 @@ npm start
 ```
 
 3. Front-end application: http://localhost:3000/
+
+## Database Setup
+
+- Host the database on the AWS account
+- Host: `sda-s06.cozm4z1zuevq.us-east-1.rds.amazonaws.com`
+- User: `postgres`
+- Port: `5432`
+- Password: `sda-s06123`
+- Command line to connect the DB: 
+```
+psql -U postgres -p 5432 -h sda-s06.cozm4z1zuevq.us-east-1.rds.amazonaws.com -W
+```
