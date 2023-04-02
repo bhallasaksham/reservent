@@ -1,3 +1,4 @@
+import os
 import subprocess
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,17 +7,23 @@ from adminService import adminRoutes
 from eventService import eventRoutes
 from roomReservationService import roomRoutes
 from userManagementService import userRoutes
+from starlette.middleware.sessions import SessionMiddleware
 
 user_management_app = FastAPI()
 room_reservation_app = FastAPI()
 event_app = FastAPI()
 admin_app = FastAPI()
 
-# setting up the routers
+    # setting up the routers
 user_management_app.include_router(userRoutes)
 room_reservation_app.include_router(roomRoutes)
 event_app.include_router(eventRoutes)
 admin_app.include_router(adminRoutes)
+
+SECRET_KEY = os.environ.get('SECRET_KEY') or None
+if SECRET_KEY is None:
+    raise BaseException('Missing env variables')
+user_management_app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 
 origins = ["http://localhost:3000"]
