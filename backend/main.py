@@ -27,7 +27,28 @@ user_management_app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 
 origins = ["http://localhost:3000"]
+user_management_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 room_reservation_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+event_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+admin_app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,

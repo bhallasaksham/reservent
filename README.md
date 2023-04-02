@@ -50,12 +50,16 @@ Format: `<type>(<scope>): <subject>`
 
 - To create a virtual environment, type `python3 -m venv env`
 - To activate the virtual environment, go to the `backend` directory and type: `source env/bin/activate`
-- Once the virtual environment is activated, run `main.py` to start the local server.
+- Once the virtual environment is activated, run <s>`main.py`</s> to start the local server (run `sh run.sh` instead).
 - Here's the list of services hosted through the backend server:
   - User Management Service: http://0.0.0.0:4000
   - Room Reservation Service: http://0.0.0.0:8000
   - Event Service: http://0.0.0.0:8080
   - Admin Service: http://0.0.0.0:9000
+
+```
+If you are facing error related with google auth, you may want to use the environment in /backend/requirements.txt
+```
 
 ## Frontend Setup
 
