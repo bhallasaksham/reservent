@@ -1,7 +1,7 @@
 
-from fastapi import APIRouter, Cookie
+from fastapi import APIRouter, Cookie, Query
 from fastapi import Request as FastAPIRequest
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from userManagementService.utils.oauth import get_oauth
 from userManagementService.utils.jwt import get_jwt
 
@@ -14,15 +14,8 @@ async def root():
 
 @userRoutes.get("/login")
 async def login(request: FastAPIRequest):
-    # redirect_uri = request.url_for('auth')  # This creates the url for the /auth endpoint
-    # return await oauth.google.authorize_redirect(request, redirect_uri, access_type='offline', prompt='consent')
-    redirect_uri = request.url_for('auth')  # This creates the URL for the /auth endpoint
-    authorization_url = await oauth.google.create_authorization_url(
-        redirect_uri,
-        access_type='offline',
-        prompt='consent'
-    )
-    return {'redirect_uri': authorization_url['url']}
+    redirect_uri = request.url_for('auth')  # This creates the url for the /auth endpoint
+    return await oauth.google.authorize_redirect(request, redirect_uri, access_type='offline', prompt='consent')
 
 @userRoutes.get('/auth')
 async def auth(request: FastAPIRequest, access_token_cookie: str = Cookie(None)):
@@ -34,7 +27,8 @@ async def auth(request: FastAPIRequest, access_token_cookie: str = Cookie(None))
     })
     
     # Create a new JSON response with the user data
-    response = JSONResponse(user)
+    # response = JSONResponse(user)
+    response = RedirectResponse(url="http://127.0.0.1:3000")
     
     # Set the access token cookie if it doesn't already exist
     if access_token_cookie is None:
