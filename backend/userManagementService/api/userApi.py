@@ -14,8 +14,15 @@ async def root():
 
 @userRoutes.get("/login")
 async def login(request: FastAPIRequest):
-    redirect_uri = request.url_for('auth')  # This creates the url for the /auth endpoint
-    return await oauth.google.authorize_redirect(request, redirect_uri, access_type='offline', prompt='consent')
+    # redirect_uri = request.url_for('auth')  # This creates the url for the /auth endpoint
+    # return await oauth.google.authorize_redirect(request, redirect_uri, access_type='offline', prompt='consent')
+    redirect_uri = request.url_for('auth')  # This creates the URL for the /auth endpoint
+    authorization_url = await oauth.google.create_authorization_url(
+        redirect_uri,
+        access_type='offline',
+        prompt='consent'
+    )
+    return {'redirect_uri': authorization_url['url']}
 
 @userRoutes.get('/auth')
 async def auth(request: FastAPIRequest, access_token_cookie: str = Cookie(None)):
