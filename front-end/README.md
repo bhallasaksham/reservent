@@ -34,5 +34,6 @@ npm start
 ### leo.cho/user-authentication
 
 - [x] basic authentication flow
-- [] public & private route
-- [] login-related redirection (if any)
+- [x] public & private route
+- [] update header with login status
+- [] logout

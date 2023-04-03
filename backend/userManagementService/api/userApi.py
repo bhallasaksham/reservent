@@ -32,8 +32,8 @@ async def auth(request: FastAPIRequest, access_token_cookie: str = Cookie(None))
     
     # Set the access token cookie if it doesn't already exist
     if access_token_cookie is None:
-        response.set_cookie(key='refresh_token', value=token['refresh_token'], httponly=True, max_age=3600, secure=True)
-        response.set_cookie(key='jwt_token', value=jwt_token, httponly=True, max_age=3600, secure=True)
+        response.set_cookie(key='refresh_token', value=token['refresh_token'], httponly=False, max_age=3600, secure=True)
+        response.set_cookie(key='jwt_token', value=jwt_token, httponly=False, max_age=3600, secure=True)
     
     return response
 
