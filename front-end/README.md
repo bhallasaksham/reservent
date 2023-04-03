@@ -35,5 +35,5 @@ npm start
 
 - [x] basic authentication flow
 - [x] public & private route
-- [] update header with login status
-- [] logout
+- [ ] update header with login status
+- [x] logout

@@ -9,14 +9,17 @@ import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 
 export const SignInPage = () => {
-  const [cookies] = useCookies(["jwt_token", "refresh_token"]);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "jwt_token",
+    "refresh_token",
+  ]);
   const history = useHistory();
 
-  useEffect(()=>{ 
-    if(cookies["jwt_token"] != null && cookies["refresh_token"] != null) {
+  useEffect(() => {
+    if (cookies["jwt_token"] != null && cookies["refresh_token"] != null) {
       history.push("/");
     }
-  }, [cookies, history])
+  }, [cookies, history]);
 
   const handleClick = () => {
     window.location.href = "http://127.0.0.1:4000/login";
