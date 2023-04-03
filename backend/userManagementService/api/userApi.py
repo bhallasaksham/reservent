@@ -28,7 +28,7 @@ async def auth(request: FastAPIRequest, access_token_cookie: str = Cookie(None))
     
     # Create a new JSON response with the user data
     # response = JSONResponse(user)
-    response = RedirectResponse(url="http://localhost:3000")
+    response = RedirectResponse(url="http://127.0.0.1:3000")
     
     # Set the access token cookie if it doesn't already exist
     if access_token_cookie is None:

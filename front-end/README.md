@@ -8,8 +8,9 @@ React + JavaScript + Bootstrap
 
 ## How to Run This App
 
-1. git clone this repo and have `node.js` installed (should support v15 or later)
-2. run following command
+1. `git clone` this repo and have `node.js` installed (should support v15 or later)
+2. create `/front-end/.env.local` file with following info: `HOST=127.0.0.1`
+3. run following command
 
 ```
 cd front-end
@@ -17,9 +18,9 @@ npm install
 npm start
 ```
 
-3. go to `localhost:3000`
+3. go to `http://127.0.0.1:3000/`
 
-## Task Checklist (last update: 03/26)
+## Task Checklist (last update: 04/01)
 
 ### feature/frontend-setup
 
@@ -29,3 +30,9 @@ npm start
 - [x] UI for sign in page
 - [x] UI for add event page
 - [x] connect backend
+
+### leo.cho/user-authentication
+
+- [x] basic authentication flow
+- [] public & private route
+- [] login-related redirection (if any)

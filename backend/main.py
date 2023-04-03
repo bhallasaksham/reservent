@@ -26,7 +26,7 @@ if SECRET_KEY is None:
 user_management_app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 
-origins = ["http://localhost:3000"]
+origins = ["http://127.0.0.1:3000"]
 user_management_app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

@@ -64,7 +64,8 @@ If you are facing error related with google auth, you may want to use the enviro
 ## Frontend Setup
 
 1. `git clone` this repo and have `node.js` installed (should support v15 or later)
-2. run following command
+2. create `/front-end/.env.local` file with following info: `HOST=127.0.0.1`
+3. run following command
 
 ```
 cd front-end
@@ -72,7 +73,7 @@ npm install
 npm start
 ```
 
-3. Front-end application: http://localhost:3000/
+3. go to `http://127.0.0.1:3000/`
 
 ## Database Setup
 
