@@ -50,17 +50,22 @@ Format: `<type>(<scope>): <subject>`
 
 - To create a virtual environment, type `python3 -m venv env`
 - To activate the virtual environment, go to the `backend` directory and type: `source env/bin/activate`
-- Once the virtual environment is activated, run `main.py` to start the local server.
+- Once the virtual environment is activated, run <s>`main.py`</s> to start the local server (run `sh run.sh` instead).
 - Here's the list of services hosted through the backend server:
-  - User Management Service: http://0.0.0.0:5000
+  - User Management Service: http://0.0.0.0:4000
   - Room Reservation Service: http://0.0.0.0:8000
   - Event Service: http://0.0.0.0:8080
   - Admin Service: http://0.0.0.0:9000
 
+```
+If you are facing error related with google auth, you may want to use the environment in /backend/requirements.txt
+```
+
 ## Frontend Setup
 
 1. `git clone` this repo and have `node.js` installed (should support v15 or later)
-2. run following command
+2. create `/front-end/.env.local` file with following info: `HOST=127.0.0.1`
+3. run following command
 
 ```
 cd front-end
@@ -68,4 +73,16 @@ npm install
 npm start
 ```
 
-3. Front-end application: http://localhost:3000/
+3. go to `http://127.0.0.1:3000/`
+
+## Database Setup
+
+- Host the database on the AWS account
+- Host: `sda-s06.cozm4z1zuevq.us-east-1.rds.amazonaws.com`
+- User: `postgres`
+- Port: `5432`
+- Password: `sda-s06123`
+- Command line to connect the DB: 
+```
+psql -U postgres -p 5432 -h sda-s06.cozm4z1zuevq.us-east-1.rds.amazonaws.com -W
+```

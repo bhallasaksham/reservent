@@ -1,0 +1,4 @@
+export GOOGLE_CLIENT_ID=273503930628-f3atcu2c4n396qgui0n4keaol9hisflg.apps.googleusercontent.com
+export GOOGLE_CLIENT_SECRET=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
+export SECRET_KEY=NmiURgpwiI5YoVZGwqkpCEZJEqeqVeGT_CyIsc5f
+python3 main.py
