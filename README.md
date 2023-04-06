@@ -13,7 +13,7 @@ Please review the Architecture Haiku [here](https://docs.google.com/document/d/1
 Please review the UI Design prototypes [here](https://www.figma.com/file/AhcHxAZcDttB2oJM5bDnmj/Untitled?node-id=0%3A1&t=zSJevP3CWC03RgGh-1).  
 
 To try the UI flow on Figma, click on "Prototype" on the right panel and then the play button next to "Flow 1" on the Authentication Page.  
-![Figma Flow Image](/ui-prototypes/figma_flow.png")  
+![Figma Flow Image](ui-prototypes/figma_flow.png)  
 
 ## Git Workflow
 
