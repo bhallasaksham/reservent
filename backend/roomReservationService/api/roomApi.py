@@ -1,8 +1,10 @@
 from fastapi import APIRouter
 
+from ..handler import RoomHandler
+
 roomRoutes = APIRouter()
 
 
 @roomRoutes.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return RoomHandler().initialize_rooms()
