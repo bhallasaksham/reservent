@@ -28,11 +28,11 @@ def facade(url: str, http_verb: str, token: Optional[str] = Header(None)):
     if http_verb == "GET":
         response = requests.get(url, headers=headers, json=data)
     elif http_verb == "PUT":
-        response: requests.put(url, headers=headers, json=data)
+        response = requests.put(url, headers=headers, json=data)
     elif http_verb == "POST":
-        response: requests.post(url, headers=headers, json=data)
+        response = requests.post(url, headers=headers, json=data)
     elif http_verb == "DELETE":
-        response: requests.delete(url, headers=headers, json=data)
+        response = requests.delete(url, headers=headers, json=data)
     else:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Invalid HTTP Verb in Facade Layer")
 

@@ -7,18 +7,21 @@ from adminService import adminRoutes
 from eventService import eventRoutes
 from roomReservationService import roomRoutes
 from userManagementService import userRoutes
+from reservationFacade import facadeRoutes
 from starlette.middleware.sessions import SessionMiddleware
 
 user_management_app = FastAPI()
 room_reservation_app = FastAPI()
 event_app = FastAPI()
 admin_app = FastAPI()
+reservation_facade_app = FastAPI()
 
     # setting up the routers
 user_management_app.include_router(userRoutes)
 room_reservation_app.include_router(roomRoutes)
 event_app.include_router(eventRoutes)
 admin_app.include_router(adminRoutes)
+reservation_facade_app.include_router(facadeRoutes)
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or None
 if SECRET_KEY is None:
@@ -49,6 +52,13 @@ event_app.add_middleware(
     allow_headers=["*"],
 )
 admin_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+reservation_facade_app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
