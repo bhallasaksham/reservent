@@ -1,11 +1,10 @@
 from fastapi import APIRouter
 
-from ..dao import Room
+from ..handler import RoomHandler
 
 roomRoutes = APIRouter()
 
 
 @roomRoutes.get("/")
 async def root():
-    rooms = Room(name='RM120', url='abc.com').initRooms()
-    return rooms
+    return RoomHandler().initialize_rooms()

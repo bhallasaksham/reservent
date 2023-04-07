@@ -1,4 +1,8 @@
+from ..dao import Room
+
+
 class RoomHandler:
     @staticmethod
     def initialize_rooms():
-        pass
+        rooms = Room().initRooms()
+        return rooms
