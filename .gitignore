@@ -8,5 +8,8 @@ backend/roomReservationService/__pycache__/
 backend/roomReservationService/api/__pycache__/
 backend/userManagementService/__pycache__/
 backend/userManagementService/api/__pycache__/
+backend/reservationFacade/__pycache__/
+backend/reservationFacade/api/__pycache__/
+.idea
 
 .DS_Store
