@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Offcanvas, Card } from "react-bootstrap";
 import styles from "./AddEventPage.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { RoomCard, CustomBadge } from "../../components";
+import { PlusSquare, PencilSquare } from "react-bootstrap-icons";
 
 export const AddEventPage = () => {
   const getRoundedDate = (date) => {
@@ -26,6 +28,26 @@ export const AddEventPage = () => {
     addMinutes(getRoundedDate(new Date()), 60)
   );
   const [numOfParticipant, setNumOfParticipant] = useState();
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState();
+
+  const searchRooms = () => {
+    setShowSidebar(true);
+    setSelectedRoom(null);
+  };
+
+  const chooseRoom = (room) => {
+    console.log("select: " + room.id, room.name);
+    setSelectedRoom(room);
+    setShowSidebar(false);
+  };
+
+  const deleteRoom = (room) => {
+    console.log("delete: " + room.id, room.name);
+    setSelectedRoom(null);
+  };
+
+  const fakeRoom = { id: 1, name: "room 118", size: 6 };
 
   const handleSubmit = (event) => {
     event.preventDefault(); // the default action that belongs to the event will not occur - whether we need this?
@@ -128,19 +150,76 @@ export const AddEventPage = () => {
         </Row>
         {/* <div className={styles["note-info"]}>Based on Pacific Time</div> */}
 
-        <Form.Group className="mb-3" controlId="formNumOfParticipant">
-          <Form.Label>Number of Participants</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Enter number of participants"
-            value={numOfParticipant}
-            onChange={(e) => setNumOfParticipant(e.target.value)}
-          />
+        <Row>
+          <Col md={3}>
+            <Form.Group className="mb-3" controlId="formNumOfParticipant">
+              <Form.Label>Number of Participants</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter number"
+                value={numOfParticipant}
+                onChange={(e) => setNumOfParticipant(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col></Col>
+        </Row>
+
+        <Form.Group className="mb-3" controlId="formRoom">
+          <Form.Label>Room</Form.Label>
+          <div>
+            {selectedRoom != null && (
+              <div className={styles["room-badge-wrapper"]}>
+                <CustomBadge
+                  content={selectedRoom.name}
+                  deleteContent={() => deleteRoom(selectedRoom)}
+                />
+              </div>
+            )}
+            {selectedRoom == null && (
+              <PlusSquare
+                className={styles["search-room-button"]}
+                onClick={searchRooms}
+              />
+            )}
+
+            {selectedRoom != null && (
+              <PencilSquare
+                className={styles["search-room-button"]}
+                onClick={searchRooms}
+              />
+            )}
+
+            <Offcanvas
+              show={showSidebar}
+              placement={"end"}
+              onHide={() => setShowSidebar(false)}
+            >
+              <Offcanvas.Header closeButton>
+                <Offcanvas.Title>Available Rooms</Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                <RoomCard
+                  room={fakeRoom}
+                  chooseRoom={() => chooseRoom(fakeRoom)}
+                />
+              </Offcanvas.Body>
+            </Offcanvas>
+          </div>
         </Form.Group>
 
-        <Button variant="primary" type="submit">
-          <span>Search Rooms</span>
-        </Button>
+        <Row>
+          <Col>
+            <Button variant="danger">
+              <span>Cancel</span>
+            </Button>
+          </Col>
+          <Col>
+            <Button variant="primary" type="submit">
+              <span>Confirm</span>
+            </Button>
+          </Col>
+        </Row>
       </Form>
     </MainLayout>
   );
