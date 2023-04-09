@@ -1,6 +1,7 @@
 .custom-badge {
   color: var(--text-dark) !important;
   padding: 0.5rem !important;
+  margin: 0 0.5rem 0.5rem 0;
 }
 
 .close-icon {

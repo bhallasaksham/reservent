@@ -16,13 +16,35 @@
   margin-bottom: 1rem;
 } */
 
-.room-badge-wrapper {
-  margin-right: 3rem;
+.room-badge-group {
+  margin-right: 2rem;
   display: inline;
 }
 
 .search-room-button {
+  cursor: pointer;
   color: var(--secondary);
   font-size: 1.5rem;
-  cursor: pointer;  
+}
+
+.input-guest-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.add-guest-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  cursor: pointer;
+  color: var(--secondary);
+  font-size: 1.5rem;
+}
+
+.guest-badge-group{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0.5rem 0.5rem 0 0.5rem;
 }
