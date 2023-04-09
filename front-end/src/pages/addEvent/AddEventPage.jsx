@@ -14,20 +14,10 @@ import {
   ArrowLeftCircleFill,
 } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
+import { getRoundedDate, addMinutes } from "../../tools";
 
 export const AddEventPage = () => {
   const history = useHistory();
-
-  const getRoundedDate = (date) => {
-    const coeff = 1000 * 60 * 30; // 30 minutes
-    const roundedDate = new Date(Math.ceil(date.getTime() / coeff) * coeff); // round up to the nearest 30 minutes
-    return roundedDate;
-  };
-
-  const addMinutes = (date, diff) => {
-    const coeff = 1000 * 60; // 1 minute
-    return new Date(date.getTime() + diff * coeff);
-  };
 
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
