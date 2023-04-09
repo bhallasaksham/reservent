@@ -51,9 +51,9 @@ Format: `<type>(<scope>): <subject>`
  
 ## Backend Setup
 
-- To create a virtual environment, type `python3 -m venv env`
-- To activate the virtual environment, go to the `backend` directory and type: `source env/bin/activate`
-- Once the virtual environment is activated, run <s>`main.py`</s> to start the local server (run `sh run.sh` instead).
+- To create a virtual environment, go to the backend directory and type `python3 -m venv env`
+- To activate the virtual environment, type: `source env/bin/activate`
+- Once the virtual environment is activated, run `sh run.sh` to start the local server.
 - Here's the list of services hosted through the backend server:
   - User Management Service: http://0.0.0.0:4000
   - Room Reservation Service: http://0.0.0.0:8000
