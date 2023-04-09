@@ -10,9 +10,14 @@ import {
   PlusSquare,
   PencilSquare,
   PersonPlusFill,
+  CheckCircleFill,
+  ArrowLeftCircleFill,
 } from "react-bootstrap-icons";
+import { useHistory } from "react-router-dom";
 
 export const AddEventPage = () => {
+  const history = useHistory();
+
   const getRoundedDate = (date) => {
     const coeff = 1000 * 60 * 30; // 30 minutes
     const roundedDate = new Date(Math.ceil(date.getTime() / coeff) * coeff); // round up to the nearest 30 minutes
@@ -264,13 +269,23 @@ export const AddEventPage = () => {
 
         <Row>
           <Col>
-            <Button variant="danger">
-              <span>Cancel</span>
+            <Button
+              variant="danger"
+              className={styles["form-button"]}
+              onClick={() => history.push("/")}
+            >
+              <ArrowLeftCircleFill />
+              Cancel
             </Button>
           </Col>
           <Col>
-            <Button variant="primary" type="submit">
-              <span>Confirm</span>
+            <Button
+              variant="primary"
+              type="submit"
+              className={styles["form-button"]}
+            >
+              <CheckCircleFill />
+              Confirm
             </Button>
           </Col>
         </Row>

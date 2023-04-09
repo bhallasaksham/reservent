@@ -43,8 +43,14 @@
   font-size: 1.5rem;
 }
 
-.guest-badge-group{
+.guest-badge-group {
   display: flex;
   flex-wrap: wrap;
   margin: 0.5rem 0.5rem 0 0.5rem;
+}
+
+.form-button {
+  width: 90%;
+  margin: 1.5rem 5% 0 5%;
+  font-weight: bold;
 }
