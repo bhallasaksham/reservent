@@ -3,16 +3,33 @@ import { MainLayout } from "../../layouts";
 import axios from "axios";
 import { Spinner, Button, Card } from "react-bootstrap";
 import styles from "./HomePage.module.css";
+import { useCookies } from "react-cookie";
+
 
 export const HomePage = () => {
   const [content, setContent] = useState();
   const [loading, setLoading] = useState(true);
 
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "jwt_token",
+    "refresh_token",
+  ]);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get("http://0.0.0.0:8000");
+        const { data: response } = await axios.get(
+          "http://0.0.0.0:4000",
+          {
+            headers: {
+              Authorization: `bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`,
+            },
+          },
+          // {
+          //   withCredentials: true,
+          // }
+        );
         setContent(response["message"]);
         // const responseJSON = JSON.parse(response);
         // setContent(responseJSON["message"]);
@@ -34,7 +51,7 @@ export const HomePage = () => {
       {!loading && (
         <Card style={{ width: "18rem" }}>
           <Card.Body>
-            <Card.Title>message from 8000:</Card.Title>
+            <Card.Title>message from 4000:</Card.Title>
             <Card.Text>{content}</Card.Text>
             <Button variant="primary">Go somewhere</Button>
           </Card.Body>
