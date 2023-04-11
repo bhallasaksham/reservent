@@ -14,7 +14,7 @@ import {
   ArrowLeftCircleFill,
 } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
-import { getRoundedDate, addMinutes } from "../../tools";
+import { getRoundedDate, addMinutes, formatTime } from "../../tools";
 
 export const AddEventPage = () => {
   const history = useHistory();
@@ -33,22 +33,28 @@ export const AddEventPage = () => {
   const [guestList, setGuestList] = useState([]);
 
   const searchRooms = () => {
+    console.log(formatTime(startDate, startTime));
+    console.log(formatTime(startDate, endTime));
+    console.log(numOfParticipant);
     setShowSidebar(true);
     setSelectedRoom(null);
   };
 
   const chooseRoom = (room) => {
-    console.log("select: " + room.id, room.name);
+    console.log("select: " + room.name);
     setSelectedRoom(room);
     setShowSidebar(false);
   };
 
   const deleteRoom = (room) => {
-    console.log("delete: " + room.id, room.name);
+    console.log("delete: " + room.name);
     setSelectedRoom(null);
   };
 
-  const fakeRoom = { id: 1, name: "room 118", size: 6 };
+  const fakeRooms = [
+    { name: "room 118", capacity: 6 },
+    { name: "room 120", capacity: 4 },
+  ];
 
   const addGuest = (guest) => {
     if (curGuest != "") {
@@ -72,7 +78,8 @@ export const AddEventPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault(); // the default action that belongs to the event will not occur - whether we need this?
 
-    //reset the values of input fields ?
+    // console.log(formatTime(startDate, startTime));
+    // console.log(formatTime(startDate, endTime));
 
     alert(
       "title: " +
@@ -90,7 +97,7 @@ export const AddEventPage = () => {
         "\ninvite guests: " +
         guestList +
         "\nroom: " +
-        selectedRoom.name
+        selectedRoom?.name
     );
   };
 
@@ -219,10 +226,12 @@ export const AddEventPage = () => {
                     <Offcanvas.Title>Available Rooms</Offcanvas.Title>
                   </Offcanvas.Header>
                   <Offcanvas.Body>
-                    <RoomCard
-                      room={fakeRoom}
-                      chooseRoom={() => chooseRoom(fakeRoom)}
-                    />
+                    {fakeRooms?.map((room) => (
+                      <RoomCard
+                        room={room}
+                        chooseRoom={() => chooseRoom(room)}
+                      />
+                    ))}
                   </Offcanvas.Body>
                 </Offcanvas>
               </div>

@@ -4,10 +4,10 @@ import { Github } from "react-bootstrap-icons";
 
 export const RoomCard = ({ room, chooseRoom }) => {
   return (
-    <Card>
+    <Card className={styles["room-card"]}>
       <Card.Body>
         <Card.Title>{room.name}</Card.Title>
-        <Card.Text>{room.size} people</Card.Text>
+        <Card.Text>{room.capacity} people</Card.Text>
         <Button variant="primary" onClick={chooseRoom}>
           <span>Select</span>
         </Button>
