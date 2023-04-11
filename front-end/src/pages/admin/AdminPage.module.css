@@ -1,0 +1,8 @@
+.user-table {
+  width: 70%;
+  margin: 2rem auto 0 auto;
+  vertical-align: middle;
+  background-color: var(--primary);
+  border-color: var(--secondary);
+  border-radius: 0.5rem;
+}

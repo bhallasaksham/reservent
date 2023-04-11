@@ -38,6 +38,9 @@ export const Header = () => {
             <Nav.Link href="/addEvent">
               <span>Event</span>
             </Nav.Link>
+            <Nav.Link href="/admin">
+              <span>Users</span>
+            </Nav.Link>
           </Nav>
           <div>
             <Button variant="outline-primary" onClick={handleSignIn}>

@@ -246,7 +246,7 @@ export const AddEventPage = () => {
                 </div>
               </div>
               <div className={styles["guest-badge-group"]}>
-                {guestList.map((guest) => (
+                {guestList?.map((guest) => (
                   <CustomBadge
                     content={guest}
                     deleteContent={() => deleteGuest(guest)}

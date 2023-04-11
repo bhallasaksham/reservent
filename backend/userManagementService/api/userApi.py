@@ -11,7 +11,7 @@ oauth = get_oauth()
 @userRoutes.get("/")
 async def root(request: FastAPIRequest):
     header = request.headers
-    print(header)
+    # print(header)
     return {"message": "Hello World"}
 
 @userRoutes.get("/login")
