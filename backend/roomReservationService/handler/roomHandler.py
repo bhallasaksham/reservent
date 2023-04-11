@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 import os
 from google.oauth2.credentials import Credentials
@@ -14,7 +15,7 @@ if GOOGLE_CLIENT_ID is None or GOOGLE_CLIENT_SECRET is None:
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
-class AvailableRoom:
+class AvailableRoom():
     name: str
     capacity: str
 
@@ -46,18 +47,26 @@ def get_datetime_from_time_string(time_string):
     return datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%S%z')
 
 
+def get_time_in_google_api_compatible_format(timestamp_str):
+    timestamp_dt = datetime.strptime(timestamp_str, '%a %b %d %Y %H:%M:%S %Z %z')
+    converted = timestamp_dt.strftime('%Y-%m-%dT%H:%M:%S%z')
+    return converted
+
+
 def is_room_available(room, requested, event):
     start_dt = get_datetime_from_time_string(requested.start_time)
     end_dt = get_datetime_from_time_string(requested.end_time)
     event_start_dt = get_datetime_from_time_string(event['start']['dateTime'])
     room_availability_timediff = event_start_dt - start_dt
     room_requested_timediff = end_dt - start_dt
-    if room_availability_timediff > room_requested_timediff and room.size >= requested.num_guests:
+    if room_availability_timediff > room_requested_timediff and room.size >= int(requested.num_guests):
         return True
     return False
 
 
 def get_rooms(reservation, meeting_rooms):
+    reservation.start_time = get_time_in_google_api_compatible_format(reservation.start_time)
+    reservation.end_time = get_time_in_google_api_compatible_format(reservation.end_time)
     available_rooms = []
     for room in meeting_rooms:
         calendar_id = room.url.split('=')[1]
