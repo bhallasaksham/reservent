@@ -25,9 +25,10 @@ async def facade(url: str, http_verb: str, request: Request):
         "email": decoded_token.get("email"),
         "google_auth_token": request.headers["authorization"].split(" ")[2]
     }
-    body = await request.json()
-    for key, value in body.items():
-        data[key] = value
+    if request.query_params:
+        params = request.query_params
+        for key, value in params.items():
+            data[key] = value
 
     if http_verb == 'GET':
         response = requests.get(url, headers=headers, json=data)
