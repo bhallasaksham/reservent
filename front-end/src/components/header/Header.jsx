@@ -6,10 +6,7 @@ import { useCookies } from "react-cookie";
 import { Redirect, useHistory } from "react-router-dom";
 
 export const Header = () => {
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "jwt_token",
-    "refresh_token",
-  ]);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token"]);
   const history = useHistory();
 
   const handleSignIn = () => {

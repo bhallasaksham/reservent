@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import {
-  Form,
-  Button,
-  Row,
-  Col,
-  Offcanvas,
-  OverlayTrigger,
-  Tooltip,
-} from "react-bootstrap";
+import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip } from "react-bootstrap";
 import styles from "./AddEventPage.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -20,7 +12,7 @@ import {
   PersonPlusFill,
   CheckCircleFill,
   ArrowLeftCircleFill,
-  QuestionCircle,
+  QuestionCircle
 } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
 import { getRoundedDate, addMinutes, formatTime } from "../../tools";
@@ -33,9 +25,7 @@ export const AddEventPage = () => {
   const [description, setDescription] = useState();
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(getRoundedDate(new Date()));
-  const [endTime, setEndTime] = useState(
-    addMinutes(getRoundedDate(new Date()), 60)
-  );
+  const [endTime, setEndTime] = useState(addMinutes(getRoundedDate(new Date()), 60));
   const [numOfParticipant, setNumOfParticipant] = useState();
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState();
@@ -76,7 +66,7 @@ export const AddEventPage = () => {
 
   const fakeRooms = [
     { name: "room 118", capacity: 6 },
-    { name: "room 120", capacity: 4 },
+    { name: "room 120", capacity: 4 }
   ];
 
   const addGuest = (guest) => {
@@ -171,15 +161,12 @@ export const AddEventPage = () => {
             <Form.Group className="mb-3" controlId="formDate">
               <Form.Label>
                 Date *{" "}
-                <OverlayTrigger
-                  overlay={<Tooltip>Pacific Daylight Time (PDT)</Tooltip>}
-                >
+                <OverlayTrigger overlay={<Tooltip>Pacific Daylight Time (PDT)</Tooltip>}>
                   <QuestionCircle />
                 </OverlayTrigger>
               </Form.Label>
               <DatePicker
                 className={`styles["date-picker"] form-control`}
-                showIcon
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
                 isClearable
@@ -242,13 +229,7 @@ export const AddEventPage = () => {
             <Form.Group className="mb-3" controlId="formRoom">
               <Form.Label>
                 Room *{" "}
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip>
-                      To create an event, you must choose a room
-                    </Tooltip>
-                  }
-                >
+                <OverlayTrigger overlay={<Tooltip>To create an event, you must choose a room</Tooltip>}>
                   <QuestionCircle />
                 </OverlayTrigger>
               </Form.Label>
@@ -256,38 +237,20 @@ export const AddEventPage = () => {
                 {selectedRoom && (
                   <>
                     <div className={styles["room-badge-group"]}>
-                      <CustomBadge
-                        content={selectedRoom.name}
-                        deleteContent={() => deleteRoom(selectedRoom)}
-                      />
+                      <CustomBadge content={selectedRoom.name} deleteContent={() => deleteRoom(selectedRoom)} />
                     </div>
-                    <PencilSquare
-                      className={styles["search-room-button"]}
-                      onClick={searchRooms}
-                    />
+                    <PencilSquare className={styles["search-room-button"]} onClick={searchRooms} />
                   </>
                 )}
-                {!selectedRoom && (
-                  <PlusSquare
-                    className={styles["search-room-button"]}
-                    onClick={searchRooms}
-                  />
-                )}
+                {!selectedRoom && <PlusSquare className={styles["search-room-button"]} onClick={searchRooms} />}
 
-                <Offcanvas
-                  show={showSidebar}
-                  placement={"end"}
-                  onHide={() => setShowSidebar(false)}
-                >
+                <Offcanvas show={showSidebar} placement={"end"} onHide={() => setShowSidebar(false)}>
                   <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Available Rooms</Offcanvas.Title>
                   </Offcanvas.Header>
                   <Offcanvas.Body>
                     {fakeRooms?.map((room) => (
-                      <RoomCard
-                        room={room}
-                        chooseRoom={() => chooseRoom(room)}
-                      />
+                      <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />
                     ))}
                   </Offcanvas.Body>
                 </Offcanvas>
@@ -305,18 +268,12 @@ export const AddEventPage = () => {
                     value={curGuest}
                     onChange={(e) => setCurGuest(e.target.value)}
                   />
-                  <PersonPlusFill
-                    className={styles["add-guest-button"]}
-                    onClick={() => addGuest(curGuest)}
-                  />
+                  <PersonPlusFill className={styles["add-guest-button"]} onClick={() => addGuest(curGuest)} />
                 </div>
               </div>
               <div className={styles["guest-badge-group"]}>
                 {guestList?.map((guest) => (
-                  <CustomBadge
-                    content={guest}
-                    deleteContent={() => deleteGuest(guest)}
-                  />
+                  <CustomBadge content={guest} deleteContent={() => deleteGuest(guest)} />
                 ))}
               </div>
             </Form.Group>
@@ -325,21 +282,13 @@ export const AddEventPage = () => {
 
         <Row>
           <Col>
-            <Button
-              variant="danger"
-              className={styles["form-button"]}
-              onClick={() => history.push("/")}
-            >
+            <Button variant="danger" className={styles["form-button"]} onClick={() => history.push("/")}>
               <ArrowLeftCircleFill />
               <span>Cancel</span>
             </Button>
           </Col>
           <Col>
-            <Button
-              variant="primary"
-              type="submit"
-              className={styles["form-button"]}
-            >
+            <Button variant="primary" type="submit" className={styles["form-button"]}>
               <CheckCircleFill />
               <span>Confirm</span>
             </Button>

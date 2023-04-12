@@ -5,15 +5,11 @@ import { Spinner, Button, Card } from "react-bootstrap";
 import styles from "./HomePage.module.css";
 import { useCookies } from "react-cookie";
 
-
 export const HomePage = () => {
   const [content, setContent] = useState();
   const [loading, setLoading] = useState(true);
 
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "jwt_token",
-    "refresh_token",
-  ]);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token"]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,9 +19,9 @@ export const HomePage = () => {
           "http://0.0.0.0:4000",
           {
             headers: {
-              Authorization: `bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`,
-            },
-          },
+              Authorization: `bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+            }
+          }
           // {
           //   withCredentials: true,
           // }
@@ -45,9 +41,7 @@ export const HomePage = () => {
   return (
     <MainLayout>
       <h1 className="page-title">Home (Content TBD)</h1>
-      {loading && (
-        <Spinner className={styles["loading-spinner"]} animation="border" />
-      )}
+      {loading && <Spinner className={styles["loading-spinner"]} animation="border" />}
       {!loading && (
         <Card style={{ width: "18rem" }}>
           <Card.Body>

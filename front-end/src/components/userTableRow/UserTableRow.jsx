@@ -15,8 +15,7 @@ export const UserTableRow = ({ user, i }) => {
 
   const isDisabled = curPrivilege === userPrivilege;
 
-  const ConditionalTooltipWrapper = ({ condition, wrapper, children }) =>
-    condition ? wrapper(children) : children;
+  const ConditionalTooltipWrapper = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
 
   return (
     <tr>
@@ -30,21 +29,9 @@ export const UserTableRow = ({ user, i }) => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            {curPrivilege !== "admin" && (
-              <Dropdown.Item onClick={() => setCurPrivilege("admin")}>
-                admin
-              </Dropdown.Item>
-            )}
-            {curPrivilege !== "staff" && (
-              <Dropdown.Item onClick={() => setCurPrivilege("staff")}>
-                staff
-              </Dropdown.Item>
-            )}
-            {curPrivilege !== "user" && (
-              <Dropdown.Item onClick={() => setCurPrivilege("user")}>
-                user
-              </Dropdown.Item>
-            )}
+            {curPrivilege !== "admin" && <Dropdown.Item onClick={() => setCurPrivilege("admin")}>admin</Dropdown.Item>}
+            {curPrivilege !== "staff" && <Dropdown.Item onClick={() => setCurPrivilege("staff")}>staff</Dropdown.Item>}
+            {curPrivilege !== "user" && <Dropdown.Item onClick={() => setCurPrivilege("user")}>user</Dropdown.Item>}
           </Dropdown.Menu>
         </Dropdown>
       </td>
@@ -57,11 +44,7 @@ export const UserTableRow = ({ user, i }) => {
             </OverlayTrigger>
           )}
         >
-          <Button
-            variant="primary"
-            disabled={isDisabled}
-            onClick={() => updateUser(user, curPrivilege)}
-          >
+          <Button variant="primary" disabled={isDisabled} onClick={() => updateUser(user, curPrivilege)}>
             <PersonFillCheck />
             <span>Update</span>
           </Button>
