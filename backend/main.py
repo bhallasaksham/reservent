@@ -10,7 +10,7 @@ from userManagementService import userRoutes
 from reservationFacade import facadeRoutes
 from starlette.middleware.sessions import SessionMiddleware
 
-from adminService.middlewares.auth import authetication
+from adminService.middlewares.auth import authentication
 
 user_management_app = FastAPI()
 room_reservation_app = FastAPI()
@@ -25,7 +25,7 @@ event_app.include_router(eventRoutes)
 admin_app.include_router(adminRoutes)
 reservation_facade_app.include_router(facadeRoutes)
 
-admin_app.middleware("http")(authetication)
+admin_app.middleware("http")(authentication)
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or None
 if SECRET_KEY is None:
