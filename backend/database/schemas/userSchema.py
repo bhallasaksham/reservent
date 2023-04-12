@@ -1,4 +1,5 @@
 
+from sqlalchemy import Enum
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -7,6 +8,13 @@ from database.dbConfig import DatabaseEngine
 Base = declarative_base()
 db = DatabaseEngine.getInstance()
 engine = db.getEngine()
+
+
+class UserPrivilege(Enum):
+    ADMIN = 1
+    STAFF = 2
+    USER = 3
+
 
 class UserSchema(Base):
     __tablename__ = 'user_tab'

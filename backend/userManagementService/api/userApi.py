@@ -4,7 +4,6 @@ from fastapi import Request as FastAPIRequest
 from fastapi.responses import JSONResponse, RedirectResponse
 from userManagementService.utils.oauth import get_oauth
 from userManagementService.utils.jwt import get_jwt
-# from userManagementService.dao.userDao import User, UserPrivilege
 from userManagementService.handler.userHandler import UserHandler
 
 userRoutes = APIRouter()
@@ -53,11 +52,3 @@ async def logout(response: JSONResponse):
     response.delete_cookie('refresh_token')
     response.delete_cookie('jwt_token')
     return {"message": "Logged out successfully"}
-
-# @userRoutes.get('/user/test')
-# async def test(response: JSONResponse):
-#     userDao = User()
-#     user = userDao.createUser('testUser', 'test@gmail.com', UserPrivilege.ADMIN)
-#     user = userDao.getUser(1)
-#     print("user", user.email, user.id, user.privilege, user.username)
-#     return user

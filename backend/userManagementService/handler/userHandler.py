@@ -1,5 +1,6 @@
 
-from userManagementService.dao.userDao import UserDao, UserPrivilege
+from userManagementService.dao.userDao import UserDao
+from database.schemas.userSchema import UserPrivilege
 
 class UserHandler:
     def __init__(self):

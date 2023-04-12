@@ -1,14 +1,8 @@
-from sqlalchemy import Enum
+
 from sqlalchemy.orm import sessionmaker
 
 from database.dbConfig import DatabaseEngine
 from database.schemas.userSchema import UserSchema
-
-
-class UserPrivilege(Enum):
-    ADMIN = 1
-    STAFF = 2
-    USER = 3
 
 
 class UserDao:
