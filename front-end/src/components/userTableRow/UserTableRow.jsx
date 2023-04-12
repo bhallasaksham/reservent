@@ -59,7 +59,6 @@ export const UserTableRow = ({ user, i }) => {
         >
           <Button
             variant="primary"
-            className={styles["update-button"]}
             disabled={isDisabled}
             onClick={() => updateUser(user, curPrivilege)}
           >

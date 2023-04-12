@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Form, Button, Row, Col, Offcanvas, Card } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  Offcanvas,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import styles from "./AddEventPage.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,6 +20,7 @@ import {
   PersonPlusFill,
   CheckCircleFill,
   ArrowLeftCircleFill,
+  QuestionCircle,
 } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
 import { getRoundedDate, addMinutes, formatTime } from "../../tools";
@@ -107,7 +116,7 @@ export const AddEventPage = () => {
       <Form className={styles["add-event-form"]} onSubmit={handleSubmit}>
         <h2>Event Details</h2>
         <Form.Group className="mb-3" controlId="formTitle">
-          <Form.Label>Title</Form.Label>
+          <Form.Label>Title *</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter title"
@@ -129,7 +138,14 @@ export const AddEventPage = () => {
         <Row>
           <Col md={4}>
             <Form.Group className="mb-3" controlId="formDate">
-              <Form.Label>Date</Form.Label>
+              <Form.Label>
+                Date *{" "}
+                <OverlayTrigger
+                  overlay={<Tooltip>Pacific Daylight Time (PDT)</Tooltip>}
+                >
+                  <QuestionCircle />
+                </OverlayTrigger>
+              </Form.Label>
               <DatePicker
                 className={`styles["date-picker"] form-control`}
                 showIcon
@@ -142,7 +158,7 @@ export const AddEventPage = () => {
           </Col>
           <Col md={5}>
             <Form.Group className="mb-3" controlId="formTime">
-              <Form.Label>Time</Form.Label>
+              <Form.Label>Time *</Form.Label>
               <Row>
                 <Col>
                   <DatePicker
@@ -184,7 +200,7 @@ export const AddEventPage = () => {
         <Row>
           <Col md={3}>
             <Form.Group className="mb-3" controlId="formNumOfParticipant">
-              <Form.Label>Number of Participants</Form.Label>
+              <Form.Label>Number of Participants *</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter number"
@@ -274,7 +290,7 @@ export const AddEventPage = () => {
               onClick={() => history.push("/")}
             >
               <ArrowLeftCircleFill />
-              Cancel
+              <span>Cancel</span>
             </Button>
           </Col>
           <Col>
@@ -284,7 +300,7 @@ export const AddEventPage = () => {
               className={styles["form-button"]}
             >
               <CheckCircleFill />
-              Confirm
+              <span>Confirm</span>
             </Button>
           </Col>
         </Row>
