@@ -11,6 +11,7 @@ import {
 import styles from "./AdminPage.module.css";
 import { useCookies } from "react-cookie";
 import { PersonFillCheck } from "react-bootstrap-icons";
+import { UserTableRow } from "../../components";
 
 export const AdminPage = () => {
   const [content, setContent] = useState();
@@ -73,48 +74,21 @@ export const AdminPage = () => {
       <Table className={styles["user-table"]} hover>
         <thead>
           <tr>
-            <th style={{ width: "5%" }}>#</th>
+            {/* <th style={{ width: "5%" }}>#</th>
             <th style={{ width: "30%" }}>Name</th>
             <th style={{ width: "40%" }}>Email Address</th>
             <th style={{ width: "15%" }}>Privilege</th>
-            <th style={{ width: "10%" }}></th>
+            <th style={{ width: "10%" }}></th> */}
+            <th >#</th>
+            <th>Name</th>
+            <th >Email Address</th>
+            <th>Privilege</th>
+            <th ></th>
           </tr>
         </thead>
         <tbody>
           {fakeUserList?.map((user, i) => (
-            <tr>
-              <td>{i + 1}</td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>
-                <DropdownButton variant="info" title={user.privilege}>
-                  {user.privilege !== "admin" && (
-                    <Dropdown.Item onClick={() => (user.privilege = "admin")}>
-                      Admin
-                    </Dropdown.Item>
-                  )}
-                  {user.privilege !== "staff" && (
-                    <Dropdown.Item onClick={() => (user.privilege = "staff")}>
-                      Staff
-                    </Dropdown.Item>
-                  )}
-                  {user.privilege !== "user" && (
-                    <Dropdown.Item onClick={() => (user.privilege = "user")}>
-                      User
-                    </Dropdown.Item>
-                  )}
-                </DropdownButton>
-              </td>
-              <td>
-                <Button
-                  variant="primary"
-                  // onClick={}
-                >
-                  <PersonFillCheck />
-                  <span>Update</span>
-                </Button>
-              </td>
-            </tr>
+            <UserTableRow user={user} i={i} />
           ))}
         </tbody>
       </Table>
