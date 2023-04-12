@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from dbConfig import DatabaseEngine
+from database.dbConfig import DatabaseEngine
 
 Base = declarative_base()
 
