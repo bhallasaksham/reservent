@@ -24,6 +24,7 @@ import {
 } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
 import { getRoundedDate, addMinutes, formatTime } from "../../tools";
+import { toast as customAlert } from "react-custom-alert";
 
 export const AddEventPage = () => {
   const history = useHistory();
@@ -42,6 +43,19 @@ export const AddEventPage = () => {
   const [guestList, setGuestList] = useState([]);
 
   const searchRooms = () => {
+    if (!startDate) {
+      return customAlert.warning("Please choose event date");
+    }
+    if (!startTime) {
+      return customAlert.warning("Please choose start time");
+    }
+    if (!endTime) {
+      return customAlert.warning("Please choose end time");
+    }
+    if (!numOfParticipant) {
+      return customAlert.warning("Please enter number of participants");
+    }
+
     console.log(formatTime(startDate, startTime));
     console.log(formatTime(startDate, endTime));
     console.log(numOfParticipant);
@@ -66,15 +80,16 @@ export const AddEventPage = () => {
   ];
 
   const addGuest = (guest) => {
-    if (curGuest != "") {
-      // TODO: check guest here
-      if (guestList.includes(guest)) {
-        alert(`You have already invited ${guest}`);
-      } else {
-        guestList.push(guest);
-        setGuestList(guestList);
-      }
+    if (curGuest !== "") {
       setCurGuest("");
+      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(guest)) {
+        return customAlert.warning("Please enter a valid email address");
+      }
+      if (guestList.includes(guest)) {
+        return customAlert.warning(`You have already invited ${guest}`);
+      }
+      guestList.push(guest);
+      setGuestList(guestList);
     }
     console.log(guestList);
   };
@@ -87,8 +102,24 @@ export const AddEventPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault(); // the default action that belongs to the event will not occur - whether we need this?
 
-    // console.log(formatTime(startDate, startTime));
-    // console.log(formatTime(startDate, endTime));
+    if (!title) {
+      return customAlert.warning("Please enter event title");
+    }
+    if (!startDate) {
+      return customAlert.warning("Please choose event date");
+    }
+    if (!startTime) {
+      return customAlert.warning("Please choose start time");
+    }
+    if (!endTime) {
+      return customAlert.warning("Please choose end time");
+    }
+    if (!numOfParticipant) {
+      return customAlert.warning("Please enter number of participants");
+    }
+    if (!selectedRoom) {
+      return customAlert.warning("Please choose a room");
+    }
 
     alert(
       "title: " +
@@ -195,7 +226,6 @@ export const AddEventPage = () => {
             </Form.Group>
           </Col>
         </Row>
-        {/* <div className={styles["note-info"]}>Based on Pacific Time</div> */}
 
         <Row>
           <Col md={3}>
@@ -210,24 +240,35 @@ export const AddEventPage = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formRoom">
-              <Form.Label>Room</Form.Label>
+              <Form.Label>
+                Room *{" "}
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip>
+                      To create an event, you must choose a room
+                    </Tooltip>
+                  }
+                >
+                  <QuestionCircle />
+                </OverlayTrigger>
+              </Form.Label>
               <div>
-                {selectedRoom != null && (
-                  <div className={styles["room-badge-group"]}>
-                    <CustomBadge
-                      content={selectedRoom.name}
-                      deleteContent={() => deleteRoom(selectedRoom)}
+                {selectedRoom && (
+                  <>
+                    <div className={styles["room-badge-group"]}>
+                      <CustomBadge
+                        content={selectedRoom.name}
+                        deleteContent={() => deleteRoom(selectedRoom)}
+                      />
+                    </div>
+                    <PencilSquare
+                      className={styles["search-room-button"]}
+                      onClick={searchRooms}
                     />
-                  </div>
+                  </>
                 )}
-                {selectedRoom == null && (
+                {!selectedRoom && (
                   <PlusSquare
-                    className={styles["search-room-button"]}
-                    onClick={searchRooms}
-                  />
-                )}
-                {selectedRoom != null && (
-                  <PencilSquare
                     className={styles["search-room-button"]}
                     onClick={searchRooms}
                   />
@@ -310,5 +351,3 @@ export const AddEventPage = () => {
 };
 
 // TODO: more styles on form & cards
-// TODO: find a better waty for note-info
-// TODO: handle required fields

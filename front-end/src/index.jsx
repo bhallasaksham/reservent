@@ -5,12 +5,15 @@ import reportWebVitals from "./reportWebVitals";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { CookiesProvider } from "react-cookie";
+import { ToastContainer } from 'react-custom-alert';
+import 'react-custom-alert/dist/index.css';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <CookiesProvider>
       <App />
+      <ToastContainer floatingTime={5000} />
     </CookiesProvider>
   </React.StrictMode>
 );

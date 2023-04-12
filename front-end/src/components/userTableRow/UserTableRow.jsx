@@ -8,7 +8,7 @@ export const UserTableRow = ({ user, i }) => {
   const [curPrivilege, setCurPrivilege] = useState(user.privilege);
 
   const updateUser = (user, curPrivilege) => {
-    // check: can not downgrade admin
+    // check: can not downgrade myself?
     alert(`${user.email}, ${curPrivilege}`);
     setUserPrivilege(curPrivilege);
   };

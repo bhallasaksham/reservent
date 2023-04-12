@@ -77,7 +77,6 @@ export const SignInPage = () => {
   );
 };
 
-// TODO: remove MainLayout when signin is ready
 // TODO: fancy title text
 // TODO: add more content (carousel, about us, etc)
 // TODO: integrate setAuthToken tool

@@ -42,5 +42,6 @@ npm start
 - [ ] update header with login status
 - [x] UI: select rooms
 - [x] UI: add guests
-- [ ] UI: admin page
-- [ ] example of sending cookie
+- [x] UI: admin page
+- [x] example of sending cookie
+- [x] alerts 
