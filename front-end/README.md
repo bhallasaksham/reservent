@@ -39,9 +39,11 @@ npm start
 
 ### yixinsun/frontend-ui
 
-- [ ] update header with login status
+- [x] update header with login status
 - [x] UI: select rooms
 - [x] UI: add guests
 - [x] UI: admin page
 - [x] example of sending tokens
 - [x] alerts 
+- [ ] home page
+- [ ] success modal

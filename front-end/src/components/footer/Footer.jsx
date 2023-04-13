@@ -6,22 +6,19 @@ export const Footer = () => {
   return (
     <div>
       <hr className={styles["hr"]}></hr>
-      <Navbar expand="lg">
-        <Container className={styles["nav-container"]}>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav>
-              <Nav.Link>
-                <span>SDA @Team 6</span>
-              </Nav.Link>
-              <Nav.Link href="https://github.com/bhallasaksham/sda-reservent-t6/">
-                <Github />
-                <span>GitHub</span>
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <Nav className="justify-content-center">
+        <Nav.Item>
+          <Nav.Link active={false}>
+            <span>SDA @Team 6</span>
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link href="https://github.com/cmusv-sasd/sda-reservent-t6">
+            <Github />
+            <span>GitHub</span>
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
     </div>
   );
 };
