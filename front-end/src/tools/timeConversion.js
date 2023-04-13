@@ -16,3 +16,11 @@ export const formatTime = (date, time) => {
   const timeZoneValue = date.toString().slice(28, 34);
   return dateString + " " + timeString + " " + timeZoneFormat + " " + timeZoneValue;
 }
+
+export const getDate = (date) => {
+  return date.toString().slice(4, 15);
+}
+
+export const getTime = (date) => {
+  return date.toString().slice(16, 21);
+}

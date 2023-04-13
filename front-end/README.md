@@ -44,6 +44,6 @@ npm start
 - [x] UI: add guests
 - [x] UI: admin page
 - [x] example of sending tokens
-- [x] alerts 
+- [x] alerts
 - [ ] home page
-- [ ] success modal
+- [x] success modal

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip, Modal } from "react-bootstrap";
 import styles from "./AddEventPage.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,7 +15,7 @@ import {
   QuestionCircle
 } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
-import { getRoundedDate, addMinutes, formatTime } from "../../tools";
+import { getRoundedDate, addMinutes, formatTime, getDate, getTime } from "../../tools";
 import { toast as customAlert } from "react-custom-alert";
 
 export const AddEventPage = () => {
@@ -27,10 +27,11 @@ export const AddEventPage = () => {
   const [startTime, setStartTime] = useState(getRoundedDate(new Date()));
   const [endTime, setEndTime] = useState(addMinutes(getRoundedDate(new Date()), 60));
   const [numOfParticipant, setNumOfParticipant] = useState();
-  const [showSidebar, setShowSidebar] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState();
   const [curGuest, setCurGuest] = useState("");
   const [guestList, setGuestList] = useState([]);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const searchRooms = () => {
     if (!startDate) {
@@ -111,7 +112,9 @@ export const AddEventPage = () => {
       return customAlert.warning("Please choose a room");
     }
 
-    alert(
+    setShowModal(true);
+
+    console.log(
       "title: " +
         title +
         "\ndes: " +
@@ -243,17 +246,6 @@ export const AddEventPage = () => {
                   </>
                 )}
                 {!selectedRoom && <PlusSquare className={styles["search-room-button"]} onClick={searchRooms} />}
-
-                <Offcanvas show={showSidebar} placement={"end"} onHide={() => setShowSidebar(false)}>
-                  <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>Available Rooms</Offcanvas.Title>
-                  </Offcanvas.Header>
-                  <Offcanvas.Body>
-                    {fakeRooms?.map((room) => (
-                      <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />
-                    ))}
-                  </Offcanvas.Body>
-                </Offcanvas>
               </div>
             </Form.Group>
           </Col>
@@ -295,6 +287,32 @@ export const AddEventPage = () => {
           </Col>
         </Row>
       </Form>
+
+      <Offcanvas show={showSidebar} placement={"end"} onHide={() => setShowSidebar(false)}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Available Rooms</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          {fakeRooms?.map((room) => (
+            <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />
+          ))}
+        </Offcanvas.Body>
+      </Offcanvas>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Event Created</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Congrats! Your event <strong>{title}</strong> has been created.
+          </p>
+          <p>
+            Room <strong>{selectedRoom?.name}</strong> has been reserved on <strong>{getDate(startDate)}</strong> from{" "}
+            <strong>{getTime(startTime)}</strong> to <strong>{getTime(endTime)}</strong>.
+          </p>
+        </Modal.Body>
+      </Modal>
     </MainLayout>
   );
 };
