@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 import os
 from google.oauth2.credentials import Credentials

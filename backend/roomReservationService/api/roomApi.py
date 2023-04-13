@@ -1,9 +1,7 @@
-from typing import Optional
-
-from fastapi import APIRouter, Response
+from fastapi import APIRouter
 from pydantic import BaseModel
 
-from ..handler.roomHandler import initialize_rooms, get_rooms, AvailableRoom
+from ..handler.roomHandler import initialize_rooms, get_rooms
 
 roomRoutes = APIRouter()
 
@@ -12,7 +10,7 @@ class Reservation(BaseModel):
     email: str
     google_auth_token: str
     start_time: str
-    end_time: Optional[str] = None
+    end_time: str
     num_guests: str
 
 

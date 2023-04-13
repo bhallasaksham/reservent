@@ -43,4 +43,4 @@ async def facade(url: str, http_verb: str, request: Request):
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                             detail="Invalid HTTP Verb in Facade Layer")
 
-    return JSONResponse(status_code=response.status_code, content=response.content)
+    return JSONResponse(status_code=response.status_code, content=response.json())
