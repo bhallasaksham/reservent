@@ -43,5 +43,5 @@ npm start
 - [x] UI: select rooms
 - [x] UI: add guests
 - [x] UI: admin page
-- [x] example of sending cookie
+- [x] example of sending tokens
 - [x] alerts 
