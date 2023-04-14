@@ -4,6 +4,7 @@ import axios from "axios";
 import { Accordion, Carousel } from "react-bootstrap";
 import styles from "./HomePage.module.css";
 import { useCookies } from "react-cookie";
+import carouselImage1 from "../../assets/carousel/bd23.jpg";
 
 export const HomePage = () => {
   const [content, setContent] = useState();
@@ -53,28 +54,28 @@ export const HomePage = () => {
         <h2>Main Features</h2>
         <Carousel className={styles["home-carousel"]}>
           <Carousel.Item>
-            <img className="d-block w-100" src="bd23.jpg" />
+            <img className="d-block w-100" src={carouselImage1} />
             <Carousel.Caption>
               <h3>Create Event</h3>
               <p>Create events and invite your guests.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
-            <img className="d-block w-100" src="bd23.jpg" />
+            <img className="d-block w-100" src={carouselImage1} />
             <Carousel.Caption>
               <h3>Reserve Room</h3>
               <p>Search and reserve rooms on campus.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
-            <img className="d-block w-100" src="bd23.jpg" />
+            <img className="d-block w-100" src={carouselImage1} />
             <Carousel.Caption>
               <h3>Email Notofication</h3>
               <p>Email notification for all participants.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
-            <img className="d-block w-100" src="bd23.jpg" />
+            <img className="d-block w-100" src={carouselImage1} />
             <Carousel.Caption>
               <h3>User Management</h3>
               <p>Manage user privileges (for admin only).</p>

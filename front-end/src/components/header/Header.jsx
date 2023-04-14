@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 import { Redirect, useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import logo from "../../assets/reservent.svg";
 
 export const Header = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token"]);
@@ -28,7 +29,7 @@ export const Header = () => {
     <Navbar className={styles["header"]} variant="dark" expand="md">
       <Container fluid className={styles["nav-container"]}>
         <Navbar.Brand className={styles["brand"]} href="/">
-          <CalendarWeek />
+          <img src={logo} className={styles["brand-icon"]} />
           <span>Reservent</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
