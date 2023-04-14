@@ -45,5 +45,5 @@ npm start
 - [x] UI: admin page
 - [x] example of sending tokens
 - [x] alerts
-- [ ] home page
+- [x] home page
 - [x] success modal

@@ -3,3 +3,13 @@
   margin: 0 auto;
   color: var(--primary);
 }
+
+.home-container {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.home-carousel {
+  width: 95%;
+  margin: 0 auto;
+}
