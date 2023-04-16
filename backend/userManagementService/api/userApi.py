@@ -4,8 +4,10 @@ from fastapi import Request as FastAPIRequest
 from fastapi.responses import JSONResponse, RedirectResponse
 from userManagementService.utils.oauth import get_oauth
 from userManagementService.utils.jwt import get_jwt
+from userManagementService.handler.userHandler import UserHandler
 
 userRoutes = APIRouter()
+userHandler = UserHandler()
 oauth = get_oauth()
 
 @userRoutes.get("/")
@@ -25,6 +27,13 @@ async def auth(request: FastAPIRequest, access_token_cookie: str = Cookie(None))
         'name': user['name'],
         'email': user['email'],
     })
+
+    try:
+        userDb = userHandler.user_login(user['name'], user['email'])
+    except Exception as e:
+        response.status_code = 500
+        print("Error creating user", e)
+        return {"message": "Error creating user", "error": str(e)}
     
     # Create a new JSON response with the user data
     # response = JSONResponse(user)
@@ -34,6 +43,7 @@ async def auth(request: FastAPIRequest, access_token_cookie: str = Cookie(None))
     if access_token_cookie is None:
         response.set_cookie(key='refresh_token', value=token['refresh_token'], httponly=False, max_age=3600, secure=True)
         response.set_cookie(key='jwt_token', value=jwt_token, httponly=False, max_age=3600, secure=True)
+        response.set_cookie(key='user_privilege', value=userDb.privilege, httponly=False, max_age=3600, secure=True)
     
     return response
 
