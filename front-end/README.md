@@ -18,7 +18,7 @@ npm install
 npm start
 ```
 
-3. go to `http://127.0.0.1:3000/`
+3. go to http://127.0.0.1:3000
 
 ## Task Checklist (last update: 04/01)
 
@@ -35,5 +35,15 @@ npm start
 
 - [x] basic authentication flow
 - [x] public & private route
-- [ ] update header with login status
 - [x] logout
+
+### yixinsun/frontend-ui
+
+- [x] update header with login status
+- [x] UI: select rooms
+- [x] UI: add guests
+- [x] UI: admin page
+- [x] example of sending tokens
+- [x] alerts
+- [x] home page
+- [x] success modal
