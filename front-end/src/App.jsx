@@ -19,10 +19,10 @@ const AdminRoute = ({ component, isAdmin, ...rest }) => {
 };
 
 function App() {
-  const [cookies] = useCookies(["jwt_token", "refresh_token"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
-  const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"];
-  const isAdmin = cookies["jwt_token"] && cookies["refresh_token"]; // TODO: && cookies["admin_token"] != null
+  const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"];
+  const isAdmin = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] === "1";
 
   return (
     <div className={styles["app"]}>

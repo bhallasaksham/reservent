@@ -10,8 +10,6 @@ export const HomePage = () => {
   const [content, setContent] = useState();
   const [loading, setLoading] = useState(true);
 
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token"]);
-
   // useEffect(() => {
   //   const fetchData = async () => {
   //     setLoading(true);

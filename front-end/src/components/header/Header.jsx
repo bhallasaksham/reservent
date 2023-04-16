@@ -8,7 +8,7 @@ import jwt_decode from "jwt-decode";
 import logo from "../../assets/reservent.svg";
 
 export const Header = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
   const history = useHistory();
 
   const handleSignIn = () => {
@@ -18,11 +18,12 @@ export const Header = () => {
   const handleSignOut = () => {
     removeCookie("jwt_token");
     removeCookie("refresh_token");
+    removeCookie("user_privilege");
     history.push("/signIn");
   };
 
-  const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"];
-  const isAdmin = cookies["jwt_token"] && cookies["refresh_token"]; // TODO: update for admin
+  const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"];
+  const isAdmin = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] === "1";
   const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
 
   return (
