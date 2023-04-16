@@ -2,10 +2,11 @@ from datetime import datetime
 import os
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-
-
 from ..dao import RoomDao
 
+
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+TIMEZONE = 'America/Los_Angeles'
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID') or None
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET') or None
 if GOOGLE_CLIENT_ID is None or GOOGLE_CLIENT_SECRET is None:
@@ -75,3 +76,40 @@ def get_rooms(reservation, meeting_rooms):
                 available_room = AvailableRoom(room.name, room.size)
                 available_rooms.append(available_room)
     return available_rooms
+
+
+# Function to create a new event
+def create_event(reservation, room_name):
+    # Authenticate with Google Calendar API
+    creds = Credentials.from_authorized_user_info(info=reservation.google_auth_token, scopes=SCOPES)
+    service = build('calendar', 'v3', credentials=creds)
+
+    # Calculate event start and end times
+    start_time = get_time_in_google_api_compatible_format(reservation.start_time)
+    end_time = get_time_in_google_api_compatible_format(reservation.end_time)
+
+    # Create event object
+    event = {
+        'summary': reservation.title,
+        'location': room_name,
+        'description': reservation.event_description,
+        'start': {
+            'dateTime': start_time,
+            'timeZone': TIMEZONE,
+        },
+        'end': {
+            'dateTime': end_time,
+            'timeZone': TIMEZONE,
+        },
+        'attendees': [
+            {'email': reservation.email},
+            {'email': [{'email': email.strip()} for email in reservation.guest_email.split(',')]},
+        ],
+        'reminders': {
+            'useDefault': True,
+        },
+    }
+
+    # Call the Calendar API to create the event
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    print(f'Event created: {event.get("htmlLink")}')
