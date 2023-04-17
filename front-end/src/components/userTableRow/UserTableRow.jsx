@@ -3,24 +3,36 @@ import { Button, Dropdown, OverlayTrigger, Tooltip, Modal } from "react-bootstra
 import styles from "./UserTableRow.module.css";
 import { PersonFillCheck } from "react-bootstrap-icons";
 import { PrivilegeEnum } from "../../tools";
+import { useCookies } from "react-cookie";
+import jwt_decode from "jwt-decode";
+import { toast as customAlert } from "react-custom-alert";
 
 export const UserTableRow = ({ user, i }) => {
   const [userPrivilege, setUserPrivilege] = useState(user.privilege);
   const [curPrivilege, setCurPrivilege] = useState(user.privilege);
   const [showModal, setShowModal] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
-  const updateUser = (user, curPrivilege) => {
-    // check: can not downgrade myself?
-    alert(`${user.email}, ${curPrivilege}`);
-    setUserPrivilege(curPrivilege);
-    setShowModal(false);
-  };
+  const isDisabled = curPrivilege === userPrivilege;
+  const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
 
   const getPrivilegeString = (privilege) => {
     return privilege === PrivilegeEnum.Admin ? "admin" : privilege === PrivilegeEnum.Staff ? "staff" : "student";
   };
 
-  const isDisabled = curPrivilege === userPrivilege;
+  const openModal = () => {
+    if (currentUser.email === user.email) {
+      setCurPrivilege(userPrivilege);
+      return customAlert.warning("you can't change the privilege of yourself");
+    }
+    setShowModal(true);
+  };
+
+  const updateUser = () => {
+    alert(`${user.email}, ${curPrivilege}`);
+    setUserPrivilege(curPrivilege);
+    setShowModal(false);
+  };
 
   const ConditionalTooltipWrapper = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
 
@@ -58,7 +70,7 @@ export const UserTableRow = ({ user, i }) => {
               </OverlayTrigger>
             )}
           >
-            <Button variant="primary" disabled={isDisabled} onClick={() => setShowModal(true)}>
+            <Button variant="primary" disabled={isDisabled} onClick={openModal}>
               <PersonFillCheck />
               <span>Update</span>
             </Button>
@@ -81,7 +93,7 @@ export const UserTableRow = ({ user, i }) => {
           <Button variant="danger" onClick={() => setShowModal(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={() => updateUser(user, curPrivilege)}>
+          <Button variant="primary" onClick={updateUser}>
             Confirm
           </Button>
         </Modal.Footer>
