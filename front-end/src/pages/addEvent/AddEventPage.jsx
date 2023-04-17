@@ -67,6 +67,7 @@ export const AddEventPage = () => {
         setAvailableRooms(response);
       } catch (error) {
         console.error(error);
+        return customAlert.error("Failed to get available rooms");
       }
       setLoading(false);
     };

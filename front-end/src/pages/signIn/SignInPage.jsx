@@ -24,28 +24,6 @@ export const SignInPage = () => {
     window.location.href = "http://127.0.0.1:4000/login";
   };
 
-  // if we want to use the jwt token (aka connecting to user management service):
-  /*
-  const foo = () => {
-    const jwt = localStorage.getItem("jwt");
-
-    const baz = async () => {
-      try {
-        const { data: response } = await axios.get("https://url/info", {
-          headers: {
-            Authorization: `bearer ${jwt}`,
-          },
-        });
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    baz();
-  };
-  */
-
   return (
     <MainLayout>
       <Container className={styles["signin-container"]}>

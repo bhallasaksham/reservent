@@ -6,6 +6,7 @@ import styles from "./AdminPage.module.css";
 import { useCookies } from "react-cookie";
 import { PersonFillCheck } from "react-bootstrap-icons";
 import { UserTableRow } from "../../components";
+import { toast as customAlert } from "react-custom-alert";
 
 export const AdminPage = () => {
   const [users, setUsers] = useState([]);
@@ -24,6 +25,7 @@ export const AdminPage = () => {
         setUsers(response);
       } catch (error) {
         console.error(error);
+        return customAlert.error("Failed to get users");
       }
       setLoading(false);
     };
