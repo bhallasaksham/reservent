@@ -4,7 +4,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
 
-from ..dao import Room
+from ..dao import RoomDao
 
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID') or None
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET') or None
@@ -24,7 +24,7 @@ class AvailableRoom():
 
 
 def initialize_rooms():
-    rooms = Room().initRooms()
+    rooms = RoomDao().initRooms()
     return rooms
 
 

@@ -1,1 +1,1 @@
-from .roomDao import Room
+from .roomDao import RoomDao
