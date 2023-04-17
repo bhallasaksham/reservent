@@ -315,9 +315,14 @@ export const AddEventPage = () => {
           {loading && <Spinner className="loading-spinner" animation="border" />}
           {!loading && (
             <>
-              {availableRooms?.map((room) => (
-                <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />
-              ))}
+              {availableRooms.length === 0 && (
+                <>
+                  <p>Sorry, we couldn't find a available room.</p>
+                  <p>Please try searching for a different time period or number of participants.</p>
+                </>
+              )}
+              {availableRooms.length > 0 &&
+                availableRooms?.map((room) => <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />)}
             </>
           )}
         </Offcanvas.Body>
@@ -343,4 +348,3 @@ export const AddEventPage = () => {
 
 // TODO: more styles on form & cards
 // TODO: seperate offcanvas
-// TODO: when no rooms
