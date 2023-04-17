@@ -4,7 +4,6 @@ import axios from "axios";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import styles from "./SignInPage.module.css";
 import { Google } from "react-bootstrap-icons";
-import { setAuthToken } from "../../tools";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 
@@ -52,4 +51,3 @@ export const SignInPage = () => {
 
 // TODO: fancy title text
 // TODO: add more content (carousel, about us, etc)
-// TODO: integrate setAuthToken tool

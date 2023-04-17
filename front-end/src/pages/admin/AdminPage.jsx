@@ -19,7 +19,7 @@ export const AdminPage = () => {
       try {
         const { data: response } = await axios.get("http://0.0.0.0:9000/admin/users", {
           headers: {
-            Authorization: `bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+            Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           }
         });
         setUsers(response);

@@ -60,7 +60,7 @@ export const AddEventPage = () => {
           `http://0.0.0.0:1024/rooms/available?start_time=${formattedStartTime}&end_time=${formattedEndTime}&num_guests=${numOfParticipant}`,
           {
             headers: {
-              Authorization: `bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+              Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
             }
           }
         );

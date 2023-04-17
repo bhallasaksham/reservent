@@ -40,7 +40,7 @@ export const UserTableRow = ({ user, i }) => {
           },
           {
             headers: {
-              Authorization: `bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+              Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
             }
           }
         );
