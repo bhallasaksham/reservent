@@ -47,3 +47,14 @@ npm start
 - [x] alerts
 - [x] home page
 - [x] success modal
+
+### fix/fe-be-environment
+
+- [x] update environments and fix bugs
+
+### yixinsun/fe-integration
+- [x] get users
+- [ ] update user privilege
+- [ ] search rooms
+- [ ] create event
+- [ ] fix eslint warnings

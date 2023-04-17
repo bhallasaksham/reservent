@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Dropdown, OverlayTrigger, Tooltip, Modal } from "react-bootstrap";
 import styles from "./UserTableRow.module.css";
 import { PersonFillCheck } from "react-bootstrap-icons";
+import { PrivilegeEnum } from "../../tools";
 
 export const UserTableRow = ({ user, i }) => {
   const [userPrivilege, setUserPrivilege] = useState(user.privilege);
@@ -12,6 +13,11 @@ export const UserTableRow = ({ user, i }) => {
     // check: can not downgrade myself?
     alert(`${user.email}, ${curPrivilege}`);
     setUserPrivilege(curPrivilege);
+    setShowModal(false);
+  };
+
+  const getPrivilegeString = (privilege) => {
+    return privilege === PrivilegeEnum.Admin ? "admin" : privilege === PrivilegeEnum.Staff ? "staff" : "student";
   };
 
   const isDisabled = curPrivilege === userPrivilege;
@@ -22,22 +28,24 @@ export const UserTableRow = ({ user, i }) => {
     <>
       <tr>
         <td>{i + 1}</td>
-        <td>{user.name}</td>
+        <td>{user.username}</td>
         <td>{user.email}</td>
         <td>
           <Dropdown>
             <Dropdown.Toggle variant="info" className={styles["dropdown-button"]}>
-              {curPrivilege}
+              {getPrivilegeString(curPrivilege)}
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              {curPrivilege !== "admin" && (
-                <Dropdown.Item onClick={() => setCurPrivilege("admin")}>admin</Dropdown.Item>
+              {curPrivilege !== PrivilegeEnum.Admin && (
+                <Dropdown.Item onClick={() => setCurPrivilege(PrivilegeEnum.Admin)}>admin</Dropdown.Item>
               )}
-              {curPrivilege !== "staff" && (
-                <Dropdown.Item onClick={() => setCurPrivilege("staff")}>staff</Dropdown.Item>
+              {curPrivilege !== PrivilegeEnum.Staff && (
+                <Dropdown.Item onClick={() => setCurPrivilege(PrivilegeEnum.Staff)}>staff</Dropdown.Item>
               )}
-              {curPrivilege !== "user" && <Dropdown.Item onClick={() => setCurPrivilege("user")}>user</Dropdown.Item>}
+              {curPrivilege !== PrivilegeEnum.Student && (
+                <Dropdown.Item onClick={() => setCurPrivilege(PrivilegeEnum.Student)}>student</Dropdown.Item>
+              )}
             </Dropdown.Menu>
           </Dropdown>
         </td>
@@ -45,7 +53,7 @@ export const UserTableRow = ({ user, i }) => {
           <ConditionalTooltipWrapper
             condition={isDisabled}
             wrapper={(children) => (
-              <OverlayTrigger overlay={<Tooltip>Nothing to update</Tooltip>}>
+              <OverlayTrigger overlay={<Tooltip>Priviledge doesn't change</Tooltip>}>
                 <span className="d-inline-block">{children}</span>
               </OverlayTrigger>
             )}
@@ -64,8 +72,8 @@ export const UserTableRow = ({ user, i }) => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            You are going to change the privilege of <strong>{user.name}</strong> from <strong>{userPrivilege}</strong>{" "}
-            to <strong>{curPrivilege}</strong>.
+            You are going to change the privilege of <strong>{user.username}</strong> from{" "}
+            <strong>{getPrivilegeString(userPrivilege)}</strong> to <strong>{getPrivilegeString(curPrivilege)}</strong>.
           </p>
           <p>Please confirm your action.</p>
         </Modal.Body>
