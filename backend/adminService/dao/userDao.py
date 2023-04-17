@@ -14,6 +14,12 @@ class UserDao:
         users = session.query(UserSchema).all()
         session.close()
         return users
+
+    def getUserByEmail(self, email):
+        session = sessionmaker(bind=self.engine)()
+        user = session.query(UserSchema).filter(UserSchema.email == email).first()
+        session.close()
+        return user
     
     def updateUserPrivilegeByEmail(self, email, privilege):
         session = sessionmaker(bind=self.engine, autoflush=True)()
