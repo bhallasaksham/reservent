@@ -9,11 +9,13 @@ import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 
 export const SignInPage = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
   const history = useHistory();
 
+  const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"];
+
   useEffect(() => {
-    if (cookies["jwt_token"] && cookies["refresh_token"]) {
+    if (isAuthenticated) {
       history.push("/");
     }
   }, [cookies, history]);

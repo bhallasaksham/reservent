@@ -11,7 +11,7 @@ export const AdminPage = () => {
   const [content, setContent] = useState();
   const [loading, setLoading] = useState(true);
 
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   useEffect(() => {
     const fetchData = async () => {
