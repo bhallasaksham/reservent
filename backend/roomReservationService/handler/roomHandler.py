@@ -64,15 +64,15 @@ def is_room_available(room, requested, event):
     return False
 
 
-def get_rooms(reservation, meeting_rooms):
-    reservation.start_time = get_time_in_google_api_compatible_format(reservation.start_time)
-    reservation.end_time = get_time_in_google_api_compatible_format(reservation.end_time)
+def get_rooms(roomsQuery, meeting_rooms):
+    roomsQuery.start_time = get_time_in_google_api_compatible_format(roomsQuery.start_time)
+    roomsQuery.end_time = get_time_in_google_api_compatible_format(roomsQuery.end_time)
     available_rooms = []
     for room in meeting_rooms:
         calendar_id = room.url.split('=')[1]
-        events_list = get_events_from_google_calendar(reservation, calendar_id)
+        events_list = get_events_from_google_calendar(roomsQuery, calendar_id)
         for event in events_list:
-            if is_room_available(room, reservation, event):
+            if is_room_available(room, roomsQuery, event):
                 available_room = AvailableRoom(room.name, room.size)
                 available_rooms.append(available_room)
     return available_rooms
@@ -112,4 +112,6 @@ def create_event(reservation, room_name):
 
     # Call the Calendar API to create the event
     event = service.events().insert(calendarId='primary', body=event).execute()
+    # TODO: insert event in google calendar of the room as well
     print(f'Event created: {event.get("htmlLink")}')
+    return True;

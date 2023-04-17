@@ -3,7 +3,8 @@ import os
 from typing import Optional
 
 import jwt
-from fastapi import HTTPException, status, Request
+from fastapi import HTTPException, status, Header
+import json
 from fastapi.responses import JSONResponse
 import requests
 
@@ -32,7 +33,6 @@ async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] =
     if params:
         for key, value in params.items():
             data[key] = value
-
     if body:
         event_data = json.loads(body)
         data['event'] = event_data
@@ -45,6 +45,7 @@ async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] =
         response = requests.post(url, headers=request_headers, json=data)
     elif http_verb == 'DELETE':
         response = requests.delete(url, headers=request_headers, json=data)
+
     else:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                             detail="Invalid HTTP Verb in Facade Layer")
