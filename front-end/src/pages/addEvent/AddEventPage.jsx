@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip, Modal } from "react-bootstrap";
+import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip, Modal, Spinner } from "react-bootstrap";
 import styles from "./AddEventPage.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -17,10 +17,9 @@ import {
 import { useHistory } from "react-router-dom";
 import { getRoundedDate, addMinutes, formatTime, getDate, getTime } from "../../tools";
 import { toast as customAlert } from "react-custom-alert";
+import { useCookies } from "react-cookie";
 
 export const AddEventPage = () => {
-  const history = useHistory();
-
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
   const [startDate, setStartDate] = useState(new Date());
@@ -30,8 +29,13 @@ export const AddEventPage = () => {
   const [selectedRoom, setSelectedRoom] = useState();
   const [curGuest, setCurGuest] = useState("");
   const [guestList, setGuestList] = useState([]);
+  const [availableRooms, setAvailableRooms] = useState([]);
+
   const [showSidebar, setShowSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const history = useHistory();
 
   const searchRooms = () => {
     if (!startDate) {
@@ -47,9 +51,28 @@ export const AddEventPage = () => {
       return customAlert.warning("Please enter number of participants");
     }
 
-    console.log(formatTime(startDate, startTime));
-    console.log(formatTime(startDate, endTime));
-    console.log(numOfParticipant);
+    const fetchData = async () => {
+      setLoading(true);
+      const formattedStartTime = formatTime(startDate, startTime);
+      const formattedEndTime = formatTime(startDate, endTime);
+      try {
+        const { data: response } = await axios.get(
+          `http://0.0.0.0:1024/rooms/available?start_time=${formattedStartTime}&end_time=${formattedEndTime}&num_guests=${numOfParticipant}`,
+          {
+            headers: {
+              Authorization: `bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+            }
+          }
+        );
+        setAvailableRooms(response);
+      } catch (error) {
+        console.error(error);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+
     setShowSidebar(true);
     setSelectedRoom(null);
   };
@@ -65,15 +88,10 @@ export const AddEventPage = () => {
     setSelectedRoom(null);
   };
 
-  const fakeRooms = [
-    { name: "room 118", capacity: 6 },
-    { name: "room 120", capacity: 4 }
-  ];
-
   const addGuest = (guest) => {
     if (curGuest !== "") {
       setCurGuest("");
-      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(guest)) {
+      if (!/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(guest)) {
         return customAlert.warning("Please enter a valid email address");
       }
       if (guestList.includes(guest)) {
@@ -293,9 +311,14 @@ export const AddEventPage = () => {
           <Offcanvas.Title>Available Rooms</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {fakeRooms?.map((room) => (
-            <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />
-          ))}
+          {loading && <Spinner className="loading-spinner" animation="border" />}
+          {!loading && (
+            <>
+              {availableRooms?.map((room) => (
+                <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />
+              ))}
+            </>
+          )}
         </Offcanvas.Body>
       </Offcanvas>
 
@@ -318,3 +341,5 @@ export const AddEventPage = () => {
 };
 
 // TODO: more styles on form & cards
+// TODO: seperate offcanvas
+// TODO: when no rooms

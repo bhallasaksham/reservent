@@ -13,7 +13,7 @@ export const formatTime = (date, time) => {
   const dateString = date.toString().slice(0, 15);
   const timeString = time.toString().slice(16, 24);
   const timeZoneFormat = date.toString().slice(25, 28);
-  const timeZoneValue = date.toString().slice(28, 34);
+  const timeZoneValue = date.toString().slice(28, 33);
   return dateString + " " + timeString + " " + timeZoneFormat + " " + timeZoneValue;
 }
 
