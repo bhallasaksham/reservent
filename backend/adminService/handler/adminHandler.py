@@ -10,6 +10,9 @@ class AdminHandler:
         users = self.userDao.getUsers()
         return users
 
-    def update_user_privilege(self, email, privilege):
-        user = self.userDao.updateUserPrivilegeByEmail(email, privilege)
+    def update_user_privilege(self, email, target_user_email, privilege):
+        admin_user = self.userDao.getUserByEmail(email)
+        if admin_user.privilege != UserPrivilege.ADMIN:
+            raise Exception("Only admin can update user privilege")
+        user = self.userDao.updateUserPrivilegeByEmail(target_user_email, privilege)
         return user
