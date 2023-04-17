@@ -54,7 +54,7 @@ npm start
 
 ### yixinsun/fe-integration
 - [x] get users
-- [ ] update user privilege
-- [ ] search rooms
+- [x] update user privilege
+- [x] search rooms
 - [ ] create event
 - [ ] fix eslint warnings

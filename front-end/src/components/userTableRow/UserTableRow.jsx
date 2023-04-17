@@ -6,6 +6,7 @@ import { PrivilegeEnum } from "../../tools";
 import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
 import { toast as customAlert } from "react-custom-alert";
+import axios from "axios";
 
 export const UserTableRow = ({ user, i }) => {
   const [userPrivilege, setUserPrivilege] = useState(user.privilege);
@@ -29,9 +30,30 @@ export const UserTableRow = ({ user, i }) => {
   };
 
   const updateUser = () => {
-    alert(`${user.email}, ${curPrivilege}`);
-    setUserPrivilege(curPrivilege);
+    const updateData = async () => {
+      try {
+        const { data: response } = await axios.put(
+          "http://0.0.0.0:9000/admin/users/privilege",
+          {
+            target_user_email: user.email,
+            privilege: curPrivilege
+          },
+          {
+            headers: {
+              Authorization: `bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+            }
+          }
+        );
+        setUserPrivilege(curPrivilege);
+        return customAlert.success("User privilege updated");
+      } catch (error) {
+        console.error(error);
+        return customAlert.error("Failed to update user privilege");
+      }
+    };
+
     setShowModal(false);
+    updateData();
   };
 
   const ConditionalTooltipWrapper = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
@@ -65,7 +87,7 @@ export const UserTableRow = ({ user, i }) => {
           <ConditionalTooltipWrapper
             condition={isDisabled}
             wrapper={(children) => (
-              <OverlayTrigger overlay={<Tooltip>Priviledge doesn't change</Tooltip>}>
+              <OverlayTrigger overlay={<Tooltip>Privilege doesn't change</Tooltip>}>
                 <span className="d-inline-block">{children}</span>
               </OverlayTrigger>
             )}
