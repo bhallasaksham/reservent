@@ -16,7 +16,7 @@ class CreateEventRequest(BaseModel):
     isStudent: bool
 
 class FinalizeEventRequest(BaseModel):
-    event: str
+    event: dict
     google_auth_token: str
     email: str
 
@@ -30,4 +30,5 @@ async def create_event(request: CreateEventRequest):
 
 @eventRoutes.put("/events/finalize")
 async def finalize_event(request: FinalizeEventRequest):
-    return EventHandler().finalize_event(request)
+    drafts = EventHandler().finalize_event(request)
+    return drafts

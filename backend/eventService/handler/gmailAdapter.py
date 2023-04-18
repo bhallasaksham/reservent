@@ -26,15 +26,14 @@ class GmailAdaptor:
             creds = Credentials.from_authorized_user_info(info=user_info, scopes=SCOPES)
             service = build('gmail', 'v1', credentials=creds)
             drafts = []
-
-            for guest in event.guests:
-                if 'Meeting' not in guest.email:
+            for guest in event['guests']:
+                if 'Meeting' not in guest['email']:
                     # create the email message
                     message = EmailMessage()
-                    message.set_content('This is automated draft mail. You are invited to a google calendar event. ' + event.description)
-                    message['To'] = guest.email
-                    message['from'] = event.creator
-                    message['Subject'] = event.summary
+                    message.set_content('This is automated draft mail. You are invited to a google calendar event. ' + event['description'])
+                    message['To'] = guest['email']
+                    message['from'] = event['creator']
+                    message['Subject'] = event['summary']
 
                     # encode the message
                     encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
@@ -44,11 +43,13 @@ class GmailAdaptor:
                             'raw': encoded_message
                         }
                     }
-                    draft = service.users().drafts().create(userId=GOOGLE_CLIENT_ID,
+                    draft = service.users().drafts().create(userId=event['creator'],
                                                             body=create_message).execute()
+                    print(F'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+
                     drafts.append(draft)
 
-                return drafts
+            return drafts
 
         except HttpError as error:
             print(F'An error occurred: {error}')

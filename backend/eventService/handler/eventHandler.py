@@ -16,14 +16,19 @@ class EventHandler:
         event_builder\
             .set_creator(request.email)\
             .set_summary(request.title)\
-            .set_description(request.description)\
             .set_start_time(datetime.strptime(request.start_time, DATE_TIME_FORMAT))\
             .set_end_time(datetime.strptime(request.end_time, DATE_TIME_FORMAT))\
             .add_guest(request.room + '-Meeting (6)')
 
-        # add guests
-        for guest in request.guests.split(','):
-            event_builder.add_guest(guest)
+        if request.description:
+            event_builder.set_description(request.description)
+
+        if request.guests:
+            guests = request.guests.split(',')
+            if len(guests) > 0:
+                # add guests
+                for guest in guests:
+                    event_builder.add_guest(guest)
 
         if request.isStudent:
             event_builder.set_visibility('public')
@@ -34,6 +39,5 @@ class EventHandler:
 
         return self.event
 
-    async def finalize_event(self, request):
-        drafts = await self.adaptor(request.event, request.google_auth_token)
-        return drafts
+    def finalize_event(self, request):
+        return self.adaptor.send_emails(request.event, request.google_auth_token)
