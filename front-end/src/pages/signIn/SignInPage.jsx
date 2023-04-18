@@ -9,14 +9,13 @@ import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 
 export const SignInPage = () => {
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "jwt_token",
-    "refresh_token",
-  ]);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
   const history = useHistory();
 
+  const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"];
+
   useEffect(() => {
-    if (cookies["jwt_token"] != null && cookies["refresh_token"] != null) {
+    if (isAuthenticated) {
       history.push("/");
     }
   }, [cookies, history]);
@@ -60,11 +59,7 @@ export const SignInPage = () => {
             <Card className={styles["signin-card"]}>
               <Card.Body>
                 <Card.Text>Please sign in with you andrew email</Card.Text>
-                <Button
-                  variant="primary"
-                  style={{ width: "100%" }}
-                  onClick={handleClick}
-                >
+                <Button variant="primary" style={{ width: "100%" }} onClick={handleClick}>
                   <Google />
                   <span>Sign In</span>
                 </Button>
@@ -77,7 +72,6 @@ export const SignInPage = () => {
   );
 };
 
-// TODO: remove MainLayout when signin is ready
 // TODO: fancy title text
 // TODO: add more content (carousel, about us, etc)
 // TODO: integrate setAuthToken tool

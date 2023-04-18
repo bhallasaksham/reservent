@@ -1,9 +1,35 @@
 .header {
-  background-color: var(--secondary);
+  background-color: var(--third);
   color: var(--text-light);
 }
 
 .nav-container {
-  margin-left: 5% !important;
-  margin-right: 5% !important;
+  margin-left: 10% !important;
+  margin-right: 10% !important;
+}
+
+.login-wrapper {
+  margin-left: auto;
+}
+
+.login-button {
+  margin-left: 2rem;
+  background-color: transparent !important;
+  color: var(--text-light) !important;
+  border-color: var(--text-light) !important;
+}
+
+.brand {
+  margin-right: 3rem;
+}
+
+.main-nav {
+  width: 5rem;
+  text-align: center;
+}
+
+.brand-icon {
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 0.3em;
 }

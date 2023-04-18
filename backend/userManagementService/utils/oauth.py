@@ -27,7 +27,7 @@ def get_oauth():
         oauth.register(
             name='google',
             server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-            client_kwargs={'scope': 'openid email profile https://www.googleapis.com/auth/calendar'},
+            client_kwargs={'scope': 'openid email profile https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/gmail.compose'},
         )
     return oauth
 

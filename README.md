@@ -76,7 +76,7 @@ npm install
 npm start
 ```
 
-3. go to `http://127.0.0.1:3000/`
+3. go to http://127.0.0.1:3000
 
 ## Database Setup
 

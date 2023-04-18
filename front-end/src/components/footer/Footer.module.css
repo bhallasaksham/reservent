@@ -1,4 +1,6 @@
-.nav-container, .hr {
-  margin-left: 5% !important;
-  margin-right: 5% !important;
+.hr {
+  margin-left: 10% !important;
+  margin-right: 10% !important;
+  margin-top: 2rem;
+  margin-bottom: 0;
 }
