@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter
 
 from eventService.handler.eventHandler import EventHandler
@@ -10,8 +12,8 @@ class CreateEventRequest(BaseModel):
     start_time: str
     end_time: str
     title: str
-    description: str
-    guests: str
+    description: Optional[str] = None
+    guests: Optional[str] = None
     room: str
     isStudent: bool
 
