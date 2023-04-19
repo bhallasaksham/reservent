@@ -47,8 +47,8 @@ export const AddEventPage = () => {
     if (!endTime) {
       return customAlert.warning("Please choose end time");
     }
+    // TODO: delete
     if (!numOfParticipant) {
-      // TODO: delete
       return customAlert.warning("Please enter number of participants");
     }
 
@@ -105,14 +105,18 @@ export const AddEventPage = () => {
     console.log(guestList);
   };
 
+  const handleEnterKey = (event, guest) => {
+    if (event.keyCode == 13) {
+      addGuest(guest);
+    }
+  };
+
   const deleteGuest = (guest) => {
     setGuestList(guestList.filter((item) => item !== guest));
     console.log(guestList);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // the default action that belongs to the event will not occur - whether we need this?
-
+  const handleSubmit = () => {
     if (!title) {
       return customAlert.warning("Please enter event title");
     }
@@ -125,6 +129,7 @@ export const AddEventPage = () => {
     if (!endTime) {
       return customAlert.warning("Please choose end time");
     }
+    // TODO: delete
     if (!numOfParticipant) {
       return customAlert.warning("Please enter number of participants");
     }
@@ -157,7 +162,7 @@ export const AddEventPage = () => {
   return (
     <MainLayout>
       <h1 className="page-title">Add New Event</h1>
-      <Form className={styles["add-event-form"]} onSubmit={handleSubmit}>
+      <Form className={styles["add-event-form"]}>
         <h2>Event Details</h2>
         <p className={styles["note-info"]}>Fields marked with * are mandatory</p>
         <Form.Group className="mb-3" controlId="formTitle">
@@ -167,6 +172,7 @@ export const AddEventPage = () => {
             placeholder="Enter title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            autocomplete="off"
           />
         </Form.Group>
 
@@ -177,6 +183,7 @@ export const AddEventPage = () => {
             placeholder="Enter description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            autocomplete="off"
           />
         </Form.Group>
 
@@ -286,6 +293,7 @@ export const AddEventPage = () => {
                     placeholder="Enter email address"
                     value={curGuest}
                     onChange={(e) => setCurGuest(e.target.value)}
+                    onKeyUp={(e) => handleEnterKey(e, curGuest)}
                   />
                   <PersonPlusFill className={styles["add-guest-button"]} onClick={() => addGuest(curGuest)} />
                 </div>
@@ -307,7 +315,7 @@ export const AddEventPage = () => {
             </Button>
           </Col>
           <Col>
-            <Button variant="primary" type="submit" className={styles["form-button"]}>
+            <Button variant="primary" type="button" className={styles["form-button"]} onClick={handleSubmit}>
               <CheckCircleFill />
               <span>Confirm</span>
             </Button>
