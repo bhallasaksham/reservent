@@ -27,12 +27,12 @@ class EventBuilder:
     def add_room_as_guest(self, roomName):
         room = RoomDao().getRoomByName(roomName)
         room_calendar_email = room.url.split('=')[1]
-        self.event['attendees'] = []
-        self.event['attendees'].append({'email': room_calendar_email})
+        self.event['guests'] = []
+        self.event['guests'].append({'email': room_calendar_email})
         return self
 
     def add_guest(self, email):
-        self.event['attendees'].append({'email': email})
+        self.event['guests'].append({'email': email})
         return self
 
     def set_visibility(self, visibility):
