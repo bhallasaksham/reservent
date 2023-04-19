@@ -1,17 +1,34 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from typing import Optional
 
-from ..handler.roomHandler import initialize_rooms, get_rooms
+from roomReservationService.handler import GetRoomsHandler, ReserveRoomHandler
 
 roomRoutes = APIRouter()
+
+
+class Event(BaseModel):
+    creator: str
+    summary: str
+    description: str
+    start: dict
+    end: dict
+    guests: list
+    visibility: str
 
 
 class Reservation(BaseModel):
     email: str
     google_auth_token: str
+    event: Event
+
+
+class Request(BaseModel):
+    email: str
+    google_auth_token: str
     start_time: str
     end_time: str
-    num_guests: str
+    num_guests: Optional[str] = 1
 
 
 @roomRoutes.get("/")
@@ -20,12 +37,15 @@ async def root():
 
 
 @roomRoutes.get("/rooms/available")
-async def get_available_rooms(reservation: Reservation):
-    meeting_rooms = initialize_rooms()
-    return get_rooms(reservation, meeting_rooms)
+async def get_available_rooms(request: Request):
+    handler = GetRoomsHandler(request)
+    return handler.get_rooms()
 
 
-
+@roomRoutes.post("/rooms/reserve")
+async def reserve_room(reservation: Reservation):
+    handler = ReserveRoomHandler(reservation)
+    return handler.create_event()
 
 
 
