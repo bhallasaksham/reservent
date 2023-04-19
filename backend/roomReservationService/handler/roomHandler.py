@@ -11,15 +11,13 @@ GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET') or None
 if GOOGLE_CLIENT_ID is None or GOOGLE_CLIENT_SECRET is None:
     raise BaseException('Missing env variables')
 
-SCOPES = ['https://www.googleapis.com/auth/calendar']
-
 
 class GetRoomsHandler:
-    all_rooms: []
-    available_rooms: []
 
     def __init__(self, request):
-        self.all_rooms = RoomDao().initRooms()
+        RoomDao().initRooms()
+        self.all_rooms = RoomDao().getRooms()
+        self.available_rooms = []
         self.request = request
 
     def get_events_from_google_calendar(self, calendar_id):
@@ -48,12 +46,12 @@ class GetRoomsHandler:
     def get_rooms(self):
         self.request.start_time = get_time_in_google_api_compatible_format(self.request.start_time)
         self.request.end_time = get_time_in_google_api_compatible_format(self.request.end_time)
-        for room in self.rooms:
+        for room in self.all_rooms:
             calendar_id = room.url.split('=')[1]
             events_list = self.get_events_from_google_calendar(calendar_id)
             for event in events_list:
                 if self.is_room_available(room, event):
-                    self.available_rooms.append(room)
+                    self.available_rooms.append(room.getRoom())
         return self.available_rooms
 
 
@@ -64,36 +62,38 @@ class ReserveRoomHandler:
     # Function to create a new event
     def create_event(self):
         # Authenticate with Google Calendar API
-        creds = Credentials.from_authorized_user_info(info=self.reservation.google_auth_token, scopes=SCOPES)
+        user_info = {
+            'client_id': GOOGLE_CLIENT_ID,
+            'client_secret': GOOGLE_CLIENT_SECRET,
+            'refresh_token': self.reservation.google_auth_token,
+        }
+        creds = Credentials.from_authorized_user_info(info=user_info, scopes=SCOPES)
         service = build('calendar', 'v3', credentials=creds)
-
-        # Calculate event start and end times
-        start_time = get_time_in_google_api_compatible_format(self.reservation.start_time)
-        end_time = get_time_in_google_api_compatible_format(self.reservation.end_time)
-
         # Create event object
         event = {
-            'summary': self.reservation.title,
-            'description': self.reservation.event_description,
+            'summary': self.reservation.event.summary,
+            'description': self.reservation.event.description,
             'start': {
-                'dateTime': start_time,
+                'dateTime': self.reservation.event.start['dateTime'],
                 'timeZone': TIMEZONE,
             },
             'end': {
-                'dateTime': end_time,
+                'dateTime': self.reservation.event.end['dateTime'],
                 'timeZone': TIMEZONE,
             },
-            'attendees': [
-                {'email': self.reservation.email},
-                {'email': [{'email': email.strip()} for email in self.reservation.guest_email.split(',')]},
-            ],
+            'attendees': self.reservation.event.guests[1:],
             'reminders': {
                 'useDefault': True,
             },
         }
 
-        # Call the Calendar API to create the event
-        event = service.events().insert(calendarId='primary', body=event).execute()
+        # # Call the Calendar API to create the event
+        # print(self.reservation.event.json())
+        inserted = service.events().insert(calendarId='primary', body=event).execute()
         # TODO: insert event in google calendar of the room as well
-        print(f'Event created: {event.get("htmlLink")}')
+        # roomName = self.reservation.event.guests[0]['email'].split('-')[0]
+        # room = RoomDao().getRoomByName(roomName)
+        # room_calendar_id = room.url.split('=')[1]
+        # service.events().insert(calendarId=room_calendar_id, body=event).execute()
+        print(f'Event created: {inserted.get("htmlLink")}')
         return True;

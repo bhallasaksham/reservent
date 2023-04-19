@@ -36,7 +36,6 @@ async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] =
     if body:
         event_data = json.loads(body)
         data['event'] = event_data
-
     if http_verb == 'GET':
         response = requests.get(url, headers=request_headers, json=data)
     elif http_verb == 'PUT':

@@ -14,12 +14,15 @@ class RoomSchema(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     url = Column(String)
-    capacity = Column(Integer)
+    size = Column(Integer)
 
-    def __init__(self, name=None, url=None, capacity=None):
+    def __init__(self, name=None, url=None, size=None):
         self.name = name
         self.url = url
-        self.capacity = capacity
+        self.size = size
 
         # Create tables if not exist
         Base.metadata.create_all(engine)
+
+    def getRoom(self):
+        return {"name": self.name, "capacity": self.size}

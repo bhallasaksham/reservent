@@ -7,17 +7,20 @@ from roomReservationService.handler import GetRoomsHandler, ReserveRoomHandler
 roomRoutes = APIRouter()
 
 
-class Reservation(BaseModel):
-    email: str
-    google_auth_token: str
+class Event(BaseModel):
     creator: str
     summary: str
     description: str
     start: dict
     end: dict
-    # event_description: Optional[str] = None
-    # room_name: Optional[str] = None
-    guest_email: Optional[str] = None
+    guests: list
+    visibility: str
+
+
+class Reservation(BaseModel):
+    email: str
+    google_auth_token: str
+    event: Event
 
 
 class Request(BaseModel):
@@ -36,17 +39,13 @@ async def root():
 @roomRoutes.get("/rooms/available")
 async def get_available_rooms(request: Request):
     handler = GetRoomsHandler(request)
-    return handler.get_available_rooms()
+    return handler.get_rooms()
 
 
 @roomRoutes.post("/rooms/reserve")
 async def reserve_room(reservation: Reservation):
-    print(reservation)
     handler = ReserveRoomHandler(reservation)
-    try:
-        response = handler.create_event()
-        return response
-    except Exception as e:
-        return {"message": str(e)}
+    return handler.create_event()
+
 
 

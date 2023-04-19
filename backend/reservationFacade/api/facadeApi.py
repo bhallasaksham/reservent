@@ -27,12 +27,12 @@ async def reserve_room(request: Request):
     try:
 
         event = await facade(url="http://127.0.0.1:8080/events", http_verb='POST', headers=request.headers, params=data)
-        print(event)
+        # print(event)
         if event.body is not None:
-            roomReservationResponse = await facade(url="http://127.0.0.1:8000/rooms/reserve", http_verb='POST',
+            await facade(url="http://127.0.0.1:8000/rooms/reserve", http_verb='POST',
                                                    headers=request.headers, body=event.body)
-            if roomReservationResponse is not None:
-                return await facade(url="http://127.0.0.1:8080/events/finalize", http_verb='PUT',
-                                    headers=request.headers, body=event.body)
+            # if roomReservationResponse is not None:
+            #     return await facade(url="http://127.0.0.1:8080/events/finalize", http_verb='PUT',
+            #                         headers=request.headers, body=event.body)
     except HTTPException as e:
         return {"message": e.detail}
