@@ -17,8 +17,8 @@ async def root():
 async def get_available_rooms(request: Request):
     try:
         rooms = await facade(url='http://127.0.0.1:8000/rooms/available', http_verb='GET', headers=request.headers,
-                            data=request.query_params)
-        return JSONResponse(status_code=rooms.status_code, content=rooms.body)
+                            params=request.query_params)
+        return rooms
     except HTTPException as e:
         return {"message": e.detail}
 
