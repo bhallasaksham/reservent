@@ -21,7 +21,7 @@ class EventHandler:
             .set_summary(request.title)\
             .set_start_time(datetime.strptime(request.start_time, DATE_TIME_FORMAT))\
             .set_end_time(datetime.strptime(request.end_time, DATE_TIME_FORMAT))\
-            .add_guest(request.room + '-Meeting (6)')
+            .add_guest('c_18857krhc40eejk5molu6feh8dbcc@resource.calendar.google.com') # TODO: fix this
 
         if request.description:
             event_builder.set_description(request.description)
