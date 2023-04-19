@@ -87,7 +87,7 @@ export const UserTableRow = ({ user, i }) => {
           <ConditionalTooltipWrapper
             condition={isDisabled}
             wrapper={(children) => (
-              <OverlayTrigger overlay={<Tooltip>Privilege doesn't change</Tooltip>}>
+              <OverlayTrigger overlay={<Tooltip>Nothing to update</Tooltip>}>
                 <span className="d-inline-block">{children}</span>
               </OverlayTrigger>
             )}

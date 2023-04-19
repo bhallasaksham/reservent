@@ -8,7 +8,7 @@ export const HomePage = () => {
   return (
     <MainLayout>
       <div className={styles["home-container"]}>
-        <h1 className="page-title">Home </h1>
+        <h1 className="page-title">Home</h1>
 
         <h2>About Reservent</h2>
         <p>

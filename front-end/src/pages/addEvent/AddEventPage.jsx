@@ -48,6 +48,7 @@ export const AddEventPage = () => {
       return customAlert.warning("Please choose end time");
     }
     if (!numOfParticipant) {
+      // TODO: delete
       return customAlert.warning("Please enter number of participants");
     }
 
@@ -158,6 +159,7 @@ export const AddEventPage = () => {
       <h1 className="page-title">Add New Event</h1>
       <Form className={styles["add-event-form"]} onSubmit={handleSubmit}>
         <h2>Event Details</h2>
+        <p className={styles["note-info"]}>Fields marked with * are mandatory</p>
         <Form.Group className="mb-3" controlId="formTitle">
           <Form.Label>Title *</Form.Label>
           <Form.Control
@@ -239,7 +241,7 @@ export const AddEventPage = () => {
         <Row>
           <Col md={3}>
             <Form.Group className="mb-3" controlId="formNumOfParticipant">
-              <Form.Label>Number of Participants *</Form.Label>
+              <Form.Label>Number of Participants</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter number"
@@ -249,12 +251,7 @@ export const AddEventPage = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formRoom">
-              <Form.Label>
-                Room *{" "}
-                <OverlayTrigger overlay={<Tooltip>To create an event, you must choose a room</Tooltip>}>
-                  <QuestionCircle />
-                </OverlayTrigger>
-              </Form.Label>
+              <Form.Label>Room *</Form.Label>
               <div>
                 {selectedRoom && (
                   <>
@@ -264,13 +261,24 @@ export const AddEventPage = () => {
                     <PencilSquare className={styles["search-room-button"]} onClick={searchRooms} />
                   </>
                 )}
-                {!selectedRoom && <PlusSquare className={styles["search-room-button"]} onClick={searchRooms} />}
+                {!selectedRoom && (
+                  <OverlayTrigger overlay={<Tooltip>Click to search available rooms</Tooltip>}>
+                    <PlusSquare className={styles["search-room-button"]} onClick={searchRooms} />
+                  </OverlayTrigger>
+                )}
               </div>
             </Form.Group>
           </Col>
           <Col>
             <Form.Group className="mb-3" controlId="formInviteGuests">
-              <Form.Label>Invite Guests</Form.Label>
+              <Form.Label>
+                Invite Guests{" "}
+                <OverlayTrigger
+                  overlay={<Tooltip>Once event created, we will send email notifications to your guests</Tooltip>}
+                >
+                  <QuestionCircle />
+                </OverlayTrigger>
+              </Form.Label>
               <div>
                 <div className={styles["input-guest-wrapper"]}>
                   <Form.Control
@@ -348,3 +356,4 @@ export const AddEventPage = () => {
 
 // TODO: more styles on form & cards
 // TODO: seperate offcanvas
+// TODO: remove console.log()
