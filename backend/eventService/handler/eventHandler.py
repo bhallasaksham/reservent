@@ -3,6 +3,8 @@ from datetime import datetime
 from eventService.handler.models.eventBuilder import EventBuilder
 from eventService.handler.gmailAdapter import GmailAdaptor
 
+from eventService.dao.eventDao import EventDao
+
 DATE_TIME_FORMAT = '%a %b %d %Y %H:%M:%S GMT %z'
 
 
@@ -10,6 +12,7 @@ class EventHandler:
     def __init__(self):
         self.event = None
         self.adaptor = GmailAdaptor()
+        self.dao = EventDao()
 
     def create_event(self, request):
         event_builder = EventBuilder()
@@ -40,4 +43,10 @@ class EventHandler:
         return self.event
 
     def finalize_event(self, request):
-        return self.adaptor.send_emails(request.event, request.google_auth_token)
+        self.event = request.event
+        event = self.save_event()
+        if event:
+            return self.adaptor.send_emails(request.event, request.google_auth_token)
+
+    def save_event(self):
+        return self.dao.save(self.event)

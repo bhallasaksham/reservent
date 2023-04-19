@@ -17,17 +17,15 @@ class EventSchema(Base):
     startTime = Column(DateTime)
     endTime = Column(DateTime)
     room = Column(String)
-    meetingLink = Column(String)
     creator = Column(String)
     guests = Column(String)
 
-    def __init__(self, title = None, description = None, startTime = None, endTime = None, room = None, meetingLink = None, creator = None, guests = None):
+    def __init__(self, title = None, description = None, startTime = None, endTime = None, room = None, creator = None, guests = None):
         self.title = title
         self.description = description
         self.startTime = startTime
         self.endTime = endTime
         self.room = room
-        self.meetingLink = meetingLink
         self.creator = creator
         self.guests = guests
 
