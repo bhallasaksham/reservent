@@ -24,5 +24,7 @@ class RoomSchema(Base):
         # Create tables if not exist
         Base.metadata.create_all(engine)
 
+
+    # TODO: remove this after renaming db column 'size' to 'capacity'
     def getRoom(self):
         return {"name": self.name, "capacity": self.size}

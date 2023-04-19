@@ -30,7 +30,7 @@ async def root():
 @eventRoutes.post("/events")
 async def create_event(request: CreateEventRequest):
     try:
-        return EventHandler().create_event(request)
+        return JSONResponse(status_code=201, content=EventHandler().create_event(request))
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
@@ -39,7 +39,7 @@ async def create_event(request: CreateEventRequest):
 async def finalize_event(request: FinalizeEventRequest):
     try:
         drafts = EventHandler().finalize_event(request)
-        return drafts
+        return JSONResponse(status_code=200, content='success')
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})

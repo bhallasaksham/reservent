@@ -2,6 +2,8 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Optional
 
+from starlette.responses import JSONResponse
+
 from roomReservationService.handler import GetRoomsHandler, ReserveRoomHandler
 
 roomRoutes = APIRouter()
@@ -12,7 +14,7 @@ class Event(BaseModel):
     description: str
     start: dict
     end: dict
-    attendees: list
+    guests: list
     visibility: str
 
 
@@ -37,14 +39,22 @@ async def root():
 
 @roomRoutes.get("/rooms/available")
 async def get_available_rooms(request: Request):
-    handler = GetRoomsHandler(request)
-    return handler.get_rooms()
+    try:
+        handler = GetRoomsHandler(request)
+        return JSONResponse(status_code=200, content=handler.get_rooms())
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 
 @roomRoutes.post("/rooms/reserve")
 async def reserve_room(reservation: Reservation):
-    handler = ReserveRoomHandler(reservation)
-    return handler.create_event()
+    try:
+        handler = ReserveRoomHandler(reservation)
+        return JSONResponse(status_code=201, content=handler.create_event())
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 
 
