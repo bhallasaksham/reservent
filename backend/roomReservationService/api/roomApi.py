@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Optional
 
-from ..handler.roomHandler import initialize_rooms, get_rooms, create_event
+from roomReservationService.handler import GetRoomsHandler, ReserveRoomHandler
 
 roomRoutes = APIRouter()
 
@@ -10,21 +10,22 @@ roomRoutes = APIRouter()
 class Reservation(BaseModel):
     email: str
     google_auth_token: str
-    title: str
-    start_time: str
-    end_time: str
-    num_guests: Optional[int] = 1
-    event_description: Optional[str] = None
-    room_name: Optional[str] = None
+    creator: str
+    summary: str
+    description: str
+    start: dict
+    end: dict
+    # event_description: Optional[str] = None
+    # room_name: Optional[str] = None
     guest_email: Optional[str] = None
 
 
-class RoomsQuery(BaseModel):
+class Request(BaseModel):
     email: str
     google_auth_token: str
     start_time: str
     end_time: str
-    num_guests: str
+    num_guests: Optional[str] = 1
 
 
 @roomRoutes.get("/")
@@ -33,17 +34,17 @@ async def root():
 
 
 @roomRoutes.get("/rooms/available")
-async def get_available_rooms(roomsQuery: RoomsQuery):
-    meeting_rooms = initialize_rooms()
-    return get_rooms(roomsQuery, meeting_rooms)
+async def get_available_rooms(request: Request):
+    handler = GetRoomsHandler(request)
+    return handler.get_available_rooms()
 
 
-@roomRoutes.post("/rooms/{room}/reserve")
-async def reserve_room(room: str, reservation: Reservation):
-    print(room, reservation)
-    reservation.room_name = room
+@roomRoutes.post("/rooms/reserve")
+async def reserve_room(reservation: Reservation):
+    print(reservation)
+    handler = ReserveRoomHandler(reservation)
     try:
-        response = create_event(reservation, room)
+        response = handler.create_event()
         return response
     except Exception as e:
         return {"message": str(e)}

@@ -14,12 +14,12 @@ class RoomSchema(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     url = Column(String)
-    size = Column(Integer)
+    capacity = Column(Integer)
 
-    def __init__(self, name = None, url = None, size = None):
+    def __init__(self, name=None, url=None, capacity=None):
         self.name = name
         self.url = url
-        self.size = size
+        self.capacity = capacity
 
         # Create tables if not exist
         Base.metadata.create_all(engine)
