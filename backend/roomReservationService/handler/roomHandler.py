@@ -90,6 +90,6 @@ class ReserveRoomHandler:
         # TODO: Why does Google Calendar consider self.reservation.event.json() and event obj different?
         # print(self.reservation.event.json())
         # print(event)
-        # inserted = service.events().insert(calendarId='primary', body=event).execute()
+        # inserted = service.events().insert(calendarId='primary', body=event).execute() # TODO: uncomment before demo
         # print(f'Event created: {inserted.get("htmlLink")}')
         return True;
