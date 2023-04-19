@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { HomePage, SignInPage, AddEventPage, AdminPage } from "./pages";
 import { useCookies } from "react-cookie";
 import React, { useState, useEffect } from "react";
+import { PrivilegeEnum } from "./tools";
 
 const UserRoute = ({ component, isAuthenticated, ...rest }) => {
   const routeComponent = (props) => {
@@ -22,7 +23,9 @@ function App() {
   const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"];
-  const isAdmin = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] === "1";
+  console.log(cookies["user_privilege"]);
+  console.log(typeof cookies["user_privilege"]);
+  const isAdmin = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Admin; // "1" == 1
 
   return (
     <div className={styles["app"]}>

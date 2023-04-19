@@ -7,6 +7,7 @@ import jwt_decode from "jwt-decode";
 import logo from "../../assets/reservent.svg";
 import axios from "axios";
 import { toast as customAlert } from "react-custom-alert";
+import { PrivilegeEnum } from "../../tools";
 
 export const Header = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
@@ -19,14 +20,11 @@ export const Header = () => {
   const handleSignOut = () => {
     const logOut = async () => {
       try {
-        await axios.get(
-          "http://0.0.0.0:4000/logout",
-          {
-            headers: {
-              Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
-            }
+        await axios.get("http://0.0.0.0:4000/logout", {
+          headers: {
+            Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           }
-        );
+        });
         removeCookie("jwt_token");
         removeCookie("refresh_token");
         removeCookie("user_privilege");
@@ -41,14 +39,14 @@ export const Header = () => {
   };
 
   const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"];
-  const isAdmin = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] === "1";
+  const isAdmin = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Admin; // "1" == 1
   const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
 
   return (
     <Navbar className={styles["header"]} variant="dark" expand="md">
       <Container fluid className={styles["nav-container"]}>
         <Navbar.Brand className={styles["brand"]} href="/">
-          <img src={logo} className={styles["brand-icon"]} alt="reservent icon"/>
+          <img src={logo} className={styles["brand-icon"]} alt="reservent icon" />
           <span>Reservent</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
