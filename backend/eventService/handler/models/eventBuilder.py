@@ -5,6 +5,9 @@ from eventService.dao.roomDao import RoomDao
 class EventBuilder:
     def __init__(self):
         self.event = {}
+    def set_creator(self, creator):
+        self.event['creator'] = creator
+        return self
 
     def set_summary(self, summary):
         self.event['summary'] = summary

@@ -9,7 +9,7 @@ from starlette.responses import JSONResponse
 eventRoutes = APIRouter()
 
 class CreateEventRequest(BaseModel):
-    creator: str
+    email: str
     start_time: str
     end_time: str
     title: str
