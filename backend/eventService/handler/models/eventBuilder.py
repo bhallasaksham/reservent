@@ -1,12 +1,10 @@
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
 
+from eventService.dao.roomDao import RoomDao
+
 class EventBuilder:
     def __init__(self):
         self.event = {}
-
-    def set_creator(self, creator):
-        self.event['creator'] = creator
-        return self
 
     def set_summary(self, summary):
         self.event['summary'] = summary
@@ -26,10 +24,15 @@ class EventBuilder:
         self.event['end'] = {'dateTime': end}
         return self
 
+    def add_room_as_guest(self, roomName):
+        room = RoomDao().getRoomByName(roomName)
+        room_calendar_email = room.url.split('=')[1]
+        self.event['attendees'] = []
+        self.event['attendees'].append({'email': room_calendar_email})
+        return self
+
     def add_guest(self, email):
-        if 'guests' not in self.event:
-            self.event['guests'] = []
-        self.event['guests'].append({'email': email})
+        self.event['attendees'].append({'email': email})
         return self
 
     def set_visibility(self, visibility):

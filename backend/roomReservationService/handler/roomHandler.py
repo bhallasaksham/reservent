@@ -81,19 +81,15 @@ class ReserveRoomHandler:
                 'dateTime': self.reservation.event.end['dateTime'],
                 'timeZone': TIMEZONE,
             },
-            'attendees': self.reservation.event.guests[1:],
+            'attendees': self.reservation.event.attendees,
             'reminders': {
                 'useDefault': True,
             },
         }
 
-        # # Call the Calendar API to create the event
+        # TODO: Why does Google Calendar consider self.reservation.event.json() and event obj different?
         # print(self.reservation.event.json())
+        # print(event)
         inserted = service.events().insert(calendarId='primary', body=event).execute()
-        # TODO: insert event in google calendar of the room as well
-        # roomName = self.reservation.event.guests[0]['email'].split('-')[0]
-        # room = RoomDao().getRoomByName(roomName)
-        # room_calendar_id = room.url.split('=')[1]
-        # service.events().insert(calendarId=room_calendar_id, body=event).execute()
         print(f'Event created: {inserted.get("htmlLink")}')
         return True;

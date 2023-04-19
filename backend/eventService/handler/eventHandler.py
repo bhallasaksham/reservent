@@ -5,6 +5,7 @@ from eventService.handler.gmailAdapter import GmailAdaptor
 
 from eventService.dao.eventDao import EventDao
 
+
 DATE_TIME_FORMAT = '%a %b %d %Y %H:%M:%S GMT %z'
 
 
@@ -17,11 +18,11 @@ class EventHandler:
     def create_event(self, request):
         event_builder = EventBuilder()
         event_builder\
-            .set_creator(request.email)\
             .set_summary(request.title)\
             .set_start_time(datetime.strptime(request.start_time, DATE_TIME_FORMAT))\
-            .set_end_time(datetime.strptime(request.end_time, DATE_TIME_FORMAT))\
-            .add_guest('c_18857krhc40eejk5molu6feh8dbcc@resource.calendar.google.com') # TODO: fix this
+            .set_end_time(datetime.strptime(request.end_time, DATE_TIME_FORMAT))
+
+        event_builder.add_room_as_guest(request.room)
 
         if request.description:
             event_builder.set_description(request.description)

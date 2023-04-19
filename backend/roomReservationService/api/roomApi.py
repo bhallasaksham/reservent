@@ -8,12 +8,11 @@ roomRoutes = APIRouter()
 
 
 class Event(BaseModel):
-    creator: str
     summary: str
     description: str
     start: dict
     end: dict
-    guests: list
+    attendees: list
     visibility: str
 
 
