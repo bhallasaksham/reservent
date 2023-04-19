@@ -30,7 +30,7 @@ class GmailAdaptor:
             messages = []
             room = ''
             if event.get('guests', None):
-                for guest in event['guests']:
+                for guest in event['guests'][1:]:
                     if 'Meeting' not in guest['email']:
                         # create the email message
                         message = EmailMessage()

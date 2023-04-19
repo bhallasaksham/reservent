@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 
 load_dotenv(os.getcwd() + '/config/.env')
 
+
 class DatabaseEngine:
     __instance = None
 
