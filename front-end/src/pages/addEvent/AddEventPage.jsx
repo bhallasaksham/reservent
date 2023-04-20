@@ -47,27 +47,24 @@ export const AddEventPage = () => {
     if (!endTime) {
       return customAlert.warning("Please choose end time");
     }
-    // TODO: delete
-    if (!numOfParticipant) {
-      return customAlert.warning("Please enter number of participants");
-    }
 
     const fetchData = async () => {
       setLoading(true);
       const formattedStartTime = formatTime(startDate, startTime);
       const formattedEndTime = formatTime(startDate, endTime);
       try {
-        const { data: response } = await axios.get(
-          `http://0.0.0.0:1024/rooms/available?start_time=${formattedStartTime}&end_time=${formattedEndTime}&num_guests=${numOfParticipant}`,
-          {
-            headers: {
-              Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
-            }
+        const queryParams =
+          `start_time=${formattedStartTime}&end_time=${formattedEndTime}` +
+          (numOfParticipant > 0 ? `&num_guests=${numOfParticipant}` : "");
+        const { data: response } = await axios.get(`http://0.0.0.0:1024/rooms/available?${queryParams}`, {
+          headers: {
+            Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           }
-        );
+        });
         setAvailableRooms(response);
       } catch (error) {
         console.error(error);
+        setShowSidebar(false);
         return customAlert.error("Failed to get available rooms");
       }
       setLoading(false);
