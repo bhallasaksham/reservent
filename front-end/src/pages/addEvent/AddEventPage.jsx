@@ -18,18 +18,21 @@ import { useHistory } from "react-router-dom";
 import { getRoundedDate, addMinutes, formatTime, getDate, getTime } from "../../tools";
 import { toast as customAlert } from "react-custom-alert";
 import { useCookies } from "react-cookie";
+import { PrivilegeEnum } from "../../tools";
+import jwt_decode from "jwt-decode";
 
 export const AddEventPage = () => {
-  const [title, setTitle] = useState();
-  const [description, setDescription] = useState();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(getRoundedDate(new Date()));
   const [endTime, setEndTime] = useState(addMinutes(getRoundedDate(new Date()), 60));
-  const [numOfParticipant, setNumOfParticipant] = useState();
-  const [selectedRoom, setSelectedRoom] = useState();
+  const [numOfParticipant, setNumOfParticipant] = useState("");
+  const [selectedRoom, setSelectedRoom] = useState(null);
   const [curGuest, setCurGuest] = useState("");
   const [guestList, setGuestList] = useState([]);
   const [availableRooms, setAvailableRooms] = useState([]);
+  const [createdEvent, setCreatedEvent] = useState(null);
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -126,34 +129,65 @@ export const AddEventPage = () => {
     if (!endTime) {
       return customAlert.warning("Please choose end time");
     }
-    // TODO: delete
-    if (!numOfParticipant) {
-      return customAlert.warning("Please enter number of participants");
-    }
     if (!selectedRoom) {
       return customAlert.warning("Please choose a room");
     }
 
-    setShowModal(true);
+    const reserveRoom = async () => {
+      const formattedStartTime = formatTime(startDate, startTime);
+      const formattedEndTime = formatTime(startDate, endTime);
+      const formattedGuestList = guestList.length > 0 ? guestList.toString() : null;
+      const isStudent =
+        cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Student;
+      const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
+      try {
+        const { data: response } = await axios.post(
+          "http://0.0.0.0:1024/rooms/reserve",
+          {
+            title: title,
+            description: description ? description : null,
+            start_time: formattedStartTime,
+            end_time: formattedEndTime,
+            guests: formattedGuestList,
+            room: selectedRoom?.name,
+            isStudent: isStudent,
+            email: currentUser.email
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+            }
+          }
+        );
+        setCreatedEvent({
+          title: title,
+          startDate: startDate,
+          startTime: startTime,
+          endTime: endTime,
+          room: selectedRoom?.name
+        });
+        setShowModal(true);
+        clearForm();
+      } catch (error) {
+        console.error(error);
+        return customAlert.error("Failed to create event");
+      }
+    };
 
-    console.log(
-      "title: " +
-        title +
-        "\ndes: " +
-        description +
-        "\ndate: " +
-        startDate +
-        "\nstime: " +
-        startTime +
-        "\netime: " +
-        endTime +
-        "\nnum of p: " +
-        numOfParticipant +
-        "\ninvite guests: " +
-        guestList +
-        "\nroom: " +
-        selectedRoom?.name
-    );
+    reserveRoom();
+  };
+
+  const clearForm = () => {
+    setTitle("");
+    setDescription("");
+    setStartDate(new Date());
+    setStartTime(getRoundedDate(new Date()));
+    setEndTime(addMinutes(getRoundedDate(new Date()), 60));
+    setNumOfParticipant("");
+    setSelectedRoom(null);
+    setCurGuest("");
+    setGuestList([]);
+    setAvailableRooms([]);
   };
 
   return (
@@ -347,11 +381,12 @@ export const AddEventPage = () => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Congrats! Your event <strong>{title}</strong> has been created.
+            Congrats! Your event <strong>{createdEvent?.title}</strong> has been created.
           </p>
           <p>
-            Room <strong>{selectedRoom?.name}</strong> has been reserved on <strong>{getDate(startDate)}</strong> from{" "}
-            <strong>{getTime(startTime)}</strong> to <strong>{getTime(endTime)}</strong>.
+            Room <strong>{createdEvent?.room}</strong> has been reserved on{" "}
+            <strong>{getDate(createdEvent?.startDate)}</strong> from <strong>{getTime(createdEvent?.startTime)}</strong>{" "}
+            to <strong>{getTime(createdEvent?.endTime)}</strong>.
           </p>
         </Modal.Body>
       </Modal>
@@ -362,3 +397,5 @@ export const AddEventPage = () => {
 // TODO: more styles on form & cards
 // TODO: seperate offcanvas
 // TODO: remove console.log()
+// TODO: ensure starttime < endtime
+// TODO: loading after submitting

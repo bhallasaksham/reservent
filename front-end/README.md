@@ -56,5 +56,5 @@ npm start
 - [x] get users
 - [x] update user privilege
 - [x] search rooms
-- [ ] create event
+- [x] create event
 - [ ] fix eslint warnings

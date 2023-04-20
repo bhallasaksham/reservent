@@ -18,9 +18,9 @@ export const formatTime = (date, time) => {
 }
 
 export const getDate = (date) => {
-  return date.toString().slice(4, 15);
+  return date ? date.toString().slice(4, 15) : "";
 }
 
 export const getTime = (date) => {
-  return date.toString().slice(16, 21);
+  return date ? date.toString().slice(16, 21) : "";
 }
