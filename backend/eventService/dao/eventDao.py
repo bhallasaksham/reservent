@@ -10,12 +10,11 @@ class EventDao:
         self.engine = DatabaseEngine.getInstance().getEngine()
         self.session = sessionmaker(bind=self.engine, autoflush=True)()
 
-    def save(self, event):
+    def save(self, event, room):
         title = event['summary']
         description = event.get('description', '')
         startTime = event['start']['dateTime']
         endTime = event['end']['dateTime']
-        room = event['guests'][0]['email']
         creator = event['creator']
         guests = str(event['guests'])
         event = EventSchema(title, description, startTime, endTime, room, creator, guests)

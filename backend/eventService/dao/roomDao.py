@@ -57,3 +57,7 @@ class RoomDao:
         room = session.query(RoomSchema).filter(RoomSchema.name == name).first()
         session.close()
         return room
+
+    def getRoomByUrl(self, url):
+        room = self.session.query(RoomSchema).filter(RoomSchema.url.contains(url)).first()
+        return room
