@@ -38,7 +38,7 @@ async def create_event(request: CreateEventRequest):
 @eventRoutes.put("/events/finalize")
 async def finalize_event(request: FinalizeEventRequest):
     try:
-        drafts = EventHandler().finalize_event(request)
+        EventHandler().finalize_event(request)
         return JSONResponse(status_code=200, content='success')
     except Exception as e:
         print(e)
