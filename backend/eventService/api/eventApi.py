@@ -43,3 +43,11 @@ async def finalize_event(request: FinalizeEventRequest):
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
+@eventRoutes.get("/events")
+async def get_events():
+    try:
+        return JSONResponse(status_code=200, content=EventHandler().get_events())
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})

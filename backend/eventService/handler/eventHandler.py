@@ -52,3 +52,6 @@ class EventHandler:
 
     def save_event(self):
         return self.dao.save(self.event)
+
+    def get_events(self):
+        return self.dao.get_events()

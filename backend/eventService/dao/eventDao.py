@@ -23,3 +23,5 @@ class EventDao:
         self.session.commit()
         return event
 
+    def get_events(self):
+        pass

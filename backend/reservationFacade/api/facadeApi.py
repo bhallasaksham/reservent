@@ -1,12 +1,12 @@
-import json
-from typing import Optional
-from fastapi import APIRouter, Response, HTTPException, Header, Cookie, Request, Body
-from starlette.responses import JSONResponse
+import os
+from dotenv import load_dotenv
+from fastapi import APIRouter, HTTPException, Request
 
 from reservationFacade.handler.facadeHandler import facade
 
 facadeRoutes = APIRouter()
 
+load_dotenv(os.getcwd() + '/config/.env')
 
 @facadeRoutes.get("/")
 async def root():
@@ -36,5 +36,13 @@ async def reserve_room(request: Request):
                 finalized = await facade(url="http://127.0.0.1:8080/events/finalize", http_verb='PUT',
                                          headers=request.headers, body=event.body)
                 return finalized
+    except HTTPException as e:
+        return {"message": e.detail}
+
+@facadeRoutes.get("/events")
+async def get_events(request: Request):
+    try:
+        events = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':'+ os.getenv("EVENT_SERVICE_PORT") +'/events', http_verb='GET', headers=request.headers)
+        return events
     except HTTPException as e:
         return {"message": e.detail}

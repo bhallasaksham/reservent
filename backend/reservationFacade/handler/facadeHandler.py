@@ -1,9 +1,8 @@
-import json
 import os
 from typing import Optional
 
 import jwt
-from fastapi import HTTPException, status, Header
+from fastapi import HTTPException, status
 import json
 from fastapi.responses import JSONResponse
 import requests
