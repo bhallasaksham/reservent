@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import { Accordion, Carousel } from "react-bootstrap";
 import styles from "./HomePage.module.css";
-import carouselImage1 from "../../assets/carousel/bd23.jpg";
+import imageEvent from "../../assets/carousel/event.jpg";
+import imageRoom from "../../assets/carousel/bd23.jpg";
+import imageEmail from "../../assets/carousel/fence.jpeg";
+import imageUser from "../../assets/carousel/people.jpeg";
 
 export const HomePage = () => {
   return (
@@ -20,28 +23,28 @@ export const HomePage = () => {
         <h2>Main Features</h2>
         <Carousel className={styles["home-carousel"]}>
           <Carousel.Item>
-            <img className="d-block w-100" src={carouselImage1} alt="carousel 1" />
+            <img className="d-block w-100" width={600} height={500} src={imageEvent} alt="event" />
             <Carousel.Caption>
               <h3>Create Event</h3>
               <p>Create events and invite your guests.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
-            <img className="d-block w-100" src={carouselImage1} alt="carousel 2" />
+            <img className="d-block w-100" width={600} height={500} src={imageRoom} alt="room" />
             <Carousel.Caption>
               <h3>Reserve Room</h3>
               <p>Search and reserve rooms on campus.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
-            <img className="d-block w-100" src={carouselImage1} alt="carousel 3" />
+            <img className="d-block w-100" width={600} height={500} src={imageEmail} alt="email" />
             <Carousel.Caption>
               <h3>Email Notofication</h3>
               <p>Email notification for all participants.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
-            <img className="d-block w-100" src={carouselImage1} alt="carousel 4" />
+            <img className="d-block w-100" width={600} height={500} src={imageUser} alt="user" />
             <Carousel.Caption>
               <h3>User Management</h3>
               <p>Manage user privileges (for admin only).</p>

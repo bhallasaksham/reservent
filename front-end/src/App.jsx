@@ -23,8 +23,6 @@ function App() {
   const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"];
-  console.log(cookies["user_privilege"]);
-  console.log(typeof cookies["user_privilege"]);
   const isAdmin = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Admin; // "1" == 1
 
   return (
