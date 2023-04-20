@@ -71,3 +71,9 @@ a {
 .modal {
   margin-top: 10rem;
 }
+
+.loading-spinner {
+  display: flex !important;
+  margin: 2rem auto;
+  color: var(--primary);
+}

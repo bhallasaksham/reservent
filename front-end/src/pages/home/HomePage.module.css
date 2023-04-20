@@ -1,11 +1,5 @@
-.loading-spinner {
-  display: flex !important;
-  margin: 0 auto;
-  color: var(--primary);
-}
-
 .home-container {
-  width: 70%;
+  width: 68rem;
   margin: 0 auto;
 }
 

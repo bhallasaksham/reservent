@@ -10,11 +10,11 @@
   width: 100%;
 }
 
-/* .note-info {
+.note-info {
   color: red;
-  margin-top: 0;
-  margin-bottom: 1rem;
-} */
+  font-style: oblique;
+  margin-top: 1rem;
+}
 
 .room-badge-group {
   margin-right: 2rem;

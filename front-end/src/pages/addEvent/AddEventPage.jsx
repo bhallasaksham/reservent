@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip, Modal } from "react-bootstrap";
+import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip, Modal, Spinner } from "react-bootstrap";
 import styles from "./AddEventPage.module.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -17,21 +17,28 @@ import {
 import { useHistory } from "react-router-dom";
 import { getRoundedDate, addMinutes, formatTime, getDate, getTime } from "../../tools";
 import { toast as customAlert } from "react-custom-alert";
+import { useCookies } from "react-cookie";
+import { PrivilegeEnum } from "../../tools";
+import jwt_decode from "jwt-decode";
 
 export const AddEventPage = () => {
-  const history = useHistory();
-
-  const [title, setTitle] = useState();
-  const [description, setDescription] = useState();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(getRoundedDate(new Date()));
   const [endTime, setEndTime] = useState(addMinutes(getRoundedDate(new Date()), 60));
-  const [numOfParticipant, setNumOfParticipant] = useState();
-  const [selectedRoom, setSelectedRoom] = useState();
+  const [numOfParticipant, setNumOfParticipant] = useState("");
+  const [selectedRoom, setSelectedRoom] = useState(null);
   const [curGuest, setCurGuest] = useState("");
   const [guestList, setGuestList] = useState([]);
+  const [availableRooms, setAvailableRooms] = useState([]);
+  const [createdEvent, setCreatedEvent] = useState(null);
+
   const [showSidebar, setShowSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const history = useHistory();
 
   const searchRooms = () => {
     if (!startDate) {
@@ -43,13 +50,31 @@ export const AddEventPage = () => {
     if (!endTime) {
       return customAlert.warning("Please choose end time");
     }
-    if (!numOfParticipant) {
-      return customAlert.warning("Please enter number of participants");
-    }
 
-    console.log(formatTime(startDate, startTime));
-    console.log(formatTime(startDate, endTime));
-    console.log(numOfParticipant);
+    const fetchData = async () => {
+      setLoading(true);
+      const formattedStartTime = formatTime(startDate, startTime);
+      const formattedEndTime = formatTime(startDate, endTime);
+      try {
+        const queryParams =
+          `start_time=${formattedStartTime}&end_time=${formattedEndTime}` +
+          (numOfParticipant > 0 ? `&num_guests=${numOfParticipant}` : "");
+        const { data: response } = await axios.get(`http://0.0.0.0:1024/rooms/available?${queryParams}`, {
+          headers: {
+            Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+          }
+        });
+        setAvailableRooms(response);
+      } catch (error) {
+        console.error(error);
+        setShowSidebar(false);
+        return customAlert.error("Failed to get available rooms");
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+
     setShowSidebar(true);
     setSelectedRoom(null);
   };
@@ -65,15 +90,10 @@ export const AddEventPage = () => {
     setSelectedRoom(null);
   };
 
-  const fakeRooms = [
-    { name: "room 118", capacity: 6 },
-    { name: "room 120", capacity: 4 }
-  ];
-
   const addGuest = (guest) => {
     if (curGuest !== "") {
       setCurGuest("");
-      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(guest)) {
+      if (!/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(guest)) {
         return customAlert.warning("Please enter a valid email address");
       }
       if (guestList.includes(guest)) {
@@ -85,14 +105,18 @@ export const AddEventPage = () => {
     console.log(guestList);
   };
 
+  const handleEnterKey = (event, guest) => {
+    if (event.keyCode == 13) {
+      addGuest(guest);
+    }
+  };
+
   const deleteGuest = (guest) => {
     setGuestList(guestList.filter((item) => item !== guest));
     console.log(guestList);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // the default action that belongs to the event will not occur - whether we need this?
-
+  const handleSubmit = () => {
     if (!title) {
       return customAlert.warning("Please enter event title");
     }
@@ -105,40 +129,73 @@ export const AddEventPage = () => {
     if (!endTime) {
       return customAlert.warning("Please choose end time");
     }
-    if (!numOfParticipant) {
-      return customAlert.warning("Please enter number of participants");
-    }
     if (!selectedRoom) {
       return customAlert.warning("Please choose a room");
     }
 
-    setShowModal(true);
+    const reserveRoom = async () => {
+      const formattedStartTime = formatTime(startDate, startTime);
+      const formattedEndTime = formatTime(startDate, endTime);
+      const formattedGuestList = guestList.length > 0 ? guestList.toString() : null;
+      const isStudent =
+        cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Student;
+      const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
+      try {
+        const { data: response } = await axios.post(
+          "http://0.0.0.0:1024/rooms/reserve",
+          {
+            title: title,
+            description: description ? description : null,
+            start_time: formattedStartTime,
+            end_time: formattedEndTime,
+            guests: formattedGuestList,
+            room: selectedRoom?.name,
+            isStudent: isStudent,
+            email: currentUser.email
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+            }
+          }
+        );
+        setCreatedEvent({
+          title: title,
+          startDate: startDate,
+          startTime: startTime,
+          endTime: endTime,
+          room: selectedRoom?.name
+        });
+        setShowModal(true);
+        clearForm();
+      } catch (error) {
+        console.error(error);
+        return customAlert.error("Failed to create event");
+      }
+    };
 
-    console.log(
-      "title: " +
-        title +
-        "\ndes: " +
-        description +
-        "\ndate: " +
-        startDate +
-        "\nstime: " +
-        startTime +
-        "\netime: " +
-        endTime +
-        "\nnum of p: " +
-        numOfParticipant +
-        "\ninvite guests: " +
-        guestList +
-        "\nroom: " +
-        selectedRoom?.name
-    );
+    reserveRoom();
+  };
+
+  const clearForm = () => {
+    setTitle("");
+    setDescription("");
+    setStartDate(new Date());
+    setStartTime(getRoundedDate(new Date()));
+    setEndTime(addMinutes(getRoundedDate(new Date()), 60));
+    setNumOfParticipant("");
+    setSelectedRoom(null);
+    setCurGuest("");
+    setGuestList([]);
+    setAvailableRooms([]);
   };
 
   return (
     <MainLayout>
       <h1 className="page-title">Add New Event</h1>
-      <Form className={styles["add-event-form"]} onSubmit={handleSubmit}>
+      <Form className={styles["add-event-form"]}>
         <h2>Event Details</h2>
+        <p className={styles["note-info"]}>Fields marked with * are mandatory</p>
         <Form.Group className="mb-3" controlId="formTitle">
           <Form.Label>Title *</Form.Label>
           <Form.Control
@@ -146,6 +203,7 @@ export const AddEventPage = () => {
             placeholder="Enter title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            autocomplete="off"
           />
         </Form.Group>
 
@@ -156,6 +214,7 @@ export const AddEventPage = () => {
             placeholder="Enter description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            autocomplete="off"
           />
         </Form.Group>
 
@@ -220,7 +279,7 @@ export const AddEventPage = () => {
         <Row>
           <Col md={3}>
             <Form.Group className="mb-3" controlId="formNumOfParticipant">
-              <Form.Label>Number of Participants *</Form.Label>
+              <Form.Label>Number of Participants</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter number"
@@ -230,12 +289,7 @@ export const AddEventPage = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formRoom">
-              <Form.Label>
-                Room *{" "}
-                <OverlayTrigger overlay={<Tooltip>To create an event, you must choose a room</Tooltip>}>
-                  <QuestionCircle />
-                </OverlayTrigger>
-              </Form.Label>
+              <Form.Label>Room *</Form.Label>
               <div>
                 {selectedRoom && (
                   <>
@@ -245,13 +299,24 @@ export const AddEventPage = () => {
                     <PencilSquare className={styles["search-room-button"]} onClick={searchRooms} />
                   </>
                 )}
-                {!selectedRoom && <PlusSquare className={styles["search-room-button"]} onClick={searchRooms} />}
+                {!selectedRoom && (
+                  <OverlayTrigger overlay={<Tooltip>Click to search available rooms</Tooltip>}>
+                    <PlusSquare className={styles["search-room-button"]} onClick={searchRooms} />
+                  </OverlayTrigger>
+                )}
               </div>
             </Form.Group>
           </Col>
           <Col>
             <Form.Group className="mb-3" controlId="formInviteGuests">
-              <Form.Label>Invite Guests</Form.Label>
+              <Form.Label>
+                Invite Guests{" "}
+                <OverlayTrigger
+                  overlay={<Tooltip>Once event created, we will send email notifications to your guests</Tooltip>}
+                >
+                  <QuestionCircle />
+                </OverlayTrigger>
+              </Form.Label>
               <div>
                 <div className={styles["input-guest-wrapper"]}>
                   <Form.Control
@@ -259,6 +324,7 @@ export const AddEventPage = () => {
                     placeholder="Enter email address"
                     value={curGuest}
                     onChange={(e) => setCurGuest(e.target.value)}
+                    onKeyUp={(e) => handleEnterKey(e, curGuest)}
                   />
                   <PersonPlusFill className={styles["add-guest-button"]} onClick={() => addGuest(curGuest)} />
                 </div>
@@ -280,7 +346,7 @@ export const AddEventPage = () => {
             </Button>
           </Col>
           <Col>
-            <Button variant="primary" type="submit" className={styles["form-button"]}>
+            <Button variant="primary" type="button" className={styles["form-button"]} onClick={handleSubmit}>
               <CheckCircleFill />
               <span>Confirm</span>
             </Button>
@@ -293,9 +359,19 @@ export const AddEventPage = () => {
           <Offcanvas.Title>Available Rooms</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {fakeRooms?.map((room) => (
-            <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />
-          ))}
+          {loading && <Spinner className="loading-spinner" animation="border" />}
+          {!loading && (
+            <>
+              {availableRooms.length === 0 && (
+                <>
+                  <p>Sorry, we couldn't find a available room.</p>
+                  <p>Please try searching for a different time period or number of participants.</p>
+                </>
+              )}
+              {availableRooms.length > 0 &&
+                availableRooms?.map((room) => <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />)}
+            </>
+          )}
         </Offcanvas.Body>
       </Offcanvas>
 
@@ -305,11 +381,12 @@ export const AddEventPage = () => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Congrats! Your event <strong>{title}</strong> has been created.
+            Congrats! Your event <strong>{createdEvent?.title}</strong> has been created.
           </p>
           <p>
-            Room <strong>{selectedRoom?.name}</strong> has been reserved on <strong>{getDate(startDate)}</strong> from{" "}
-            <strong>{getTime(startTime)}</strong> to <strong>{getTime(endTime)}</strong>.
+            Room <strong>{createdEvent?.room}</strong> has been reserved on{" "}
+            <strong>{getDate(createdEvent?.startDate)}</strong> from <strong>{getTime(createdEvent?.startTime)}</strong>{" "}
+            to <strong>{getTime(createdEvent?.endTime)}</strong>.
           </p>
         </Modal.Body>
       </Modal>
@@ -318,3 +395,7 @@ export const AddEventPage = () => {
 };
 
 // TODO: more styles on form & cards
+// TODO: seperate offcanvas
+// TODO: remove console.log()
+// TODO: ensure starttime < endtime
+// TODO: loading after submitting
