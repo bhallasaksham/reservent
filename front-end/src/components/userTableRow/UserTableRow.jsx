@@ -52,7 +52,7 @@ export const UserTableRow = ({ user, i, updateTable }) => {
             }
           }
         );
-        setUserPrivilege(curPrivilege);
+        setUserPrivilege(response.privilege);
         return customAlert.success("User privilege updated");
       } catch (error) {
         console.error(error);
