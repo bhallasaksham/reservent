@@ -16,3 +16,9 @@ class AdminHandler:
             raise Exception("Only admin can update user privilege")
         user = self.userDao.updateUserPrivilegeByEmail(target_user_email, privilege)
         return user
+
+    def delete_user(self, email, target_user_email):
+        admin_user = self.userDao.getUserByEmail(email)
+        if admin_user.privilege != UserPrivilege.ADMIN:
+            raise Exception("Only admin can delete user")
+        return self.userDao.deleteUserByEmail(target_user_email)

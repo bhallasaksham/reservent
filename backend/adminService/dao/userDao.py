@@ -29,3 +29,16 @@ class UserDao:
         session.close()
         return user
 
+    def deleteUserByEmail(self, email):
+        session = sessionmaker(bind=self.engine, autoflush=True)()
+        try:
+            user = session.query(UserSchema).filter(UserSchema.email == email).first()
+            session.delete(user)
+            session.commit()
+            session.close()
+        except Exception as e:
+            print(e)
+            session.rollback()
+            session.close()
+            return False
+        return True
