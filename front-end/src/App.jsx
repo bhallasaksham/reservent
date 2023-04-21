@@ -1,6 +1,6 @@
 import styles from "./App.module.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import { HomePage, SignInPage, AddEventPage, AdminPage } from "./pages";
+import { HomePage, SignInPage, AddEventPage, AdminPage, EventPage } from "./pages";
 import { useCookies } from "react-cookie";
 import React, { useState, useEffect } from "react";
 import { PrivilegeEnum } from "./tools";
@@ -31,6 +31,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/signIn" component={SignInPage} />
+          <UserRoute isAuthenticated={isAuthenticated} path="/event" component={EventPage} />
           <UserRoute isAuthenticated={isAuthenticated} path="/addEvent" component={AddEventPage} />
           <AdminRoute isAdmin={isAdmin} path="/admin" component={AdminPage} />
           <Route render={() => <h1>404 not found... </h1>} />
