@@ -1,3 +1,7 @@
+import json
+from datetime import datetime
+
+from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -31,3 +35,13 @@ class EventSchema(Base):
 
         # Create the table if it does not exist
         Base.metadata.create_all(engine)
+
+# Pydantic schema for the Event model
+class EventModel(BaseModel):
+    title: str
+    description: str
+    startTime: str
+    endTime: str
+    room: str
+    creator: str
+    guests: str

@@ -16,9 +16,11 @@ class CreateEventRequest(BaseModel):
     description: Optional[str] = None
     guests: Optional[str] = None
     room: str
+    room_url: str
     isStudent: bool
 
 class FinalizeEventRequest(BaseModel):
+    room: str
     event: dict
     google_auth_token: str
     email: str
