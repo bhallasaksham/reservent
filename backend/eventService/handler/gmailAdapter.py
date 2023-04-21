@@ -1,13 +1,12 @@
 import os
 import base64
-from datetime import datetime
 
-import pytz
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from email.message import EmailMessage
 
+from eventService.utils.datetime import get_email_datetime_from_string
 
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID') or None
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET') or None
@@ -16,7 +15,7 @@ if GOOGLE_CLIENT_ID is None or GOOGLE_CLIENT_SECRET is None:
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
-class GmailAdaptor:
+class GmailAdapter:
     @staticmethod
     def send_emails(event, google_auth_token, room):
         try:
@@ -36,15 +35,9 @@ class GmailAdaptor:
                     if event.get('description', None):
                         msg_str += '\n\n' + event['description']
 
-                    # Parse the timestamp string
-                    pacific = pytz.timezone('US/Pacific')
-                    timestamp_start = event['start']['dateTime']
-                    timestamp_start = datetime.strptime(timestamp_start[:-5], '%Y-%m-%dT%H:%M:%S')
-                    start = timestamp_start.strftime('%a %b %d %I:%M%p')
+                    start = get_email_datetime_from_string(event['start']['dateTime'])
+                    end = get_email_datetime_from_string(event['end']['dateTime'])
 
-                    timestamp_end = event['end']['dateTime']
-                    timestamp_end = datetime.strptime(timestamp_end[:-5], '%Y-%m-%dT%H:%M:%S')
-                    end = timestamp_end.astimezone(pacific).strftime('%a %b %d %I:%M%p')
                     msg_str += '\n\nWhen:'
                     msg_str += '\n' + start + ' - ' + end
                     msg_str += '\n\nLocation:'

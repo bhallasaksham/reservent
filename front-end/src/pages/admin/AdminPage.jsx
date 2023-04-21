@@ -33,6 +33,10 @@ export const AdminPage = () => {
     fetchData();
   }, []);
 
+  const deleteUserOnTable = (user) => {
+    setUsers(users.filter((item) => item !== user));
+  };
+
   return (
     <MainLayout>
       <h1 className="page-title">Users</h1>
@@ -46,12 +50,12 @@ export const AdminPage = () => {
               <th>Name</th>
               <th>Email Address</th>
               <th>Privilege</th>
-              <th></th>
+              <th width="25%"></th>
             </tr>
           </thead>
           <tbody>
             {users?.map((user, i) => (
-              <UserTableRow user={user} i={i} />
+              <UserTableRow user={user} i={i} updateTable={() => deleteUserOnTable(user)} />
             ))}
           </tbody>
         </Table>
