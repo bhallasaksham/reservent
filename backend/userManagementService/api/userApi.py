@@ -52,3 +52,13 @@ async def logout(response: JSONResponse):
     response.delete_cookie('refresh_token')
     response.delete_cookie('jwt_token')
     return {"message": "Logged out successfully"}
+
+@userRoutes.get('/user/privilege')
+async def get_user_privilege(request: FastAPIRequest):
+    try:
+        body = await request.json()
+        email = body.get("email")
+        userPrivilege = userHandler.get_user_privilege(email)
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"message": "Error getting user privilege", "error": str(e)})
+    return JSONResponse(status_code=200, content={"user": email, "privilege": userPrivilege})
