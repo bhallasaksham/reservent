@@ -60,3 +60,9 @@ class EventHandler:
 
     def get_events(self):
         return self.dao.get_events()
+
+    def get_event_by_id(self, event_id):
+        return self.dao.get_event_by_id(event_id)
+
+    def delete_event_by_id(self, event_id):
+       self.dao.delete_event_by_id(event_id)

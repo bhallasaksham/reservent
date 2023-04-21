@@ -38,6 +38,7 @@ class EventSchema(Base):
 
 # Pydantic schema for the Event model
 class EventModel(BaseModel):
+    id: int
     title: str
     description: str
     startTime: str

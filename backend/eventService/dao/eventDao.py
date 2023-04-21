@@ -35,7 +35,17 @@ class EventDao:
         now = datetime.now(pytz.timezone('US/Pacific'))
         events = self.session.query(EventSchema).filter(EventSchema.startTime >= now).all()
         events_list = [
-            EventModel(title=event.title, description=event.description, startTime=get_timestring_from_datetime(event.startTime),
+            EventModel(id=event.id, title=event.title, description=event.description, startTime=get_timestring_from_datetime(event.startTime),
             endTime=get_timestring_from_datetime(event.endTime), room=event.room, creator=event.creator, guests=event.guests).dict() for event in events
         ]
         return events_list
+
+    def get_event_by_id(self, event_id):
+        event = self.session.query(EventSchema).filter(EventSchema.id == event_id).first()
+        return EventModel(id=event.id, title=event.title, description=event.description, startTime=get_timestring_from_datetime(event.startTime),
+            endTime=get_timestring_from_datetime(event.endTime), room=event.room, creator=event.creator, guests=event.guests).dict()
+
+    def delete_event_by_id(self, event_id):
+        query = self.session.query(EventSchema).filter(EventSchema.id == event_id)
+        query.delete()
+        self.session.commit()
