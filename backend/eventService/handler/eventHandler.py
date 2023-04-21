@@ -1,10 +1,9 @@
 from datetime import datetime
 
 from eventService.handler.models.eventBuilder import EventBuilder
-from eventService.handler.gmailAdapter import GmailAdaptor
+from eventService.handler.gmailAdapter import GmailAdapter
 
 from eventService.dao.eventDao import EventDao
-from eventService.dao.roomDao import RoomDao
 
 DATE_TIME_FORMAT = '%a %b %d %Y %H:%M:%S GMT %z'
 
@@ -13,7 +12,7 @@ class EventHandler:
     def __init__(self):
         self.event = None
         self.room = None
-        self.adaptor = GmailAdaptor()
+        self.adaptor = GmailAdapter()
         self.dao = EventDao()
 
     def create_event(self, request):
@@ -24,8 +23,8 @@ class EventHandler:
             .set_start_time(datetime.strptime(request.start_time, DATE_TIME_FORMAT))\
             .set_end_time(datetime.strptime(request.end_time, DATE_TIME_FORMAT))
 
-        room = RoomDao().getRoomByName(request.room)
-        room_calendar_email = room.url.split('=')[1]
+        # room = RoomDao().getRoomByName(request.room)
+        room_calendar_email = request.room_url.split('=')[1]
         event_builder.add_room_as_guest(room_calendar_email)
 
         if request.description:
@@ -49,8 +48,7 @@ class EventHandler:
 
     def finalize_event(self, request):
         self.event = request.event
-        room_url = request.event['guests'][0]['email']
-        self.room = RoomDao().getRoomByUrl(room_url).name
+        self.room = request.room
 
         event = self.save_event()
 
@@ -59,3 +57,12 @@ class EventHandler:
 
     def save_event(self):
         return self.dao.save(self.event, self.room)
+
+    def get_events(self):
+        return self.dao.get_events()
+
+    def get_event_by_id(self, event_id):
+        return self.dao.get_event_by_id(event_id)
+
+    def delete_event_by_id(self, event_id):
+       self.dao.delete_event_by_id(event_id)

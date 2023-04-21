@@ -16,9 +16,11 @@ class CreateEventRequest(BaseModel):
     description: Optional[str] = None
     guests: Optional[str] = None
     room: str
+    room_url: str
     isStudent: bool
 
 class FinalizeEventRequest(BaseModel):
+    room: str
     event: dict
     google_auth_token: str
     email: str
@@ -39,6 +41,31 @@ async def create_event(request: CreateEventRequest):
 async def finalize_event(request: FinalizeEventRequest):
     try:
         EventHandler().finalize_event(request)
+        return JSONResponse(status_code=200, content='success')
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
+@eventRoutes.get("/events")
+async def get_events():
+    try:
+        return JSONResponse(status_code=200, content=EventHandler().get_events())
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
+@eventRoutes.get("/events/{event_id}")
+async def get_event(event_id: str):
+    try:
+        return JSONResponse(status_code=200, content=EventHandler().get_event_by_id(event_id))
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
+@eventRoutes.delete("/events/{event_id}")
+async def delete_event(event_id: str):
+    try:
+        EventHandler().delete_event_by_id(event_id)
         return JSONResponse(status_code=200, content='success')
     except Exception as e:
         print(e)
