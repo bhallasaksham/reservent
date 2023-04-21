@@ -38,7 +38,7 @@ async def update_user_privilege(request: FastAPIRequest):
     privilege = body.get("privilege")
     target_user_email = body.get("target_user_email")
     try:
-        user = adminHandler.update_user_privilege(email, target_user_email, privilege)
+        adminHandler.update_user_privilege(email, target_user_email, privilege)
     except Exception as e:
         return JSONResponse(status_code=500, content={"message": "Error updating user privilege", "error": str(e)})
-    return JSONResponse(status_code=200, content={"user": user.email, "privilege": user.privilege})
+    return JSONResponse(status_code=200, content={"user": target_user_email, "privilege": privilege})
