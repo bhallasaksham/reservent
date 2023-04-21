@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Button, Dropdown, OverlayTrigger, Tooltip, Modal } from "react-bootstrap";
 import styles from "./UserTableRow.module.css";
-import { PersonFillCheck } from "react-bootstrap-icons";
+import { PersonCheck, PersonDash } from "react-bootstrap-icons";
 import { PrivilegeEnum } from "../../tools";
 import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
 import { toast as customAlert } from "react-custom-alert";
 import axios from "axios";
 
-export const UserTableRow = ({ user, i }) => {
+export const UserTableRow = ({ user, i, updateTable }) => {
   const [userPrivilege, setUserPrivilege] = useState(user.privilege);
   const [curPrivilege, setCurPrivilege] = useState(user.privilege);
-  const [showModal, setShowModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   const isDisabled = curPrivilege === userPrivilege;
@@ -21,12 +22,19 @@ export const UserTableRow = ({ user, i }) => {
     return privilege === PrivilegeEnum.Admin ? "admin" : privilege === PrivilegeEnum.Staff ? "staff" : "student";
   };
 
-  const openModal = () => {
+  const openUpdateModal = () => {
     if (currentUser.email === user.email) {
       setCurPrivilege(userPrivilege);
       return customAlert.warning("you can't change the privilege of yourself");
     }
-    setShowModal(true);
+    setShowUpdateModal(true);
+  };
+
+  const openDeleteModal = () => {
+    if (currentUser.email === user.email) {
+      return customAlert.warning("you can't delete yourself");
+    }
+    setShowDeleteModal(true);
   };
 
   const updateUser = () => {
@@ -52,8 +60,31 @@ export const UserTableRow = ({ user, i }) => {
       }
     };
 
-    setShowModal(false);
+    setShowUpdateModal(false);
     updateData();
+  };
+
+  const deleteUser = () => {
+    const deleteData = async () => {
+      try {
+        await axios.delete("http://0.0.0.0:9000/admin/users", {
+          headers: {
+            Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+          },
+          data: {
+            target_user_email: user.email
+          }
+        });
+        updateTable();
+        return customAlert.success("User deleted");
+      } catch (error) {
+        console.error(error);
+        return customAlert.error("Failed to delete user");
+      }
+    };
+
+    setShowDeleteModal(false);
+    deleteData();
   };
 
   const ConditionalTooltipWrapper = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
@@ -92,17 +123,21 @@ export const UserTableRow = ({ user, i }) => {
               </OverlayTrigger>
             )}
           >
-            <Button variant="primary" disabled={isDisabled} onClick={openModal}>
-              <PersonFillCheck />
+            <Button variant="primary" disabled={isDisabled} onClick={openUpdateModal}>
+              <PersonCheck />
               <span>Update</span>
             </Button>
           </ConditionalTooltipWrapper>
+          <Button variant="danger" style={{ marginLeft: "1rem" }} onClick={openDeleteModal}>
+            <PersonDash />
+            <span>Delete</span>
+          </Button>
         </td>
       </tr>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal show={showUpdateModal} onHide={() => setShowUpdateModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Privilege Update</Modal.Title>
+          <Modal.Title>Update User Privilege</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
@@ -112,7 +147,7 @@ export const UserTableRow = ({ user, i }) => {
           <p>Please confirm your action.</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={() => setShowModal(false)}>
+          <Button variant="danger" onClick={() => setShowUpdateModal(false)}>
             Cancel
           </Button>
           <Button variant="primary" onClick={updateUser}>
@@ -120,6 +155,28 @@ export const UserTableRow = ({ user, i }) => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            You are going to delete <strong>{user.username}</strong> from the system. This action cannot be undone.
+          </p>
+          <p>Please confirm your action.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={deleteUser}>
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
+
+// TODO: seperate Modal
