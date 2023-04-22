@@ -5,8 +5,12 @@ from typing import Optional
 from starlette.responses import JSONResponse
 
 from roomReservationService.handler import GetRoomsHandler, ReserveRoomHandler
+from roomReservationService.handler.roomHandler import GetRoomsDecoratorAdmin
+from roomReservationService.handler.userHandler import UserHandler
+from database.schemas.userSchema import UserPrivilege
 
 roomRoutes = APIRouter()
+userHandler = UserHandler()
 
 
 class Event(BaseModel):
@@ -41,6 +45,9 @@ async def root():
 async def get_available_rooms(request: Request):
     try:
         handler = GetRoomsHandler(request)
+        userPrivilege = userHandler.get_user_privilege(request.email)
+        if userPrivilege == UserPrivilege.ADMIN or userPrivilege == UserPrivilege.STAFF:
+            handler = GetRoomsDecoratorAdmin(handler, request)
         return JSONResponse(status_code=200, content=handler.get_rooms())
     except Exception as e:
         print(e)
