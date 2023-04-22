@@ -62,6 +62,3 @@ async def reserve_room(reservation: Reservation):
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
-
-
-

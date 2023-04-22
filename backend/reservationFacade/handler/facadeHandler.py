@@ -17,7 +17,7 @@ def decode_jwt(encoded_token):
     return jwt.decode(encoded_token, SECRET_KEY, algorithms=['HS256'])
 
 
-async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] = None, body: Optional[str] = None):
+async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] = None, body: Optional[str] = None) -> object:
     if headers is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
     jwt_token = headers["authorization"].split(" ")[1]

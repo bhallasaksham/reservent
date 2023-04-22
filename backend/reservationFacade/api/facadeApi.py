@@ -1,3 +1,4 @@
+import json
 import os
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, Request
@@ -62,10 +63,13 @@ async def reserve_room(request: Request):
                 finalized = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("EVENT_SERVICE_PORT")
                                              + 'events/finalize', http_verb='PUT',
                                          headers=request.headers, params={"room": room_name}, body=event.body)
+                params = {'room': room_name}
+                params += json.loads(reserved.body)
+                finalized = await facade(url="http://127.0.0.1:8080/events/finalize", http_verb='PUT',
+                                                 headers=request.headers, params=params, body=event.body)
                 return finalized
     except HTTPException as e:
         return {"message": e.detail}
-
 
 '''
 Endpoint to retrieve events from the Event Service.
@@ -78,7 +82,6 @@ and returns the response containing the events.
 If there's an HTTP exception, the error message will be returned in a JSON object.
 '''
 
-
 @facadeRoutes.get("/events")
 async def get_events(request: Request):
     try:
@@ -87,7 +90,6 @@ async def get_events(request: Request):
         return events
     except HTTPException as e:
         return {"message": e.detail}
-
 
 '''
 Endpoint to delete an event and its associated reservation.
@@ -104,16 +106,18 @@ If there's an HTTP exception at any stage, the error message will be returned in
 @facadeRoutes.delete("/events/{event_id}")
 async def delete_event(event_id: str, request: Request):
     try:
-        event = await facade(
-            url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("EVENT_SERVICE_PORT") + '/events/' + event_id,
-            http_verb='GET', headers=request.headers)
+        event = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':'+ os.getenv("EVENT_SERVICE_PORT") +'/events/'
+                                 + event_id, http_verb='GET', headers=request.headers)
+
         if event.status_code == 200:
-            # TODO: delete_reservation from google calendar
+            reserved = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_PORT")
+                                    + 'rooms/reserve', http_verb='DELETE',
+                                    headers = request.headers, body = event.body)
             # if reservation deleted:
-            deleted_event = await facade(
-                url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("EVENT_SERVICE_PORT") + '/events/' + event_id,
-                http_verb='DELETE',
-                headers=request.headers)
-            return deleted_event
+            if reserved.status_code == 200:
+                deleted_event = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':'
+                                                 + os.getenv("EVENT_SERVICE_PORT") +'/events/' + event_id,
+                                             http_verb='DELETE', headers=request.headers)
+                return deleted_event
     except HTTPException as e:
         return {"message": e.detail}
