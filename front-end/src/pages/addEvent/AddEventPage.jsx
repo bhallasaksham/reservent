@@ -10,12 +10,12 @@ import {
   PlusSquare,
   PencilSquare,
   PersonPlusFill,
-  CheckCircleFill,
-  ArrowLeftCircleFill,
+  CheckCircle,
+  ArrowLeftCircle,
   QuestionCircle
 } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
-import { getRoundedDate, addMinutes, formatTime, getDate, getTime } from "../../tools";
+import { getRoundedDate, addMinutes, formatTime, getDate, getTime, checkTime } from "../../tools";
 import { toast as customAlert } from "react-custom-alert";
 import { useCookies } from "react-cookie";
 import { PrivilegeEnum } from "../../tools";
@@ -41,16 +41,6 @@ export const AddEventPage = () => {
   const history = useHistory();
 
   const searchRooms = () => {
-    if (!startDate) {
-      return customAlert.warning("Please choose event date");
-    }
-    if (!startTime) {
-      return customAlert.warning("Please choose start time");
-    }
-    if (!endTime) {
-      return customAlert.warning("Please choose end time");
-    }
-
     const fetchData = async () => {
       setLoading(true);
       const formattedStartTime = formatTime(startDate, startTime);
@@ -59,11 +49,14 @@ export const AddEventPage = () => {
         const queryParams =
           `start_time=${formattedStartTime}&end_time=${formattedEndTime}` +
           (numOfParticipant > 0 ? `&num_guests=${numOfParticipant}` : "");
-        const { data: response } = await axios.get(`${process.env.REACT_APP_ROOM_RESERVATION_FACADE}/rooms/available?${queryParams}`, {
-          headers: {
-            Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+        const { data: response } = await axios.get(
+          `${process.env.REACT_APP_ROOM_RESERVATION_FACADE}/rooms/available?${queryParams}`,
+          {
+            headers: {
+              Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+            }
           }
-        });
+        );
         setAvailableRooms(response);
       } catch (error) {
         console.error(error);
@@ -73,10 +66,11 @@ export const AddEventPage = () => {
       setLoading(false);
     };
 
-    fetchData();
-
-    setShowSidebar(true);
-    setSelectedRoom(null);
+    if (checkTime(startDate, startTime, endTime)) {
+      fetchData();
+      setShowSidebar(true);
+      setSelectedRoom(null);
+    }
   };
 
   const chooseRoom = (room) => {
@@ -117,22 +111,6 @@ export const AddEventPage = () => {
   };
 
   const handleSubmit = () => {
-    if (!title) {
-      return customAlert.warning("Please enter event title");
-    }
-    if (!startDate) {
-      return customAlert.warning("Please choose event date");
-    }
-    if (!startTime) {
-      return customAlert.warning("Please choose start time");
-    }
-    if (!endTime) {
-      return customAlert.warning("Please choose end time");
-    }
-    if (!selectedRoom) {
-      return customAlert.warning("Please choose a room");
-    }
-
     const reserveRoom = async () => {
       const formattedStartTime = formatTime(startDate, startTime);
       const formattedEndTime = formatTime(startDate, endTime);
@@ -174,7 +152,15 @@ export const AddEventPage = () => {
       }
     };
 
-    reserveRoom();
+    if (!title) {
+      return customAlert.warning("Please enter event title");
+    }
+    if (!selectedRoom) {
+      return customAlert.warning("Please choose a room");
+    }
+    if (checkTime(startDate, startTime, endTime)) {
+      reserveRoom();
+    }
   };
 
   const clearForm = () => {
@@ -340,15 +326,15 @@ export const AddEventPage = () => {
 
         <Row>
           <Col>
-            <Button variant="danger" className={styles["form-button"]} onClick={() => history.push("/")}>
-              <ArrowLeftCircleFill />
+            <Button variant="danger" className={styles["form-button"]} onClick={() => history.push("/event")}>
+              <ArrowLeftCircle />
               <span>Cancel</span>
             </Button>
           </Col>
           <Col>
             <Button variant="primary" type="button" className={styles["form-button"]} onClick={handleSubmit}>
-              <CheckCircleFill />
-              <span>Confirm</span>
+              <CheckCircle />
+              <span>Create</span>
             </Button>
           </Col>
         </Row>
@@ -397,5 +383,4 @@ export const AddEventPage = () => {
 // TODO: more styles on form & cards
 // TODO: seperate offcanvas
 // TODO: remove console.log()
-// TODO: ensure starttime < endtime
 // TODO: loading after submitting
