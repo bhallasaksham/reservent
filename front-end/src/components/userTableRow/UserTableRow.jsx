@@ -41,7 +41,7 @@ export const UserTableRow = ({ user, i, updateTable }) => {
     const updateData = async () => {
       try {
         const { data: response } = await axios.put(
-          "http://0.0.0.0:9000/admin/users/privilege",
+          `${process.env.REACT_APP_ADMIN_SERIVCE}/admin/users/privilege`,
           {
             target_user_email: user.email,
             privilege: curPrivilege
@@ -67,7 +67,7 @@ export const UserTableRow = ({ user, i, updateTable }) => {
   const deleteUser = () => {
     const deleteData = async () => {
       try {
-        await axios.delete("http://0.0.0.0:9000/admin/users", {
+        await axios.delete(`${process.env.REACT_APP_ADMIN_SERIVCE}/admin/users`, {
           headers: {
             Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           },

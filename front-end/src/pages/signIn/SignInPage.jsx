@@ -20,7 +20,7 @@ export const SignInPage = () => {
   }, [cookies, history]);
 
   const handleClick = () => {
-    window.location.href = "http://127.0.0.1:4000/login";
+    window.location.href = `${process.env.REACT_APP_USER_MANAGEMENT_SERIVCE}/login`;
   };
 
   return (

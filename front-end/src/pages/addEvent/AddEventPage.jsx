@@ -59,7 +59,7 @@ export const AddEventPage = () => {
         const queryParams =
           `start_time=${formattedStartTime}&end_time=${formattedEndTime}` +
           (numOfParticipant > 0 ? `&num_guests=${numOfParticipant}` : "");
-        const { data: response } = await axios.get(`http://0.0.0.0:1024/rooms/available?${queryParams}`, {
+        const { data: response } = await axios.get(`${process.env.REACT_APP_ROOM_RESERVATION_FACADE}/rooms/available?${queryParams}`, {
           headers: {
             Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           }
@@ -142,7 +142,7 @@ export const AddEventPage = () => {
       const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
       try {
         const { data: response } = await axios.post(
-          "http://0.0.0.0:1024/rooms/reserve",
+          `${process.env.REACT_APP_ROOM_RESERVATION_FACADE}/rooms/reserve`,
           {
             title: title,
             description: description ? description : null,

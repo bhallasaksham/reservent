@@ -20,7 +20,7 @@ export const Header = () => {
   const handleSignOut = () => {
     const logOut = async () => {
       try {
-        await axios.get("http://0.0.0.0:4000/logout", {
+        await axios.get(`${process.env.REACT_APP_USER_MANAGEMENT_SERIVCE}/logout`, {
           headers: {
             Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           }
