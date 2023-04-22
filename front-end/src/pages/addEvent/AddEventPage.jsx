@@ -3,9 +3,7 @@ import { MainLayout } from "../../layouts";
 import axios from "axios";
 import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip, Modal, Spinner } from "react-bootstrap";
 import styles from "./AddEventPage.module.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { RoomCard, CustomBadge } from "../../components";
+import { RoomCard, CustomBadge, TimeRangePicker } from "../../components";
 import {
   PlusSquare,
   PencilSquare,
@@ -15,10 +13,9 @@ import {
   QuestionCircle
 } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
-import { getRoundedDate, addMinutes, formatTime, getDate, getTime, checkTime } from "../../tools";
+import { getRoundedDate, addMinutes, formatTime, getDate, getTime, checkTime, PrivilegeEnum } from "../../tools";
 import { toast as customAlert } from "react-custom-alert";
 import { useCookies } from "react-cookie";
-import { PrivilegeEnum } from "../../tools";
 import jwt_decode from "jwt-decode";
 
 export const AddEventPage = () => {
@@ -128,7 +125,7 @@ export const AddEventPage = () => {
             end_time: formattedEndTime,
             guests: formattedGuestList,
             room: selectedRoom?.name,
-            isStudent: isStudent,
+            isStudent: isStudent,   // TODO: remove
             email: currentUser.email
           },
           {
@@ -137,7 +134,7 @@ export const AddEventPage = () => {
             }
           }
         );
-        setCreatedEvent({
+        setCreatedEvent({   // TODO: update using response
           title: title,
           startDate: startDate,
           startTime: startTime,
@@ -204,63 +201,14 @@ export const AddEventPage = () => {
           />
         </Form.Group>
 
-        <Row>
-          <Col md={4}>
-            <Form.Group className="mb-3" controlId="formDate">
-              <Form.Label>
-                Date *{" "}
-                <OverlayTrigger overlay={<Tooltip>Pacific Daylight Time (PDT)</Tooltip>}>
-                  <QuestionCircle />
-                </OverlayTrigger>
-              </Form.Label>
-              <DatePicker
-                className={`styles["date-picker"] form-control`}
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                isClearable
-                placeholderText="Choose date (MM/DD/YYYY)"
-              />
-            </Form.Group>
-          </Col>
-          <Col md={5}>
-            <Form.Group className="mb-3" controlId="formTime">
-              <Form.Label>Time *</Form.Label>
-              <Row>
-                <Col>
-                  <DatePicker
-                    className={`styles["date-picker"] form-control`}
-                    selected={startTime}
-                    onChange={(time) => setStartTime(time)}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    isClearable
-                    timeIntervals={15}
-                    timeCaption="Time"
-                    dateFormat="h:mm aa"
-                    placeholderText="Choose start time"
-                  />
-                </Col>
-                <Col xs="auto">
-                  <span>-</span>
-                </Col>
-                <Col>
-                  <DatePicker
-                    className={`styles["date-picker"] form-control`}
-                    selected={endTime}
-                    onChange={(time) => setEndTime(time)}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    isClearable
-                    timeIntervals={15}
-                    timeCaption="Time"
-                    dateFormat="h:mm aa"
-                    placeholderText="Choose end time"
-                  />
-                </Col>
-              </Row>
-            </Form.Group>
-          </Col>
-        </Row>
+        <TimeRangePicker
+          startDate={startDate}
+          startTime={startTime}
+          endTime={endTime}
+          setStartDate={setStartDate}
+          setStartTime={setStartTime}
+          setEndTime={setEndTime}
+        />
 
         <Row>
           <Col md={3}>

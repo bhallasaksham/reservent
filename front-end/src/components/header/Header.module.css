@@ -24,7 +24,8 @@
 }
 
 .main-nav {
-  width: 7rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
   text-align: center;
 }
 
