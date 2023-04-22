@@ -50,4 +50,3 @@ export const SignInPage = () => {
 };
 
 // TODO: fancy title text
-// TODO: add more content (carousel, about us, etc)

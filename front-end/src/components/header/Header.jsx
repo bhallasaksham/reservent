@@ -67,7 +67,7 @@ export const Header = () => {
             {isAuthenticated && (
               <Nav.Item className={styles["main-nav"]}>
                 <Nav.Link href="/addEvent">
-                  <span>New</span>
+                  <span>Add Event</span>
                 </Nav.Link>
               </Nav.Item>
             )}
@@ -99,5 +99,3 @@ export const Header = () => {
     </Navbar>
   );
 };
-
-// TODO: remove new

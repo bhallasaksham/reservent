@@ -79,5 +79,3 @@ export const HomePage = () => {
     </MainLayout>
   );
 };
-
-// TODO: add more pics for carousel

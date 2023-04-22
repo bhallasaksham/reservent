@@ -178,5 +178,3 @@ export const UserTableRow = ({ user, i, updateTable }) => {
     </>
   );
 };
-
-// TODO: seperate Modal
