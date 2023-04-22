@@ -11,3 +11,7 @@ class UserHandler:
         if user is None:
             user = self.userDao.createUser(username, email, UserPrivilege.USER)
         return user
+
+    def get_user_privilege(self, email):
+        user = self.userDao.getUserByEmail(email)
+        return user.privilege
