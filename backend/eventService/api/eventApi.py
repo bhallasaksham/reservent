@@ -8,6 +8,7 @@ from starlette.responses import JSONResponse
 
 eventRoutes = APIRouter()
 
+
 class CreateEventRequest(BaseModel):
     email: str
     start_time: str
@@ -19,15 +20,19 @@ class CreateEventRequest(BaseModel):
     room_url: str
     isStudent: bool
 
+
 class FinalizeEventRequest(BaseModel):
     room: str
+    room_id: str  # TODO: SAVE THIS IN DB
     event: dict
     google_auth_token: str
     email: str
 
+
 @eventRoutes.get("/")
 async def root():
     return {"message": "Hello World"}
+
 
 @eventRoutes.post("/events")
 async def create_event(request: CreateEventRequest):
@@ -36,6 +41,7 @@ async def create_event(request: CreateEventRequest):
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
 
 @eventRoutes.put("/events/finalize")
 async def finalize_event(request: FinalizeEventRequest):
@@ -46,27 +52,11 @@ async def finalize_event(request: FinalizeEventRequest):
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
-@eventRoutes.get("/events")
-async def get_events():
-    try:
-        return JSONResponse(status_code=200, content=EventHandler().get_events())
-    except Exception as e:
-        print(e)
-        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 @eventRoutes.get("/events/{event_id}")
 async def get_event(event_id: str):
     try:
         return JSONResponse(status_code=200, content=EventHandler().get_event_by_id(event_id))
-    except Exception as e:
-        print(e)
-        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
-
-@eventRoutes.delete("/events/{event_id}")
-async def delete_event(event_id: str):
-    try:
-        EventHandler().delete_event_by_id(event_id)
-        return JSONResponse(status_code=200, content='success')
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})

@@ -61,13 +61,14 @@ class GetRoomsHandler:
                         'capacity': room.capacity,
                     })
         return self.available_rooms
-    
+
+
 class GetRoomsDecorator(GetRoomsInterface):
-    _interface : GetRoomsInterface = None
+    _interface: GetRoomsInterface = None
 
     def __init__(self, interface):
         self._interface = interface
-    
+
     def __getattr__(self, name):
         """
         Delegate all unimplemented methods to the wrapped component.
@@ -96,7 +97,6 @@ class GetRoomsDecoratorAdmin(GetRoomsDecorator):
                         'capacity': room.capacity,
                     })
         return rooms
-
 
 
 class ReserveRoomHandler:
@@ -142,12 +142,10 @@ class ReserveRoomHandler:
         # TODO: Why does Google Calendar consider self.reservation.event.json() and event obj different?
         # print(self.reservation.event.json())
         # print(event)
-        inserted = service.events().insert(calendarId='primary', body=event).execute() # TODO: uncomment before demo
+        inserted = service.events().insert(calendarId='primary', body=event).execute()  # TODO: uncomment before demo
         return inserted.id
 
-    def delete_event(self):
+    def delete_event(self, event_id):
         service = self.init_service()
-        google_event_id = self.reservation.event.google_event_id
-        deleted = service.events().delete(calendarId='primary', eventId=google_event_id).execute()
+        deleted = service.events().delete(calendarId='primary', eventId=event_id).execute()
         return deleted
-

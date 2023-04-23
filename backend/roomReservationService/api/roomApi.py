@@ -25,12 +25,14 @@ class Event(BaseModel):
 class Reservation(BaseModel):
     email: str
     google_auth_token: str
+    privilege: str
     event: Event
 
 
 class Request(BaseModel):
     email: str
     google_auth_token: str
+    privilege: str
     start_time: str
     end_time: str
     num_guests: Optional[str] = 1
@@ -45,8 +47,7 @@ async def root():
 async def get_available_rooms(request: Request):
     try:
         handler = GetRoomsHandler(request)
-        userPrivilege = userHandler.get_user_privilege(request.email)
-        if userPrivilege == UserPrivilege.ADMIN or userPrivilege == UserPrivilege.STAFF:
+        if request.privilege == UserPrivilege.ADMIN or request.privilege == UserPrivilege.STAFF:
             handler = GetRoomsDecoratorAdmin(handler, request)
         return JSONResponse(status_code=200, content=handler.get_rooms())
     except Exception as e:
@@ -59,6 +60,16 @@ async def reserve_room(reservation: Reservation):
     try:
         handler = ReserveRoomHandler(reservation)
         return JSONResponse(status_code=201, content=handler.create_event())
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
+
+@roomRoutes.delete("/rooms/reservation/{event_id}")
+async def delete_room_reservation(event_id: str):
+    try:
+        handler = ReserveRoomHandler(reservation=None)
+        return JSONResponse(status_code=200, content=handler.delete_event(event_id))
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})

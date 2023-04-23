@@ -27,7 +27,7 @@ async def get_available_rooms(request: Request):
     try:
         return await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_PORT") +
                                 '/rooms/available', http_verb='GET', headers=request.headers,
-                            data=request.query_params)
+                            params=request.query_params)
     except HTTPException as e:
         return {"message": e.detail}
 
@@ -59,14 +59,11 @@ async def reserve_room(request: Request):
                                         + 'rooms/reserve', http_verb='POST',
                                     headers=request.headers, body=event.body)
             if reserved.status_code == 201:
-                room_name = data["room"]
+                params = {"room": data["room"]}
+                params.update(json.loads(reserved.body))
                 finalized = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("EVENT_SERVICE_PORT")
                                              + 'events/finalize', http_verb='PUT',
-                                         headers=request.headers, params={"room": room_name}, body=event.body)
-                params = {'room': room_name}
-                params += json.loads(reserved.body)
-                finalized = await facade(url="http://127.0.0.1:8080/events/finalize", http_verb='PUT',
-                                                 headers=request.headers, params=params, body=event.body)
+                                         headers=request.headers, params=params, body=event.body)
                 return finalized
     except HTTPException as e:
         return {"message": e.detail}
@@ -81,6 +78,7 @@ and returns the response containing the events.
 
 If there's an HTTP exception, the error message will be returned in a JSON object.
 '''
+
 
 @facadeRoutes.get("/events")
 async def get_events(request: Request):
@@ -103,21 +101,21 @@ If there's an HTTP exception at any stage, the error message will be returned in
 '''
 
 
+# TODO: WE NO LONGER NEED TO SAVE EVENTS IN DB, BUT MAYBE WE CAN SEND EMAILS TO NOTIFY THAT EVENT HAS BEEN DELETED
+#  (THIS IS TOTALLY OPTIONAL)
 @facadeRoutes.delete("/events/{event_id}")
 async def delete_event(event_id: str, request: Request):
     try:
-        event = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':'+ os.getenv("EVENT_SERVICE_PORT") +'/events/'
-                                 + event_id, http_verb='GET', headers=request.headers)
 
-        if event.status_code == 200:
             reserved = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_PORT")
-                                    + 'rooms/reserve', http_verb='DELETE',
-                                    headers = request.headers, body = event.body)
+                                    + 'rooms/reservation/' + event_id, http_verb='DELETE',
+                                    headers=request.headers)
             # if reservation deleted:
-            if reserved.status_code == 200:
-                deleted_event = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':'
-                                                 + os.getenv("EVENT_SERVICE_PORT") +'/events/' + event_id,
-                                             http_verb='DELETE', headers=request.headers)
-                return deleted_event
+            # if reserved.status_code == 200:
+            #     deleted_event = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':'
+            #                                      + os.getenv("EVENT_SERVICE_PORT") +'/events/' + event_id,
+            #                                  http_verb='DELETE', headers=request.headers)
+            #     return deleted_event
+            return reserved
     except HTTPException as e:
         return {"message": e.detail}
