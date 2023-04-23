@@ -10,7 +10,7 @@ import { toast as customAlert } from "react-custom-alert";
 
 export const AdminPage = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   useEffect(() => {
@@ -23,11 +23,12 @@ export const AdminPage = () => {
           }
         });
         setUsers(response);
+        setLoading(false);
       } catch (error) {
         console.error(error);
+        setLoading(false);
         return customAlert.error("Failed to get users");
       }
-      setLoading(false);
     };
 
     fetchData();

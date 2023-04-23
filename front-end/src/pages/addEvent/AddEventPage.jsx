@@ -33,7 +33,7 @@ export const AddEventPage = () => {
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
   const history = useHistory();
 
@@ -55,12 +55,13 @@ export const AddEventPage = () => {
           }
         );
         setAvailableRooms(response);
+        setLoading(false);
       } catch (error) {
         console.error(error);
         setShowSidebar(false);
+        setLoading(false);
         return customAlert.error("Failed to get available rooms");
       }
-      setLoading(false);
     };
 
     if (checkTime(startDate, startTime, endTime)) {
@@ -109,6 +110,7 @@ export const AddEventPage = () => {
 
   const handleSubmit = () => {
     const reserveRoom = async () => {
+      setLoading(true);
       const formattedStartTime = formatTime(startDate, startTime);
       const formattedEndTime = formatTime(startDate, endTime);
       const formattedGuestList = guestList.length > 0 ? guestList.toString() : null;
@@ -141,10 +143,12 @@ export const AddEventPage = () => {
           endTime: endTime,
           room: selectedRoom?.name
         });
+        setLoading(false);
         setShowModal(true);
         clearForm();
       } catch (error) {
         console.error(error);
+        setLoading(false);
         return customAlert.error("Failed to create event");
       }
     };
@@ -281,8 +285,13 @@ export const AddEventPage = () => {
           </Col>
           <Col>
             <Button variant="primary" type="button" className={styles["form-button"]} onClick={handleSubmit}>
-              <CheckCircle />
-              <span>Create</span>
+              {loading && <Spinner animation="grow" size="sm" />}
+              {!loading && (
+                <>
+                  <CheckCircle />
+                  <span>Create</span>
+                </>
+              )}
             </Button>
           </Col>
         </Row>
