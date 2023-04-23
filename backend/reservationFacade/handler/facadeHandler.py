@@ -4,8 +4,16 @@ from typing import Optional
 import jwt
 from fastapi import HTTPException, status
 import json
-from fastapi.responses import JSONResponse
 import requests
+from starlette.responses import JSONResponse
+
+# from requests.adapters import HTTPAdapter
+# from urllib3.util.retry import Retry
+#
+# session = requests.Session()
+# retry = Retry(total=5, backoff_factor=0.1)
+# adapter = HTTPAdapter(max_retries=retry)
+# session.mount('http://', adapter)
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or None
 if SECRET_KEY is None:
@@ -17,17 +25,26 @@ def decode_jwt(encoded_token):
     return jwt.decode(encoded_token, SECRET_KEY, algorithms=['HS256'])
 
 
-async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] = None, body: Optional[str] = None):
+async def get_privilege(headers):
+    jwt_token = headers["authorization"].split(" ")[1]
+    decoded_token = decode_jwt(jwt_token)
+    url = 'http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("USER_MANAGEMENT_SERVICE_PORT") + "/users/privileges"
+    response = requests.get(url, headers=headers, params={"email": decoded_token.get("email")})
+    data = response.json()
+    return data['privilege']
+
+
+async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] = None,
+                 body: Optional[str] = None) -> object:
     if headers is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
     jwt_token = headers["authorization"].split(" ")[1]
     decoded_token = decode_jwt(jwt_token)
-    request_headers = {
-        "Content-Type": "application/json"
-    }
+    privilege = await get_privilege(headers)
     data = {
         "email": decoded_token.get("email"),
-        "google_auth_token": headers["authorization"].split(" ")[2]
+        "google_auth_token": headers["authorization"].split(" ")[2],
+        "privilege": privilege
     }
     if params:
         for key, value in params.items():
@@ -36,15 +53,14 @@ async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] =
         event_data = json.loads(body)
         data['event'] = event_data
     if http_verb == 'GET':
-        response = requests.get(url, headers=request_headers, json=data)
+        response = requests.get(url, headers=headers, json=data)
     elif http_verb == 'PUT':
-        response = requests.put(url, headers=request_headers, json=data)
+        response = requests.put(url, headers=headers, json=data)
     elif http_verb == 'POST':
-        response = requests.post(url, headers=request_headers, json=data)
+        response = requests.post(url, headers=headers, json=data)
     elif http_verb == 'DELETE':
-        response = requests.delete(url, headers=request_headers, json=data)
-
+        response = requests.delete(url, headers=headers, json=data)
     else:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                             detail="Invalid HTTP Verb in Facade Layer")
-    return response
+    return JSONResponse(status_code=response.status_code, content=response.json())

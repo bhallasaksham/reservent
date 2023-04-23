@@ -1,1 +1,1 @@
-from .roomHandler import GetRoomsHandler, ReserveRoomHandler
+from .roomHandler import GetRoomsHandler, ReserveRoomHandler, GetRoomsDecoratorImpl
