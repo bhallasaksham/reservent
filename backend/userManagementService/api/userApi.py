@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from userManagementService.utils.oauth import get_oauth
 from userManagementService.utils.jwt import get_jwt
 from userManagementService.handler.userHandler import UserHandler
+from userManagementService.utils.constants import FRONT_END_URL
 
 userRoutes = APIRouter()
 userHandler = UserHandler()
@@ -36,8 +37,7 @@ async def auth(request: FastAPIRequest, access_token_cookie: str = Cookie(None))
         return {"message": "Error creating user", "error": str(e)}
     
     # Create a new JSON response with the user data
-    # response = JSONResponse(user)
-    response = RedirectResponse(url="http://127.0.0.1:3000")
+    response = RedirectResponse(url=FRONT_END_URL)
     
     # Set the access token cookie if it doesn't already exist
     if access_token_cookie is None:
