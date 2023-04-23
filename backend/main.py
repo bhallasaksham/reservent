@@ -11,6 +11,7 @@ from reservationFacade import facadeRoutes
 from starlette.middleware.sessions import SessionMiddleware
 
 from adminService.middlewares.auth import authentication
+from userManagementService.utils.constants import FRONT_END_URL
 
 user_management_app = FastAPI()
 room_reservation_app = FastAPI()
@@ -32,8 +33,7 @@ if SECRET_KEY is None:
     raise BaseException('Missing env variables')
 user_management_app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
-
-origins = ["http://127.0.0.1:3000"]
+origins = [FRONT_END_URL]
 user_management_app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
