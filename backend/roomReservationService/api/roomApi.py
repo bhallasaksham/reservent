@@ -46,6 +46,7 @@ async def root():
 @roomRoutes.get("/rooms/available")
 async def get_available_rooms(request: Request):
     try:
+        print(request)
         handler = GetRoomsHandler(request)
         if request.privilege == UserPrivilege.ADMIN or request.privilege == UserPrivilege.STAFF:
             handler = GetRoomsDecoratorAdmin(handler, request)

@@ -38,15 +38,15 @@ async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] =
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
     jwt_token = headers["authorization"].split(" ")[1]
     decoded_token = decode_jwt(jwt_token)
-    privilege = await get_privilege(headers)
-    print(privilege)
+    # privilege = await get_privilege(headers)
+    # print(privilege)
     request_headers = {
         "Content-Type": "application/json"
     }
     data = {
         "email": decoded_token.get("email"),
         "google_auth_token": headers["authorization"].split(" ")[2],
-        "privilege": privilege
+        "privilege": "2"
     }
     if params:
         for key, value in params.items():
@@ -56,14 +56,13 @@ async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] =
         data['event'] = event_data
     print(data)
     if http_verb == 'GET':
-        response = await requests.get(url, headers=request_headers, json=data)
+        response = requests.get(url, headers=request_headers, json=data)
     elif http_verb == 'PUT':
-        response = await requests.put(url, headers=request_headers, json=data)
+        response = requests.put(url, headers=request_headers, json=data)
     elif http_verb == 'POST':
-        response = await requests.post(url, headers=request_headers, json=data)
+        response = requests.post(url, headers=request_headers, json=data)
     elif http_verb == 'DELETE':
-        response = await requests.delete(url, headers=request_headers, json=data)
-
+        response = requests.delete(url, headers=request_headers, json=data)
     else:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                             detail="Invalid HTTP Verb in Facade Layer")
