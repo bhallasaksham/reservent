@@ -10,7 +10,7 @@ from database.schemas.userSchema import UserPrivilege
 roomRoutes = APIRouter()
 
 
-class Event(BaseModel):
+class Event(BaseModel):  # TODO: may need to change this based on new return structure of event service
     summary: str
     description: str
     start: dict
