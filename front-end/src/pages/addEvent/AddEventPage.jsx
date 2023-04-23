@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip, Modal, Spinner } from "react-bootstrap";
+import { Form, Button, Row, Col, OverlayTrigger, Tooltip, Modal, Spinner } from "react-bootstrap";
 import styles from "./AddEventPage.module.css";
-import { RoomCard, CustomBadge, TimeRangePicker } from "../../components";
-import {
-  PlusSquare,
-  PencilSquare,
-  PersonPlusFill,
-  CheckCircle,
-  ArrowLeftCircle,
-  QuestionCircle
-} from "react-bootstrap-icons";
+import { CustomBadge, TimeRangePicker, RoomPicker } from "../../components";
+import { PersonPlusFill, CheckCircle, ArrowLeftCircle, QuestionCircle } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
 import { getRoundedDate, addMinutes, formatTime, getDate, getTime, checkTime, PrivilegeEnum } from "../../tools";
 import { toast as customAlert } from "react-custom-alert";
@@ -28,59 +21,12 @@ export const AddEventPage = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [curGuest, setCurGuest] = useState("");
   const [guestList, setGuestList] = useState([]);
-  const [availableRooms, setAvailableRooms] = useState([]);
   const [createdEvent, setCreatedEvent] = useState(null);
 
-  const [showSidebar, setShowSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
   const history = useHistory();
-
-  const searchRooms = () => {
-    const fetchData = async () => {
-      setLoading(true);
-      const formattedStartTime = formatTime(startDate, startTime);
-      const formattedEndTime = formatTime(startDate, endTime);
-      try {
-        const queryParams =
-          `start_time=${formattedStartTime}&end_time=${formattedEndTime}` +
-          (numOfParticipant > 0 ? `&num_guests=${numOfParticipant}` : "");
-        const { data: response } = await axios.get(
-          `${process.env.REACT_APP_ROOM_RESERVATION_FACADE}/rooms/available?${queryParams}`,
-          {
-            headers: {
-              Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
-            }
-          }
-        );
-        setAvailableRooms(response);
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setShowSidebar(false);
-        setLoading(false);
-        return customAlert.error("Failed to get available rooms");
-      }
-    };
-
-    if (checkTime(startDate, startTime, endTime)) {
-      fetchData();
-      setShowSidebar(true);
-      setSelectedRoom(null);
-    }
-  };
-
-  const chooseRoom = (room) => {
-    console.log("select: " + room.name);
-    setSelectedRoom(room);
-    setShowSidebar(false);
-  };
-
-  const deleteRoom = (room) => {
-    console.log("delete: " + room.name);
-    setSelectedRoom(null);
-  };
 
   const addGuest = (guest) => {
     if (curGuest !== "") {
@@ -98,7 +44,7 @@ export const AddEventPage = () => {
   };
 
   const handleEnterKey = (event, guest) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       addGuest(guest);
     }
   };
@@ -115,8 +61,8 @@ export const AddEventPage = () => {
       const formattedEndTime = formatTime(startDate, endTime);
       const formattedGuestList = guestList.length > 0 ? guestList.toString() : null;
       const isStudent =
-        cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Student;
-      const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
+        cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Student; // TODO: delete
+      const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null; // TODO: delete
       try {
         const { data: response } = await axios.post(
           `${process.env.REACT_APP_ROOM_RESERVATION_FACADE}/rooms/reserve`,
@@ -127,8 +73,8 @@ export const AddEventPage = () => {
             end_time: formattedEndTime,
             guests: formattedGuestList,
             room: selectedRoom?.name,
-            isStudent: isStudent,   // TODO: remove
-            email: currentUser.email
+            isStudent: isStudent, // TODO: remove
+            email: currentUser.email // TODO: delete
           },
           {
             headers: {
@@ -136,7 +82,8 @@ export const AddEventPage = () => {
             }
           }
         );
-        setCreatedEvent({   // TODO: update using response
+        setCreatedEvent({
+          // TODO: update using response
           title: title,
           startDate: startDate,
           startTime: startTime,
@@ -174,7 +121,6 @@ export const AddEventPage = () => {
     setSelectedRoom(null);
     setCurGuest("");
     setGuestList([]);
-    setAvailableRooms([]);
   };
 
   return (
@@ -228,21 +174,14 @@ export const AddEventPage = () => {
 
             <Form.Group className="mb-3" controlId="formRoom">
               <Form.Label>Room *</Form.Label>
-              <div>
-                {selectedRoom && (
-                  <>
-                    <div className={styles["room-badge-group"]}>
-                      <CustomBadge content={selectedRoom.name} deleteContent={() => deleteRoom(selectedRoom)} />
-                    </div>
-                    <PencilSquare className={styles["search-room-button"]} onClick={searchRooms} />
-                  </>
-                )}
-                {!selectedRoom && (
-                  <OverlayTrigger overlay={<Tooltip>Click to search available rooms</Tooltip>}>
-                    <PlusSquare className={styles["search-room-button"]} onClick={searchRooms} />
-                  </OverlayTrigger>
-                )}
-              </div>
+              <RoomPicker
+                startDate={startDate}
+                startTime={startTime}
+                endTime={endTime}
+                numOfParticipant={numOfParticipant}
+                selectedRoom={selectedRoom}
+                setSelectedRoom={setSelectedRoom}
+              />
             </Form.Group>
           </Col>
           <Col>
@@ -297,27 +236,6 @@ export const AddEventPage = () => {
         </Row>
       </Form>
 
-      <Offcanvas show={showSidebar} placement={"end"} onHide={() => setShowSidebar(false)}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Available Rooms</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          {loading && <Spinner className="loading-spinner" animation="border" />}
-          {!loading && (
-            <>
-              {availableRooms.length === 0 && (
-                <>
-                  <p>Sorry, we couldn't find a available room.</p>
-                  <p>Please try searching for a different time period or number of participants.</p>
-                </>
-              )}
-              {availableRooms.length > 0 &&
-                availableRooms?.map((room) => <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />)}
-            </>
-          )}
-        </Offcanvas.Body>
-      </Offcanvas>
-
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Event Created</Modal.Title>
@@ -338,6 +256,4 @@ export const AddEventPage = () => {
 };
 
 // TODO: more styles on form & cards
-// TODO: seperate offcanvas
 // TODO: remove console.log()
-// TODO: loading after submitting
