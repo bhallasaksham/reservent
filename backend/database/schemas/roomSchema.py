@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String
+
+from sqlalchemy import Column, Integer, String, Enum
 from sqlalchemy.ext.declarative import declarative_base
 
 from database.dbConfig import DatabaseEngine
@@ -7,6 +8,10 @@ Base = declarative_base()
 db = DatabaseEngine.getInstance()
 engine = db.getEngine()
 
+class Privilege(Enum):
+    STUDENT = 1
+    STAFF_AND_FACULTY = 2
+
 
 class RoomSchema(Base):
     __tablename__ = 'tblRooms'
@@ -14,17 +19,14 @@ class RoomSchema(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     url = Column(String)
-    size = Column(Integer)
+    capacity = Column(Integer)
+    privilege = Column(Integer)
 
-    def __init__(self, name=None, url=None, size=None):
+    def __init__(self, name=None, url=None, capacity=None, privilege=None):
         self.name = name
         self.url = url
-        self.size = size
+        self.capacity = capacity
+        self.privilege = privilege
 
         # Create tables if not exist
         Base.metadata.create_all(engine)
-
-
-    # TODO: remove this after renaming db column 'size' to 'capacity'
-    def getRoom(self):
-        return {"name": self.name, "capacity": self.size}
