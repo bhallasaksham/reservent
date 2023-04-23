@@ -11,25 +11,23 @@ eventRoutes = APIRouter()
 
 class CreateEventRequest(BaseModel):
     email: str
-    auth_token: str
+    google_auth_token: str
     privilege: str
-    start_time: str
-    end_time: str
-    title: str
     description: Optional[str] = None
+    end_time: str
     guests: Optional[str] = None
     room: str
     room_url: str
-    isStudent: bool
-
+    start_time: str
+    title: str
 
 
 class FinalizeEventRequest(BaseModel):
-    room: str
-    room_id: str  # TODO: SAVE THIS IN DB
-    event: dict
-    google_auth_token: str
     email: str
+    google_auth_token: str
+    privilege: str
+    room: str
+    event_id: str  # No need to save this in db, but return to client. Client can use this event id to make delete request
 
 
 @eventRoutes.get("/")
