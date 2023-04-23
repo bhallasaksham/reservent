@@ -44,11 +44,15 @@ async def root():
 @roomRoutes.get("/rooms/available")
 async def get_available_rooms(request: Request):
     try:
+        print("room available")
         handler = GetRoomsHandler(request)
         userPrivilege = userHandler.get_user_privilege(request.email)
+        print("userPrivilege: ", userPrivilege)
         if userPrivilege == UserPrivilege.ADMIN or userPrivilege == UserPrivilege.STAFF:
             handler = GetRoomsDecoratorAdmin(handler, request)
-        return JSONResponse(status_code=200, content=handler.get_rooms())
+        content = handler.get_rooms()
+        print("content: ", content)
+        return JSONResponse(status_code=200, content=content)
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})

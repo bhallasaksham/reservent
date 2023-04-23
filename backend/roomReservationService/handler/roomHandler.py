@@ -59,6 +59,7 @@ class GetRoomsHandler:
                     self.available_rooms.append({
                         'name': room.name,
                         'capacity': room.capacity,
+                        'url': room.url,
                     })
         return self.available_rooms
     
@@ -94,6 +95,7 @@ class GetRoomsDecoratorAdmin(GetRoomsDecorator):
                     rooms.append({
                         'name': room.name,
                         'capacity': room.capacity,
+                        'url': room.url,
                     })
         return rooms
 
