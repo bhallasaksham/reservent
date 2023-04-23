@@ -58,6 +58,7 @@ class GetRoomsHandler:
                 if self.is_room_available(room, event):
                     self.available_rooms.append({
                         'name': room.name,
+                        'calendar_id': calendar_id,
                         'capacity': room.capacity,
                     })
         return self.available_rooms
@@ -79,7 +80,7 @@ class GetRoomsDecorator(GetRoomsInterface):
         return self._interface.getRooms()
 
 
-class GetRoomsDecoratorAdmin(GetRoomsDecorator):
+class GetRoomsDecoratorImpl(GetRoomsDecorator):
     def __init__(self, interface, request):
         super().__init__(interface)
         self.request = request
@@ -94,6 +95,7 @@ class GetRoomsDecoratorAdmin(GetRoomsDecorator):
                 if self.is_room_available(room, event):
                     rooms.append({
                         'name': room.name,
+                        'calendar_id': calendar_id,
                         'capacity': room.capacity,
                     })
         return rooms
@@ -143,6 +145,7 @@ class ReserveRoomHandler:
         # print(self.reservation.event.json())
         # print(event)
         inserted = service.events().insert(calendarId='primary', body=event).execute()  # TODO: uncomment before demo
+        print(inserted.id)
         return inserted.id
 
     def delete_event(self, event_id):

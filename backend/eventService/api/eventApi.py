@@ -11,6 +11,8 @@ eventRoutes = APIRouter()
 
 class CreateEventRequest(BaseModel):
     email: str
+    auth_token: str
+    privilege: str
     start_time: str
     end_time: str
     title: str
@@ -19,6 +21,7 @@ class CreateEventRequest(BaseModel):
     room: str
     room_url: str
     isStudent: bool
+
 
 
 class FinalizeEventRequest(BaseModel):
