@@ -57,7 +57,7 @@ async def reserve_room(request: Request):
 
         if event.status_code == 201:
             reserved = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_PORT")
-                                        + 'rooms/reserve', http_verb='POST',
+                                        + '/rooms/reserve', http_verb='POST',
                                     headers=request.headers, body=event.body)
             if reserved.status_code == 201:
                 params = {"room": data["room"]}
