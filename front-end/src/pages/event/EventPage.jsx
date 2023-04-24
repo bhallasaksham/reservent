@@ -63,7 +63,7 @@ export const EventPage = () => {
           {events.length > 0 && (
             <div className={styles["event-list"]}>
               {events?.map((event, i) => (
-                <EventCard event={formatEvent(event)} updateCardList={deleteEventInList} />
+                <EventCard event={formatEvent(event)} updateCardList={() => deleteEventInList(event)} />
               ))}
             </div>
           )}
