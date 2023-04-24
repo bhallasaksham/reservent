@@ -20,7 +20,7 @@ npm start
 
 3. go to http://127.0.0.1:3000
 
-## Task Checklist (last update: 04/21)
+## Task Checklist (last update: 04/24)
 
 ### feature/frontend-setup
 
@@ -77,4 +77,4 @@ npm start
 ### yixinsun/fe-refactor
 
 - [ ] fix eslint warnings
-- [ ] add comments
+- [x] add comments

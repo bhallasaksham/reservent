@@ -5,6 +5,11 @@ import { useCookies } from "react-cookie";
 import React, { useState, useEffect } from "react";
 import { PrivilegeEnum } from "./tools";
 
+/*
+Route: used by unauthenticated user
+UserRoute: used by authenticated user
+AdminRoute: used by admin user
+*/
 const UserRoute = ({ component, isAuthenticated, ...rest }) => {
   const routeComponent = (props) => {
     return isAuthenticated ? React.createElement(component, props) : <Redirect to={{ pathname: "/signIn" }} />;

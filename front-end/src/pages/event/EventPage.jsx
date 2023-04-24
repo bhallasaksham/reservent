@@ -14,6 +14,11 @@ export const EventPage = () => {
   const [loading, setLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
+  /*
+  Get events
+  - Response: array of events (id, title, description, startTime, endTime, room, creator, guests)
+  - Privilege: for student, only get events created by students; for staff/admin, get all events 
+  */
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -35,11 +40,12 @@ export const EventPage = () => {
     fetchData();
   }, []);
 
+  // TODO: might not need this
   const formatEvent = (event) => {
     // console.log(event.guests.filter((item) => item !== event?.creator))
     event.guests = event.guests.filter((item) => item.trim() !== event?.creator);
     return event;
-  }
+  };
 
   const deleteEventInList = (event) => {
     setEvents(events.filter((item) => item !== event));

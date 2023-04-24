@@ -51,6 +51,11 @@ export const AddEventPage = () => {
     setGuestList(guestList.filter((item) => item !== guest));
   };
 
+  /*
+  Create event and reserve room
+  - Payload: title, description (optional), start_time, end_time, guests (optional), room, room_url
+  - Privilege: all
+  */
   const handleSubmit = () => {
     const reserveRoom = async () => {
       setLoading(true);

@@ -19,6 +19,10 @@ export const SignInPage = () => {
     }
   }, [cookies, history]);
 
+  /*
+  User sign in
+  Redirect to user management service to access google auth
+  */
   const handleClick = () => {
     window.location.href = `${process.env.REACT_APP_USER_MANAGEMENT_SERIVCE}/login`;
   };

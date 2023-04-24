@@ -15,6 +15,12 @@ export const RoomPicker = ({ startDate, startTime, endTime, numOfParticipant, se
   const [loading, setLoading] = useState(false);
   const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
+  /*
+  Get available rooms
+  - QueryParam: start_time, end_time, num_guests (optional)
+  - Response: array of rooms (name, capacity, room_url)
+  - Privilege: for student, only get small rooms; for staff/admin, get all rooms 
+  */
   const searchRooms = () => {
     const fetchData = async () => {
       setLoading(true);

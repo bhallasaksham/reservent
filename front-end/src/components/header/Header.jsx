@@ -17,6 +17,10 @@ export const Header = () => {
     history.push("/signIn");
   };
 
+  /*
+  User Sign out 
+  Remove cookies and redirect to sign in page
+  */
   const handleSignOut = () => {
     const logOut = async () => {
       try {

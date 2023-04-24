@@ -13,6 +13,11 @@ export const AdminPage = () => {
   const [loading, setLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
+  /*
+  Get all users
+  - Response: array of users (name, email, privilege)
+  - Privilege: admin
+  */
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);

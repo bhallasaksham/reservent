@@ -37,6 +37,12 @@ export const UserTableRow = ({ user, i, updateTable }) => {
     setShowDeleteModal(true);
   };
 
+  /*
+  Update user privilege
+  - Payload: target_user_email, privilege
+  - Response: updated user (email, privilege)
+  - Privilege: admin
+  */
   const updateUser = () => {
     const updateData = async () => {
       try {
@@ -64,6 +70,11 @@ export const UserTableRow = ({ user, i, updateTable }) => {
     updateData();
   };
 
+  /*
+  Delete user
+  - Payload: target_user_email
+  - Privilege: admin
+  */
   const deleteUser = () => {
     const deleteData = async () => {
       try {
@@ -87,6 +98,7 @@ export const UserTableRow = ({ user, i, updateTable }) => {
     deleteData();
   };
 
+  // this is used to add tooltip for disabled button only
   const ConditionalTooltipWrapper = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
 
   return (
