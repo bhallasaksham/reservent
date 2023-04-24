@@ -12,10 +12,10 @@ roomRoutes = APIRouter()
 
 class Event(BaseModel):
     summary: str
-    description: str
+    description: Optional[str] = None
     start: dict
     end: dict
-    guests: list
+    guests: Optional[list]  =  None
     visibility: str
 
 
@@ -56,7 +56,7 @@ async def get_available_rooms(request: Request):
 async def reserve_room(reservation: Reservation):
     try:
         handler = ReserveRoomHandler(reservation)
-        return JSONResponse(status_code=201, content={"id": handler.create_event()})
+        return JSONResponse(status_code=201, content={"event_id":handler.create_event()})
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})

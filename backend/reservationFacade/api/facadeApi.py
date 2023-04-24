@@ -60,8 +60,8 @@ async def reserve_room(request: Request):
                                         + '/rooms/reserve', http_verb='POST',
                                     headers=request.headers, body=event.body)
             if reserved.status_code == 201:
-                params = {"room": data["room"]}
-                params.update(json.loads(reserved.body))
+                body = json.loads(reserved.body)
+                params = {'room': data["room"], 'event_id': body['event_id']}
                 finalized = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("EVENT_SERVICE_PORT")
                                              + '/events/finalize', http_verb='PUT',
                                          headers=request.headers, params=params, body=event.body)
