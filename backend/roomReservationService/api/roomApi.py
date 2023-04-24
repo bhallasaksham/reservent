@@ -26,6 +26,12 @@ class Reservation(BaseModel):
     event: Event
 
 
+class DeleteRequest(BaseModel):
+    email: str
+    google_auth_token: str
+    privilege: str
+
+
 class Request(BaseModel):
     email: str
     google_auth_token: str
@@ -63,9 +69,9 @@ async def reserve_room(reservation: Reservation):
 
 
 @roomRoutes.delete("/rooms/reservation/{event_id}")
-async def delete_room_reservation(event_id: str):
+async def delete_room_reservation(delete_request: DeleteRequest, event_id: str):
     try:
-        handler = ReserveRoomHandler(reservation=None)
+        handler = ReserveRoomHandler(reservation=delete_request)
         return JSONResponse(status_code=200, content=handler.delete_event(event_id))
     except Exception as e:
         print(e)
