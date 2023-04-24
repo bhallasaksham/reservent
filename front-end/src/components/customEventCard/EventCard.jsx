@@ -22,6 +22,11 @@ export const EventCard = ({ event, updateCardList }) => {
     return guests.join(", ");
   };
 
+  /*
+  Delete event
+  - QureyParam: event id
+  - Privilege: users can only delete their own events
+  */
   const deleteEvent = () => {
     const deleteData = async () => {
       try {
@@ -66,7 +71,7 @@ export const EventCard = ({ event, updateCardList }) => {
                   {event.creator} {isCurrentUser && "(you)"}
                 </span>
               </div>
-              {event.guests && (
+              {event.guests?.length > 0 && (
                 <div>
                   <People /> <span>{getGuestString(event.guests)}</span>
                 </div>

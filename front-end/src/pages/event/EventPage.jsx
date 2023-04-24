@@ -51,40 +51,6 @@ export const EventPage = () => {
     setEvents(events.filter((item) => item !== event));
   };
 
-  // const fakeEvents = [
-  //   {
-  //     id: 2,
-  //     title: "Test Email 1",
-  //     description: "Test Description",
-  //     startTime: "Sat Apr 22 04:00PM",
-  //     endTime: "Sat Apr 22 05:00PM",
-  //     room: "RM120",
-  //     creator: "yixinsun@andrew.cmu.edu",
-  //     guests: ["ahpatel@andrew.cmu.edu"]
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Test Email 2",
-  //     description: "Test Description",
-  //     startTime: "Sat Apr 22 04:00PM",
-  //     endTime: "Sat Apr 22 05:00PM",
-  //     room: "RM120",
-  //     creator: "ahpatel@andrew.cmu.edu",
-  //     guests: ["patelami3431@gmail.com"]
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "Test Email 3",
-  //     description: "Test Description",
-  //     startTime: "Sat Apr 22 04:00PM",
-  //     endTime: "Sat Apr 22 05:00PM",
-  //     room: "RM120",
-  //     creator: "ahpatel@andrew.cmu.edu",
-  //     guests: ["patelami3431@gmail.com"]
-  //   }
-  // ];
-
-  // const fakeEvents2 = [];
 
   return (
     <MainLayout>
@@ -109,3 +75,5 @@ export const EventPage = () => {
     </MainLayout>
   );
 };
+
+// TODO: handle eslint warning for eventpage and eventcard
