@@ -35,7 +35,8 @@ class EventDao:
         return event
 
     def get_events(self, privilege):
-        now = datetime.now(pytz.timezone('US/Pacific'))
+        pst_tz = pytz.timezone('US/Pacific')
+        now = datetime.now(pst_tz).replace(tzinfo=None)
         if privilege != UserPrivilege.USER:
             events = self.session.query(EventSchema).filter(EventSchema.startTime >= now).all()
         else:
