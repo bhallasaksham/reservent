@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Spinner, Button, Table, DropdownButton, Dropdown } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import styles from "./EventPage.module.css";
 import { useCookies } from "react-cookie";
-import { PersonFillCheck } from "react-bootstrap-icons";
 import { EventCard } from "../../components";
 import { toast as customAlert } from "react-custom-alert";
 import { Link } from "react-router-dom";
@@ -12,7 +11,7 @@ import { Link } from "react-router-dom";
 export const EventPage = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   /*
   Get events
@@ -38,11 +37,9 @@ export const EventPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [cookies]);
 
-  // TODO: might not need this
   const formatEvent = (event) => {
-    // console.log(event.guests.filter((item) => item !== event?.creator))
     event.guests = event.guests.filter((item) => item.trim() !== event?.creator);
     return event;
   };
@@ -75,5 +72,3 @@ export const EventPage = () => {
     </MainLayout>
   );
 };
-
-// TODO: handle eslint warning for eventpage and eventcard

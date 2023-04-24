@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, Button, Modal } from "react-bootstrap";
 import styles from "./EventCard.module.css";
 import { TextLeft, PersonCircle, People, Clock, DoorOpen } from "react-bootstrap-icons";
@@ -9,7 +9,7 @@ import { toast as customAlert } from "react-custom-alert";
 
 export const EventCard = ({ event, updateCardList }) => {
   const [showModal, setShowModal] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
   const isCurrentUser = currentUser.email === event.creator;
