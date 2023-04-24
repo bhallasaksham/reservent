@@ -46,11 +46,6 @@ class EventDao:
         ]
         return events_list
 
-    def get_event_by_id(self, event_id):
-        event = self.session.query(EventSchema).filter(EventSchema.id == event_id).first()
-        return EventModel(id=event.id, title=event.title, description=event.description, startTime=get_timestring_from_datetime(event.startTime),
-            endTime=get_timestring_from_datetime(event.endTime), room=event.room, creator=event.creator, guests=ast.literal_eval(event.guests), privilege=event.privilege).dict()
-
     def delete_event_by_id(self, event_id):
         query = self.session.query(EventSchema).filter(EventSchema.id == event_id)
         query.delete()

@@ -109,7 +109,7 @@ If there's an HTTP exception at any stage, the error message will be returned in
 async def delete_event(event_id: str, request: Request):
     try:
             reserved = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_PORT")
-                                    + 'rooms/reservation/' + event_id, http_verb='DELETE',
+                                    + '/rooms/reservation/' + event_id, http_verb='DELETE',
                                     headers=request.headers)
             # if reservation deleted:
             if reserved.status_code == 200:
