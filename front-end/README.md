@@ -71,7 +71,7 @@ npm start
 - [x] fe env
 - [x] update get rooms
 - [x] update reserve rooms
-- [ ] integration - get events
-- [ ] integration - delete events
+- [x] integration - get events
+- [x] integration - delete events
 - [x] fix eslint warnings
 - [x] add comments
