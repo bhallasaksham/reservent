@@ -1,5 +1,4 @@
-import json
-from datetime import datetime
+from typing import List
 
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, DateTime
@@ -15,7 +14,7 @@ engine = db.getEngine()
 class EventSchema(Base):
     __tablename__ = 'tblEvents'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
     title = Column(String)
     description = Column(String)
     startTime = Column(DateTime)
@@ -23,8 +22,21 @@ class EventSchema(Base):
     room = Column(String)
     creator = Column(String)
     guests = Column(String)
+    privilege = Column(Integer)
 
-    def __init__(self, title = None, description = None, startTime = None, endTime = None, room = None, creator = None, guests = None):
+    def __init__(
+            self,
+            id = None,
+            title = None,
+            description = None,
+            startTime = None,
+            endTime = None,
+            room = None,
+            creator = None,
+            guests = None,
+            privilege = None
+    ):
+        self.id = id
         self.title = title
         self.description = description
         self.startTime = startTime
@@ -32,17 +44,19 @@ class EventSchema(Base):
         self.room = room
         self.creator = creator
         self.guests = guests
+        self.privilege = privilege
 
         # Create the table if it does not exist
         Base.metadata.create_all(engine)
 
 # Pydantic schema for the Event model
 class EventModel(BaseModel):
-    id: int
+    id: str
     title: str
     description: str
     startTime: str
     endTime: str
     room: str
     creator: str
-    guests: str
+    guests: List[str]
+    privilege: int
