@@ -56,7 +56,7 @@ async def get_available_rooms(request: Request):
 async def reserve_room(reservation: Reservation):
     try:
         handler = ReserveRoomHandler(reservation)
-        return JSONResponse(status_code=201, content=handler.create_event())
+        return JSONResponse(status_code=201, content={"id": handler.create_event()})
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})

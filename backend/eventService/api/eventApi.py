@@ -11,7 +11,6 @@ eventRoutes = APIRouter()
 
 class CreateEventRequest(BaseModel):
     email: str
-    auth_token: str
     privilege: str
     start_time: str
     end_time: str
@@ -20,22 +19,26 @@ class CreateEventRequest(BaseModel):
     guests: Optional[str] = None
     room: str
     room_url: str
-    isStudent: bool
-
 
 
 class FinalizeEventRequest(BaseModel):
     room: str
-    room_id: str  # TODO: SAVE THIS IN DB
+    id: str
     event: dict
     google_auth_token: str
     email: str
+    privilege: str
+
+class GetEventsRequest(BaseModel):
+    privilege: str
 
 
-@eventRoutes.get("/")
-async def root():
-    return {"message": "Hello World"}
+'''
+Endpoint to create an event model using the Builder Pattern.
 
+If there are no errors encountered, it returns the event model that was created, with status code 201.
+Otherwise, if there's an HTTP exception, the error message will be returned in a JSON object with status code 500.
+'''
 
 @eventRoutes.post("/events")
 async def create_event(request: CreateEventRequest):
@@ -46,6 +49,12 @@ async def create_event(request: CreateEventRequest):
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 
+'''
+Endpoint to finalize an event by sending out the emails to the guests and saving the event in the DB.
+
+If there are no errors encountered, it returns with status code 200 and the success message.
+Otherwise, if there's an HTTP exception, the error message will be returned in a JSON object with status code 500.
+'''
 @eventRoutes.put("/events/finalize")
 async def finalize_event(request: FinalizeEventRequest):
     try:
@@ -56,10 +65,33 @@ async def finalize_event(request: FinalizeEventRequest):
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 
-@eventRoutes.get("/events/{event_id}")
-async def get_event(event_id: str):
+'''
+Endpoint to get all the events from the DB based on the privilege
+
+If there are no errors encountered, it returns with status code 200 and the list of events based on the privilege. For students,
+it would only return events from other students. For the other privileges, it will return entire list of events from the time 
+it was called. If there's an HTTP exception, the error message will be returned in a JSON object with status code 500.
+'''
+@eventRoutes.get("/events")
+async def get_events(request: GetEventsRequest):
     try:
-        return JSONResponse(status_code=200, content=EventHandler().get_event_by_id(event_id))
+        return JSONResponse(status_code=200, content=EventHandler().get_events(request.privilege))
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
+
+'''
+Endpoint to delete an event by ID from the DB.
+
+If there are no errors encountered, it returns with status code 200 and the success message.
+Otherwise, if there's an HTTP exception, the error message will be returned in a JSON object with status code 500.
+'''
+@eventRoutes.delete("/events/{event_id}")
+async def delete_event(event_id: str):
+    try:
+        EventHandler().delete_event_by_id(event_id)
+        return JSONResponse(status_code=200, content='success')
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
