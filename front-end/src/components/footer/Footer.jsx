@@ -1,4 +1,4 @@
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
 import styles from "./Footer.module.css";
 import { Github } from "react-bootstrap-icons";
 

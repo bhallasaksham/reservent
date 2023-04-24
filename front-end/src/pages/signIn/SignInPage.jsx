@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { MainLayout } from "../../layouts";
-import axios from "axios";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import styles from "./SignInPage.module.css";
 import { Google } from "react-bootstrap-icons";
@@ -8,7 +7,7 @@ import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 
 export const SignInPage = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
   const history = useHistory();
 
   const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"];
@@ -17,7 +16,7 @@ export const SignInPage = () => {
     if (isAuthenticated) {
       history.push("/");
     }
-  }, [cookies, history]);
+  }, [cookies, history, isAuthenticated]);
 
   /*
   User sign in
@@ -52,5 +51,3 @@ export const SignInPage = () => {
     </MainLayout>
   );
 };
-
-// TODO: fancy title text

@@ -2,7 +2,7 @@ import styles from "./App.module.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { HomePage, SignInPage, AddEventPage, AdminPage, EventPage } from "./pages";
 import { useCookies } from "react-cookie";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { PrivilegeEnum } from "./tools";
 
 /*
@@ -25,7 +25,7 @@ const AdminRoute = ({ component, isAdmin, ...rest }) => {
 };
 
 function App() {
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   const isAuthenticated = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"];
   const isAdmin = cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Admin; // "1" == 1

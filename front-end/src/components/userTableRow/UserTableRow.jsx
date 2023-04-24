@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Dropdown, OverlayTrigger, Tooltip, Modal } from "react-bootstrap";
 import styles from "./UserTableRow.module.css";
 import { PersonCheck, PersonDash } from "react-bootstrap-icons";
@@ -13,7 +13,7 @@ export const UserTableRow = ({ user, i, updateTable }) => {
   const [curPrivilege, setCurPrivilege] = useState(user.privilege);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   const isDisabled = curPrivilege === userPrivilege;
   const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;

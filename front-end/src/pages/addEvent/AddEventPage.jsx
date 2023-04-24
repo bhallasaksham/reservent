@@ -251,5 +251,3 @@ export const AddEventPage = () => {
     </MainLayout>
   );
 };
-
-// TODO: more styles on form & cards

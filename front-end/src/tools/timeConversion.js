@@ -3,7 +3,7 @@ import { toast as customAlert } from "react-custom-alert";
 // round up {date} to the nearest 30 minutes
 export const getRoundedDate = (date) => {
   const coeff = 1000 * 60 * 30; // 30 minutes
-  const roundedDate = new Date(Math.ceil(date.getTime() / coeff) * coeff); 
+  const roundedDate = new Date(Math.ceil(date.getTime() / coeff) * coeff);
   return roundedDate;
 };
 

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Spinner, Button, Table, DropdownButton, Dropdown } from "react-bootstrap";
+import { Spinner, Table } from "react-bootstrap";
 import styles from "./AdminPage.module.css";
 import { useCookies } from "react-cookie";
-import { PersonFillCheck } from "react-bootstrap-icons";
 import { UserTableRow } from "../../components";
 import { toast as customAlert } from "react-custom-alert";
 
 export const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   /*
   Get all users
@@ -37,7 +36,7 @@ export const AdminPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [cookies]);
 
   const deleteUserOnTable = (user) => {
     setUsers(users.filter((item) => item !== user));

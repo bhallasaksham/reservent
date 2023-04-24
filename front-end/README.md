@@ -73,8 +73,5 @@ npm start
 - [x] update reserve rooms
 - [ ] integration - get events
 - [ ] integration - delete events
-
-### yixinsun/fe-refactor
-
-- [ ] fix eslint warnings
+- [x] fix eslint warnings
 - [x] add comments

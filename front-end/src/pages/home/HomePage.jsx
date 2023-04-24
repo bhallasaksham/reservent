@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { MainLayout } from "../../layouts";
 import { Accordion, Carousel } from "react-bootstrap";
 import styles from "./HomePage.module.css";

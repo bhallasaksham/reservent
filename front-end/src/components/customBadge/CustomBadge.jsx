@@ -1,4 +1,4 @@
-import { Card, Button, Badge } from "react-bootstrap";
+import { Badge } from "react-bootstrap";
 import styles from "./CustomBadge.module.css";
 import { XLg } from "react-bootstrap-icons";
 
