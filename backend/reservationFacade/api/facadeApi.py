@@ -63,7 +63,7 @@ async def reserve_room(request: Request):
                 params = {"room": data["room"]}
                 params.update(json.loads(reserved.body))
                 finalized = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("EVENT_SERVICE_PORT")
-                                             + 'events/finalize', http_verb='PUT',
+                                             + '/events/finalize', http_verb='PUT',
                                          headers=request.headers, params=params, body=event.body)
                 return finalized
             else:
@@ -105,22 +105,18 @@ returns the response.
 If there's an HTTP exception at any stage, the error message will be returned in a JSON object.
 '''
 
-
-# TODO: WE NO LONGER NEED TO SAVE EVENTS IN DB, BUT MAYBE WE CAN SEND EMAILS TO NOTIFY THAT EVENT HAS BEEN DELETED
-#  (THIS IS TOTALLY OPTIONAL)
 @facadeRoutes.delete("/events/{event_id}")
 async def delete_event(event_id: str, request: Request):
     try:
-
             reserved = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_PORT")
                                     + 'rooms/reservation/' + event_id, http_verb='DELETE',
                                     headers=request.headers)
             # if reservation deleted:
-            # if reserved.status_code == 200:
-            #     deleted_event = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':'
-            #                                      + os.getenv("EVENT_SERVICE_PORT") +'/events/' + event_id,
-            #                                  http_verb='DELETE', headers=request.headers)
-            #     return deleted_event
+            if reserved.status_code == 200:
+                deleted_event = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':'
+                                                 + os.getenv("EVENT_SERVICE_PORT") +'/events/' + event_id,
+                                             http_verb='DELETE', headers=request.headers)
+                return deleted_event
             return reserved
     except HTTPException as e:
         return {"message": e.detail}

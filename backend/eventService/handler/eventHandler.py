@@ -5,15 +5,19 @@ from eventService.handler.gmailAdapter import GmailAdapter
 
 from eventService.dao.eventDao import EventDao
 
+from database.schemas.userSchema import UserPrivilege
+
 DATE_TIME_FORMAT = '%a %b %d %Y %H:%M:%S GMT %z'
 
 
 class EventHandler:
     def __init__(self):
-        self.event = None
-        self.room = None
         self.adaptor = GmailAdapter()
         self.dao = EventDao()
+        self.id = None
+        self.event = None
+        self.room = None
+        self.privilege = None
 
     def create_event(self, request):
         event_builder = EventBuilder()
@@ -23,9 +27,7 @@ class EventHandler:
             .set_start_time(datetime.strptime(request.start_time, DATE_TIME_FORMAT))\
             .set_end_time(datetime.strptime(request.end_time, DATE_TIME_FORMAT))
 
-        # room = RoomDao().getRoomByName(request.room)
-        room_calendar_email = request.room_url.split('=')[1]
-        event_builder.add_room_as_guest(room_calendar_email)
+        event_builder.add_room_as_guest(request.room_url)
 
         if request.description:
             event_builder.set_description(request.description)
@@ -37,7 +39,7 @@ class EventHandler:
                 for guest in guests:
                     event_builder.add_guest(guest)
 
-        if request.isStudent:
+        if request.privilege == UserPrivilege.USER:
             event_builder.set_visibility('public')
         else:
             event_builder.set_visibility('default')
@@ -47,8 +49,10 @@ class EventHandler:
         return self.event
 
     def finalize_event(self, request):
+        self.id = request.id
         self.event = request.event
         self.room = request.room
+        self.privilege = int(request.privilege)
 
         event = self.save_event()
 
@@ -56,10 +60,10 @@ class EventHandler:
             return self.adaptor.send_emails(request.event, request.google_auth_token, self.room)
 
     def save_event(self):
-        return self.dao.save(self.event, self.room)
+        return self.dao.save(self.event, self.room, self.id, self.privilege)
 
-    def get_events(self):
-        return self.dao.get_events()
+    def get_events(self, privilege):
+        return self.dao.get_events(int(privilege))
 
     def get_event_by_id(self, event_id):
         return self.dao.get_event_by_id(event_id)

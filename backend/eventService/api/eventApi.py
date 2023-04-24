@@ -11,7 +11,6 @@ eventRoutes = APIRouter()
 
 class CreateEventRequest(BaseModel):
     email: str
-    auth_token: str
     privilege: str
     start_time: str
     end_time: str
@@ -20,17 +19,18 @@ class CreateEventRequest(BaseModel):
     guests: Optional[str] = None
     room: str
     room_url: str
-    isStudent: bool
-
 
 
 class FinalizeEventRequest(BaseModel):
     room: str
-    room_id: str  # TODO: SAVE THIS IN DB
+    id: str
     event: dict
     google_auth_token: str
     email: str
+    privilege: str
 
+class GetEventsRequest(BaseModel):
+    privilege: str
 
 @eventRoutes.get("/")
 async def root():
@@ -56,10 +56,29 @@ async def finalize_event(request: FinalizeEventRequest):
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 
+@eventRoutes.get("/events")
+async def get_events(request: GetEventsRequest):
+    try:
+        return JSONResponse(status_code=200, content=EventHandler().get_events(request.privilege))
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
+
 @eventRoutes.get("/events/{event_id}")
 async def get_event(event_id: str):
     try:
         return JSONResponse(status_code=200, content=EventHandler().get_event_by_id(event_id))
+    except Exception as e:
+        print(e)
+        return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
+
+
+@eventRoutes.delete("/events/{event_id}")
+async def delete_event(event_id: str):
+    try:
+        EventHandler().delete_event_by_id(event_id)
+        return JSONResponse(status_code=200, content='success')
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
