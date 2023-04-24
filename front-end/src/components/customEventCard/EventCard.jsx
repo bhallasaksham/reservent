@@ -19,20 +19,17 @@ export const EventCard = ({ event, updateCardList }) => {
   };
 
   const getGuestString = (guests) => {
-    return guests.map((x) => x).join(", ");
+    return guests.join(", ");
   };
 
   const deleteEvent = () => {
     const deleteData = async () => {
       try {
-        // await axios.delete("http://0.0.0.0:9000/admin/users", {
-        //   headers: {
-        //     Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
-        //   },
-        //   data: {
-        //     target_user_email: user.email
-        //   }
-        // });
+        await axios.delete(`${process.env.REACT_APP_ROOM_RESERVATION_FACADE}/events/${event.id}`, {
+          headers: {
+            Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
+          }
+        });
         updateCardList();
         return customAlert.success("Event deleted");
       } catch (error) {
@@ -57,7 +54,6 @@ export const EventCard = ({ event, updateCardList }) => {
                   <TextLeft /> <span>{event.description}</span>
                 </div>
               )}
-
               <div>
                 <Clock /> <span>{getTimeString(event.startTime, event.endTime)}</span>
               </div>
@@ -70,7 +66,6 @@ export const EventCard = ({ event, updateCardList }) => {
                   {event.creator} {isCurrentUser && "(you)"}
                 </span>
               </div>
-
               {event.guests && (
                 <div>
                   <People /> <span>{getGuestString(event.guests)}</span>
