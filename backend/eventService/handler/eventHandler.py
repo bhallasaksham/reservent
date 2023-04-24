@@ -54,7 +54,7 @@ class EventHandler:
 
     def finalize_event(self, request):
         """ Finalizes the event by saving the event in the DB and calling the Gmail Adaptor to send out the emails """
-        self.id = request.id
+        self.id = request.event_id
         self.event = request.event
         self.room = request.room
         self.privilege = int(request.privilege)

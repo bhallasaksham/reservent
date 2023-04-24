@@ -23,7 +23,7 @@ class CreateEventRequest(BaseModel):
 
 class FinalizeEventRequest(BaseModel):
     room: str
-    id: str
+    event_id: str
     event: dict
     google_auth_token: str
     email: str
