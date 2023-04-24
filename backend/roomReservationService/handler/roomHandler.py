@@ -119,7 +119,7 @@ class ReserveRoomHandler:
         # Create event object
         event = {
             'summary': self.reservation.event.summary,
-            'description': self.reservation.event.description,
+            'description': self.reservation.event.description or None,
             'start': {
                 'dateTime': self.reservation.event.start['dateTime'],
                 'timeZone': TIMEZONE,
@@ -128,7 +128,7 @@ class ReserveRoomHandler:
                 'dateTime': self.reservation.event.end['dateTime'],
                 'timeZone': TIMEZONE,
             },
-            'attendees': self.reservation.event.guests[1:],
+            'attendees': self.reservation.event.guests[1:] or None,
             'reminders': {
                 'useDefault': True,
             },
@@ -142,8 +142,8 @@ class ReserveRoomHandler:
         event = self.build_event()
 
         inserted = service.events().insert(calendarId='primary', body=event).execute()  # TODO: uncomment before demo
-        print(inserted.id)
-        return inserted.id
+        print(inserted.get('id'))
+        return inserted.get('id')
 
     def delete_event(self, event_id):
         service = self.init_service()
