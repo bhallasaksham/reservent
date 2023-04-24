@@ -69,9 +69,10 @@ npm start
 - [x] UI for event page
 - [x] basic logic
 - [x] fe env
-- [ ] integration
-- [ ] update get rooms
-- [ ] update reserve rooms
+- [x] update get rooms
+- [x] update reserve rooms
+- [ ] integration - get events
+- [ ] integration - delete events
 
 ### yixinsun/fe-refactor
 

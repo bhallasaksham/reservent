@@ -6,10 +6,9 @@ import styles from "./AddEventPage.module.css";
 import { CustomBadge, TimeRangePicker, RoomPicker } from "../../components";
 import { PersonPlusFill, CheckCircle, ArrowLeftCircle, QuestionCircle } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
-import { getRoundedDate, addMinutes, formatTime, getDate, getTime, checkTime, PrivilegeEnum } from "../../tools";
+import { getRoundedDate, addMinutes, formatTime, getDate, getTime, checkTime } from "../../tools";
 import { toast as customAlert } from "react-custom-alert";
 import { useCookies } from "react-cookie";
-import jwt_decode from "jwt-decode";
 
 export const AddEventPage = () => {
   const [title, setTitle] = useState("");
@@ -40,7 +39,6 @@ export const AddEventPage = () => {
       guestList.push(guest);
       setGuestList(guestList);
     }
-    console.log(guestList);
   };
 
   const handleEnterKey = (event, guest) => {
@@ -51,7 +49,6 @@ export const AddEventPage = () => {
 
   const deleteGuest = (guest) => {
     setGuestList(guestList.filter((item) => item !== guest));
-    console.log(guestList);
   };
 
   const handleSubmit = () => {
@@ -60,11 +57,8 @@ export const AddEventPage = () => {
       const formattedStartTime = formatTime(startDate, startTime);
       const formattedEndTime = formatTime(startDate, endTime);
       const formattedGuestList = guestList.length > 0 ? guestList.toString() : null;
-      const isStudent =
-        cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Student; // TODO: delete
-      const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null; // TODO: delete
       try {
-        const { data: response } = await axios.post(
+        await axios.post(
           `${process.env.REACT_APP_ROOM_RESERVATION_FACADE}/rooms/reserve`,
           {
             title: title,
@@ -73,8 +67,7 @@ export const AddEventPage = () => {
             end_time: formattedEndTime,
             guests: formattedGuestList,
             room: selectedRoom?.name,
-            isStudent: isStudent, // TODO: remove
-            email: currentUser.email // TODO: delete
+            room_url: selectedRoom?.calendar_id
           },
           {
             headers: {
@@ -83,7 +76,6 @@ export const AddEventPage = () => {
           }
         );
         setCreatedEvent({
-          // TODO: update using response
           title: title,
           startDate: startDate,
           startTime: startTime,
@@ -256,4 +248,3 @@ export const AddEventPage = () => {
 };
 
 // TODO: more styles on form & cards
-// TODO: remove console.log()

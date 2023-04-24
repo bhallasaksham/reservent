@@ -128,7 +128,7 @@ class ReserveRoomHandler:
                 'dateTime': self.reservation.event.end['dateTime'],
                 'timeZone': TIMEZONE,
             },
-            'attendees': self.reservation.event.guests[1:] or None,
+            'attendees': self.reservation.event.guests or None,
             'reminders': {
                 'useDefault': True,
             },
