@@ -23,7 +23,7 @@ export const SignInPage = () => {
   Redirect to user management service to access google auth
   */
   const handleClick = () => {
-    window.location.href = `${process.env.REACT_APP_USER_MANAGEMENT_SERIVCE}/login`;
+    window.location.href = `${process.env.REACT_APP_USER_MANAGEMENT_SERVICE}/login`;
   };
 
   return (

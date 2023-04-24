@@ -21,7 +21,7 @@ export const AdminPage = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(`${process.env.REACT_APP_ADMIN_SERIVCE}/admin/users`, {
+        const { data: response } = await axios.get(`${process.env.REACT_APP_ADMIN_SERVICE}/admin/users`, {
           headers: {
             Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           }

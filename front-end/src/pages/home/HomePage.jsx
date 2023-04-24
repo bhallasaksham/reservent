@@ -39,7 +39,7 @@ export const HomePage = () => {
           <Carousel.Item>
             <img className="d-block w-100" width={600} height={500} src={imageEmail} alt="email" />
             <Carousel.Caption>
-              <h3>Email Notofication</h3>
+              <h3>Email Notification</h3>
               <p>Email notification for all participants.</p>
             </Carousel.Caption>
           </Carousel.Item>
@@ -47,7 +47,7 @@ export const HomePage = () => {
             <img className="d-block w-100" width={600} height={500} src={imageUser} alt="user" />
             <Carousel.Caption>
               <h3>User Management</h3>
-              <p>Manage user privileges (for admin only).</p>
+              <p>Manage user privileges.</p>
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
