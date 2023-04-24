@@ -56,7 +56,7 @@ async def reserve_room(request: Request):
                              http_verb='POST', headers=request.headers, params=data)
 
         if event.status_code == 201:
-            reserved = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_PORT")
+            reserved = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_SERVICE_PORT")
                                         + '/rooms/reserve', http_verb='POST',
                                     headers=request.headers, body=event.body)
             if reserved.status_code == 201:
@@ -108,7 +108,7 @@ If there's an HTTP exception at any stage, the error message will be returned in
 @facadeRoutes.delete("/events/{event_id}")
 async def delete_event(event_id: str, request: Request):
     try:
-            reserved = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_PORT")
+            reserved = await facade(url='http://' + os.getenv("LOCAL_HOST") + ':' + os.getenv("ROOM_RESERVATION_SERVICE_PORT")
                                     + '/rooms/reservation/' + event_id, http_verb='DELETE',
                                     headers=request.headers)
             # if reservation deleted:
