@@ -1,0 +1,11 @@
+.event-container {
+  width: 70rem;
+  margin: 2rem auto;
+}
+
+.event-list {
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2rem;
+}

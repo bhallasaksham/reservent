@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Dropdown, OverlayTrigger, Tooltip, Modal } from "react-bootstrap";
 import styles from "./UserTableRow.module.css";
 import { PersonCheck, PersonDash } from "react-bootstrap-icons";
@@ -13,7 +13,7 @@ export const UserTableRow = ({ user, i, updateTable }) => {
   const [curPrivilege, setCurPrivilege] = useState(user.privilege);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
   const isDisabled = curPrivilege === userPrivilege;
   const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
@@ -37,11 +37,17 @@ export const UserTableRow = ({ user, i, updateTable }) => {
     setShowDeleteModal(true);
   };
 
+  /*
+  Update user privilege
+  - Payload: target_user_email, privilege
+  - Response: updated user (email, privilege)
+  - Privilege: admin
+  */
   const updateUser = () => {
     const updateData = async () => {
       try {
         const { data: response } = await axios.put(
-          "http://0.0.0.0:9000/admin/users/privilege",
+          `${process.env.REACT_APP_ADMIN_SERVICE}/admin/users/privilege`,
           {
             target_user_email: user.email,
             privilege: curPrivilege
@@ -64,10 +70,15 @@ export const UserTableRow = ({ user, i, updateTable }) => {
     updateData();
   };
 
+  /*
+  Delete user
+  - Payload: target_user_email
+  - Privilege: admin
+  */
   const deleteUser = () => {
     const deleteData = async () => {
       try {
-        await axios.delete("http://0.0.0.0:9000/admin/users", {
+        await axios.delete(`${process.env.REACT_APP_ADMIN_SERVICE}/admin/users`, {
           headers: {
             Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           },
@@ -87,6 +98,7 @@ export const UserTableRow = ({ user, i, updateTable }) => {
     deleteData();
   };
 
+  // this is used to add tooltip for disabled button only
   const ConditionalTooltipWrapper = ({ condition, wrapper, children }) => (condition ? wrapper(children) : children);
 
   return (
@@ -178,5 +190,3 @@ export const UserTableRow = ({ user, i, updateTable }) => {
     </>
   );
 };
-
-// TODO: seperate Modal

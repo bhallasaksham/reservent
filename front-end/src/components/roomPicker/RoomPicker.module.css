@@ -1,0 +1,10 @@
+.room-badge-group {
+  margin-right: 2rem;
+  display: inline;
+}
+
+.search-room-button {
+  cursor: pointer;
+  color: var(--secondary);
+  font-size: 1.5rem;
+}

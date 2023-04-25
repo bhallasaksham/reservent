@@ -20,7 +20,7 @@ npm start
 
 3. go to http://127.0.0.1:3000
 
-## Task Checklist (last update: 04/01)
+## Task Checklist (last update: 04/24)
 
 ### feature/frontend-setup
 
@@ -53,8 +53,25 @@ npm start
 - [x] update environments and fix bugs
 
 ### yixinsun/fe-integration
+
 - [x] get users
 - [x] update user privilege
 - [x] search rooms
 - [x] create event
-- [ ] fix eslint warnings
+
+### yixinsun/delete-user
+
+- [x] delete button & modal
+- [x] integration
+
+### yixinsun/event-management
+
+- [x] UI for event page
+- [x] basic logic
+- [x] fe env
+- [x] update get rooms
+- [x] update reserve rooms
+- [x] integration - get events
+- [x] integration - delete events
+- [x] fix eslint warnings
+- [x] add comments

@@ -1,25 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Form, Button, Row, Col, Offcanvas, OverlayTrigger, Tooltip, Modal, Spinner } from "react-bootstrap";
+import { Form, Button, Row, Col, OverlayTrigger, Tooltip, Modal, Spinner } from "react-bootstrap";
 import styles from "./AddEventPage.module.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { RoomCard, CustomBadge } from "../../components";
-import {
-  PlusSquare,
-  PencilSquare,
-  PersonPlusFill,
-  CheckCircleFill,
-  ArrowLeftCircleFill,
-  QuestionCircle
-} from "react-bootstrap-icons";
+import { CustomBadge, TimeRangePicker, RoomPicker } from "../../components";
+import { PersonPlusFill, CheckCircle, ArrowLeftCircle, QuestionCircle } from "react-bootstrap-icons";
 import { useHistory } from "react-router-dom";
-import { getRoundedDate, addMinutes, formatTime, getDate, getTime } from "../../tools";
+import { getRoundedDate, addMinutes, formatTime, getDate, getTime, checkTime } from "../../tools";
 import { toast as customAlert } from "react-custom-alert";
 import { useCookies } from "react-cookie";
-import { PrivilegeEnum } from "../../tools";
-import jwt_decode from "jwt-decode";
 
 export const AddEventPage = () => {
   const [title, setTitle] = useState("");
@@ -31,64 +20,12 @@ export const AddEventPage = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [curGuest, setCurGuest] = useState("");
   const [guestList, setGuestList] = useState([]);
-  const [availableRooms, setAvailableRooms] = useState([]);
   const [createdEvent, setCreatedEvent] = useState(null);
 
-  const [showSidebar, setShowSidebar] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [loading, setLoading] = useState(false);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
   const history = useHistory();
-
-  const searchRooms = () => {
-    if (!startDate) {
-      return customAlert.warning("Please choose event date");
-    }
-    if (!startTime) {
-      return customAlert.warning("Please choose start time");
-    }
-    if (!endTime) {
-      return customAlert.warning("Please choose end time");
-    }
-
-    const fetchData = async () => {
-      setLoading(true);
-      const formattedStartTime = formatTime(startDate, startTime);
-      const formattedEndTime = formatTime(startDate, endTime);
-      try {
-        const queryParams =
-          `start_time=${formattedStartTime}&end_time=${formattedEndTime}` +
-          (numOfParticipant > 0 ? `&num_guests=${numOfParticipant}` : "");
-        const { data: response } = await axios.get(`http://0.0.0.0:1024/rooms/available?${queryParams}`, {
-          headers: {
-            Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
-          }
-        });
-        setAvailableRooms(response);
-      } catch (error) {
-        console.error(error);
-        setShowSidebar(false);
-        return customAlert.error("Failed to get available rooms");
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-
-    setShowSidebar(true);
-    setSelectedRoom(null);
-  };
-
-  const chooseRoom = (room) => {
-    console.log("select: " + room.name);
-    setSelectedRoom(room);
-    setShowSidebar(false);
-  };
-
-  const deleteRoom = (room) => {
-    console.log("delete: " + room.name);
-    setSelectedRoom(null);
-  };
 
   const addGuest = (guest) => {
     if (curGuest !== "") {
@@ -102,47 +39,32 @@ export const AddEventPage = () => {
       guestList.push(guest);
       setGuestList(guestList);
     }
-    console.log(guestList);
   };
 
   const handleEnterKey = (event, guest) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       addGuest(guest);
     }
   };
 
   const deleteGuest = (guest) => {
     setGuestList(guestList.filter((item) => item !== guest));
-    console.log(guestList);
   };
 
+  /*
+  Create event and reserve room
+  - Payload: title, description (optional), start_time, end_time, guests (optional), room, room_url
+  - Privilege: all
+  */
   const handleSubmit = () => {
-    if (!title) {
-      return customAlert.warning("Please enter event title");
-    }
-    if (!startDate) {
-      return customAlert.warning("Please choose event date");
-    }
-    if (!startTime) {
-      return customAlert.warning("Please choose start time");
-    }
-    if (!endTime) {
-      return customAlert.warning("Please choose end time");
-    }
-    if (!selectedRoom) {
-      return customAlert.warning("Please choose a room");
-    }
-
     const reserveRoom = async () => {
+      setLoading(true);
       const formattedStartTime = formatTime(startDate, startTime);
       const formattedEndTime = formatTime(startDate, endTime);
       const formattedGuestList = guestList.length > 0 ? guestList.toString() : null;
-      const isStudent =
-        cookies["jwt_token"] && cookies["refresh_token"] && cookies["user_privilege"] == PrivilegeEnum.Student;
-      const currentUser = cookies["jwt_token"] ? jwt_decode(cookies["jwt_token"]) : null;
       try {
-        const { data: response } = await axios.post(
-          "http://0.0.0.0:1024/rooms/reserve",
+        await axios.post(
+          `${process.env.REACT_APP_ROOM_RESERVATION_FACADE}/rooms/reserve`,
           {
             title: title,
             description: description ? description : null,
@@ -150,8 +72,7 @@ export const AddEventPage = () => {
             end_time: formattedEndTime,
             guests: formattedGuestList,
             room: selectedRoom?.name,
-            isStudent: isStudent,
-            email: currentUser.email
+            room_url: selectedRoom?.calendar_id
           },
           {
             headers: {
@@ -166,15 +87,25 @@ export const AddEventPage = () => {
           endTime: endTime,
           room: selectedRoom?.name
         });
+        setLoading(false);
         setShowModal(true);
         clearForm();
       } catch (error) {
         console.error(error);
+        setLoading(false);
         return customAlert.error("Failed to create event");
       }
     };
 
-    reserveRoom();
+    if (!title) {
+      return customAlert.warning("Please enter event title");
+    }
+    if (!selectedRoom) {
+      return customAlert.warning("Please choose a room");
+    }
+    if (checkTime(startDate, startTime, endTime)) {
+      reserveRoom();
+    }
   };
 
   const clearForm = () => {
@@ -187,7 +118,6 @@ export const AddEventPage = () => {
     setSelectedRoom(null);
     setCurGuest("");
     setGuestList([]);
-    setAvailableRooms([]);
   };
 
   return (
@@ -218,63 +148,14 @@ export const AddEventPage = () => {
           />
         </Form.Group>
 
-        <Row>
-          <Col md={4}>
-            <Form.Group className="mb-3" controlId="formDate">
-              <Form.Label>
-                Date *{" "}
-                <OverlayTrigger overlay={<Tooltip>Pacific Daylight Time (PDT)</Tooltip>}>
-                  <QuestionCircle />
-                </OverlayTrigger>
-              </Form.Label>
-              <DatePicker
-                className={`styles["date-picker"] form-control`}
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                isClearable
-                placeholderText="Choose date (MM/DD/YYYY)"
-              />
-            </Form.Group>
-          </Col>
-          <Col md={5}>
-            <Form.Group className="mb-3" controlId="formTime">
-              <Form.Label>Time *</Form.Label>
-              <Row>
-                <Col>
-                  <DatePicker
-                    className={`styles["date-picker"] form-control`}
-                    selected={startTime}
-                    onChange={(time) => setStartTime(time)}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    isClearable
-                    timeIntervals={15}
-                    timeCaption="Time"
-                    dateFormat="h:mm aa"
-                    placeholderText="Choose start time"
-                  />
-                </Col>
-                <Col xs="auto">
-                  <span>-</span>
-                </Col>
-                <Col>
-                  <DatePicker
-                    className={`styles["date-picker"] form-control`}
-                    selected={endTime}
-                    onChange={(time) => setEndTime(time)}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    isClearable
-                    timeIntervals={15}
-                    timeCaption="Time"
-                    dateFormat="h:mm aa"
-                    placeholderText="Choose end time"
-                  />
-                </Col>
-              </Row>
-            </Form.Group>
-          </Col>
-        </Row>
+        <TimeRangePicker
+          startDate={startDate}
+          startTime={startTime}
+          endTime={endTime}
+          setStartDate={setStartDate}
+          setStartTime={setStartTime}
+          setEndTime={setEndTime}
+        />
 
         <Row>
           <Col md={3}>
@@ -290,21 +171,14 @@ export const AddEventPage = () => {
 
             <Form.Group className="mb-3" controlId="formRoom">
               <Form.Label>Room *</Form.Label>
-              <div>
-                {selectedRoom && (
-                  <>
-                    <div className={styles["room-badge-group"]}>
-                      <CustomBadge content={selectedRoom.name} deleteContent={() => deleteRoom(selectedRoom)} />
-                    </div>
-                    <PencilSquare className={styles["search-room-button"]} onClick={searchRooms} />
-                  </>
-                )}
-                {!selectedRoom && (
-                  <OverlayTrigger overlay={<Tooltip>Click to search available rooms</Tooltip>}>
-                    <PlusSquare className={styles["search-room-button"]} onClick={searchRooms} />
-                  </OverlayTrigger>
-                )}
-              </div>
+              <RoomPicker
+                startDate={startDate}
+                startTime={startTime}
+                endTime={endTime}
+                numOfParticipant={numOfParticipant}
+                selectedRoom={selectedRoom}
+                setSelectedRoom={setSelectedRoom}
+              />
             </Form.Group>
           </Col>
           <Col>
@@ -340,40 +214,24 @@ export const AddEventPage = () => {
 
         <Row>
           <Col>
-            <Button variant="danger" className={styles["form-button"]} onClick={() => history.push("/")}>
-              <ArrowLeftCircleFill />
+            <Button variant="danger" className={styles["form-button"]} onClick={() => history.push("/event")}>
+              <ArrowLeftCircle />
               <span>Cancel</span>
             </Button>
           </Col>
           <Col>
             <Button variant="primary" type="button" className={styles["form-button"]} onClick={handleSubmit}>
-              <CheckCircleFill />
-              <span>Confirm</span>
+              {loading && <Spinner animation="grow" size="sm" />}
+              {!loading && (
+                <>
+                  <CheckCircle />
+                  <span>Create</span>
+                </>
+              )}
             </Button>
           </Col>
         </Row>
       </Form>
-
-      <Offcanvas show={showSidebar} placement={"end"} onHide={() => setShowSidebar(false)}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Available Rooms</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          {loading && <Spinner className="loading-spinner" animation="border" />}
-          {!loading && (
-            <>
-              {availableRooms.length === 0 && (
-                <>
-                  <p>Sorry, we couldn't find a available room.</p>
-                  <p>Please try searching for a different time period or number of participants.</p>
-                </>
-              )}
-              {availableRooms.length > 0 &&
-                availableRooms?.map((room) => <RoomCard room={room} chooseRoom={() => chooseRoom(room)} />)}
-            </>
-          )}
-        </Offcanvas.Body>
-      </Offcanvas>
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
@@ -393,9 +251,3 @@ export const AddEventPage = () => {
     </MainLayout>
   );
 };
-
-// TODO: more styles on form & cards
-// TODO: seperate offcanvas
-// TODO: remove console.log()
-// TODO: ensure starttime < endtime
-// TODO: loading after submitting

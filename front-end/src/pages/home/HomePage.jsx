@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { MainLayout } from "../../layouts";
 import { Accordion, Carousel } from "react-bootstrap";
 import styles from "./HomePage.module.css";
-import imageEvent from "../../assets/carousel/event.jpg";
+import imageCreateEvent from "../../assets/carousel/event-outdoor.jpg";
 import imageRoom from "../../assets/carousel/bd23.jpg";
 import imageEmail from "../../assets/carousel/fence.jpeg";
 import imageUser from "../../assets/carousel/people.jpeg";
+import imageManageEvent from "../../assets/carousel/event-indoor.jpeg";
 
 export const HomePage = () => {
   return (
@@ -23,7 +24,7 @@ export const HomePage = () => {
         <h2>Main Features</h2>
         <Carousel className={styles["home-carousel"]}>
           <Carousel.Item>
-            <img className="d-block w-100" width={600} height={500} src={imageEvent} alt="event" />
+            <img className="d-block w-100" width={600} height={500} src={imageCreateEvent} alt="event" />
             <Carousel.Caption>
               <h3>Create Event</h3>
               <p>Create events and invite your guests.</p>
@@ -39,15 +40,22 @@ export const HomePage = () => {
           <Carousel.Item>
             <img className="d-block w-100" width={600} height={500} src={imageEmail} alt="email" />
             <Carousel.Caption>
-              <h3>Email Notofication</h3>
+              <h3>Email Notification</h3>
               <p>Email notification for all participants.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img className="d-block w-100" width={600} height={500} src={imageManageEvent} alt="manage event" />
+            <Carousel.Caption>
+              <h3>Manage Event</h3>
+              <p>View upcoming events and manage them.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
             <img className="d-block w-100" width={600} height={500} src={imageUser} alt="user" />
             <Carousel.Caption>
               <h3>User Management</h3>
-              <p>Manage user privileges (for admin only).</p>
+              <p>Manage user privileges.</p>
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
@@ -79,5 +87,3 @@ export const HomePage = () => {
     </MainLayout>
   );
 };
-
-// TODO: add more pics for carousel

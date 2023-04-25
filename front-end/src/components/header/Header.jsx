@@ -17,10 +17,14 @@ export const Header = () => {
     history.push("/signIn");
   };
 
+  /*
+  User Sign out 
+  Remove cookies and redirect to sign in page
+  */
   const handleSignOut = () => {
     const logOut = async () => {
       try {
-        await axios.get("http://0.0.0.0:4000/logout", {
+        await axios.get(`${process.env.REACT_APP_USER_MANAGEMENT_SERVICE}/logout`, {
           headers: {
             Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           }
@@ -59,8 +63,15 @@ export const Header = () => {
             </Nav.Item>
             {isAuthenticated && (
               <Nav.Item className={styles["main-nav"]}>
+                <Nav.Link href="/event">
+                  <span>Events</span>
+                </Nav.Link>
+              </Nav.Item>
+            )}
+            {isAuthenticated && (
+              <Nav.Item className={styles["main-nav"]}>
                 <Nav.Link href="/addEvent">
-                  <span>Event</span>
+                  <span>Add Event</span>
                 </Nav.Link>
               </Nav.Item>
             )}

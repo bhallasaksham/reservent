@@ -1,37 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { MainLayout } from "../../layouts";
 import axios from "axios";
-import { Spinner, Button, Table, DropdownButton, Dropdown } from "react-bootstrap";
+import { Spinner, Table } from "react-bootstrap";
 import styles from "./AdminPage.module.css";
 import { useCookies } from "react-cookie";
-import { PersonFillCheck } from "react-bootstrap-icons";
 import { UserTableRow } from "../../components";
 import { toast as customAlert } from "react-custom-alert";
 
 export const AdminPage = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
+  const [loading, setLoading] = useState(false);
+  const [cookies] = useCookies(["jwt_token", "refresh_token", "user_privilege"]);
 
+  /*
+  Get all users
+  - Response: array of users (name, email, privilege)
+  - Privilege: admin
+  */
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get("http://0.0.0.0:9000/admin/users", {
+        const { data: response } = await axios.get(`${process.env.REACT_APP_ADMIN_SERVICE}/admin/users`, {
           headers: {
             Authorization: `Bearer ${cookies["jwt_token"]} ${cookies["refresh_token"]}`
           }
         });
         setUsers(response);
+        setLoading(false);
       } catch (error) {
         console.error(error);
+        setLoading(false);
         return customAlert.error("Failed to get users");
       }
-      setLoading(false);
     };
 
     fetchData();
-  }, []);
+  }, [cookies]);
 
   const deleteUserOnTable = (user) => {
     setUsers(users.filter((item) => item !== user));

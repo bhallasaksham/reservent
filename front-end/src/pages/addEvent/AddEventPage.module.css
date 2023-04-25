@@ -6,25 +6,10 @@
   border-radius: 0.5rem;
 }
 
-.date-picker {
-  width: 100%;
-}
-
 .note-info {
   color: red;
   font-style: oblique;
   margin-top: 1rem;
-}
-
-.room-badge-group {
-  margin-right: 2rem;
-  display: inline;
-}
-
-.search-room-button {
-  cursor: pointer;
-  color: var(--secondary);
-  font-size: 1.5rem;
 }
 
 .input-guest-wrapper {
