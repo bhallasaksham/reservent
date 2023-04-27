@@ -10,91 +10,6 @@ Authorization: This API uses JWT for user authorization. The JWT token is stored
 
 Errors: This API returns errors in JSON format with the following keys: "message" and "error". The "message" key contains a user-friendly error message, while the "error" key contains the error details.
 
-### Endpoints
-
-#### Login
-
-This endpoint redirects the user to the Google OAuth login page. After successful authentication, the user is redirected to the /auth endpoint.
-
-##### Route
-```
-GET /login
-```
-
-##### Response
-```
-Redirect to Google OAuth login page.
-```
-
-#### Authentication
-
-This endpoint handles the authentication callback from the Google OAuth server. It retrieves the user information and creates a JWT token for user authorization. It also creates a refresh token for the user and sets it in a cookie.
-
-##### Route
-```
-GET /auth
-```
-
-##### Response
-
-###### Success
-```
-Redirect to the frontend URL with cookies set.
-```
-###### Code 500 Error
-```json
-{
-    message: "Error creating user"
-}
-```
-
-##### Note
-- [Firebase Documentation](https://firebase.google.com/docs/auth/web/google-signin)
-
-
-#### Logout
-
-This endpoint logs out the user by deleting the refresh token and JWT token cookies.
-
-##### Route
-```
-GET /logout
-```
-
-##### Response
-
-```json
-{
-    message: "Logged out successfully"
-}
-```
-
-#### GET USER PRIVILEGE
-
-This endpoint returns the user privilege level for a given email address. This endpoint is protected by user authentication and authorization.
-
-##### Route
-```
-GET /users/privileges
-```
-
-##### Response
-
-###### Code 200 Success
-````json
-{
-    user: "user@andrew.cmu.edu",
-    privilege: "admin"
-}
-````
-
-###### Code 500 Error
-````json
-{
-    message: "Error getting user privilege"
-}
-````
-
 ### Dependencies
 
 1. fastapi: This is a high-performance web framework used for building APIs with Python 3.7+. It is used to create the API routes, handle incoming requests, and generate responses.
@@ -110,6 +25,91 @@ These dependencies can be installed by running:
 pip install fastapi httpx google-auth uvicorn
 ```
 
+
+### Login
+
+This endpoint redirects the user to the Google OAuth login page. After successful authentication, the user is redirected to the /auth endpoint.
+
+#### Endpoint
+```
+GET /login
+```
+
+#### Response
+```
+Redirect to Google OAuth login page.
+```
+
+### Authentication
+
+This endpoint handles the authentication callback from the Google OAuth server. It retrieves the user information and creates a JWT token for user authorization. It also creates a refresh token for the user and sets it in a cookie.
+
+#### Route
+```
+GET /auth
+```
+
+#### Response Success
+```
+Redirect to the frontend URL with cookies set.
+```
+
+#### Response Error Code 500
+```json
+{
+    message: "Error creating user"
+}
+```
+
+#### Note
+- [Firebase Documentation](https://firebase.google.com/docs/auth/web/google-signin)
+
+
+### Logout
+
+This endpoint logs out the user by deleting the refresh token and JWT token cookies.
+
+#### Endpoint
+```
+GET /logout
+```
+
+#### Response
+
+```json
+{
+    message: "Logged out successfully"
+}
+```
+
+### GET USER PRIVILEGE
+
+This endpoint returns the user privilege level for a given email address. This endpoint is protected by user authentication and authorization.
+
+#### Endpoint
+```
+GET /users/privileges
+```
+
+#### Response
+
+##### Code 200 Success
+````json
+{
+    user: "user@andrew.cmu.edu",
+    privilege: "admin"
+}
+````
+
+##### Code 500 Error
+````json
+{
+    message: "Error getting user privilege"
+}
+````
+
+
+
 ## ROOM RESERVATION SERVICE
 
 The Room Reservation Service API is a simple RESTful API that provides room reservation functionality.
@@ -120,17 +120,23 @@ Authorization: This API uses user privileges to restrict access to certain endpo
 
 Errors: This API returns errors in JSON format with the following keys: "message". The "message" key contains a user-friendly error message.
 
-### Endpoints
+### Dependencies
 
-#### Fetch Available Rooms
+1. fastapi: A modern, fast web framework for building APIs with Python.
+2. pydantic: A data validation and settings management library.
+3. google-auth: Library for Google OAuth2 authentication.
+4. google-api-python-client: A library for accessing Google APIs.
+5. typing: A module for supporting type hints.
 
-##### Route
+### Fetch Available Rooms
+
+#### Endpoint
 
 ```
 GET /rooms/available
 ```
 
-##### Example Request Body
+#### Example Request Body
 ```json
 {
     email: "user@andrew.cmu.edu",
@@ -142,7 +148,7 @@ GET /rooms/available
 }
 ```
 
-##### Example Response
+#### Example Response
 ```json
 {
     "available_rooms": [
@@ -160,16 +166,16 @@ GET /rooms/available
 }
 ```
 
-#### Reserve Room
+### Reserve Room
 
 This endpoint reserves a room for a given time range and number of guests. This endpoint is protected by user authentication and authorization.
 
-##### Route
+#### Endpoint
 ```
 POST /rooms/reserve
 ```
 
-##### Example Request Body
+#### Example Request Body
 ```json
 {
     email: "user@example.com",
@@ -191,30 +197,30 @@ POST /rooms/reserve
 }
 ```
 
-##### Example Response Success Code 201
+#### Example Response Success Code 201
 ```json
 {
     event_id: "1234567890"
 }
 ```
 
-##### Example Response Error Code 500
+#### Example Response Error Code 500
 ```json
 {
     message: "Internal Server Error"
 }
 ```
 
-#### Delete Room Reservation
+### Delete Room Reservation
 
 This endpoint cancels a room reservation for a given event ID. This endpoint is protected by user authentication and authorization.
 
-##### Route
+#### Endpoint
 ```
 DELETE /rooms/reservation/{event_id}
 ```
 
-##### Example Request Body
+#### Example Request Body
 ```json
 {
     email: "user@andrew.cmu.edu",
@@ -223,25 +229,169 @@ DELETE /rooms/reservation/{event_id}
 }
 ```
 
-##### Example Response Success Code 200
+#### Example Response Success Code 200
 ```
 Nothing will be returned.
 ```
 
-##### Example Response Error Code 500
+#### Example Response Error Code 500
 ```json
 {
     message: "Internal Server Error"
 }
 ```
 
+
+
+
+## EVENT SERVICE
+
+The Event Service allows users to create, finalize, delete, and get events. Users can create events and finalize them by sending out emails to guests and saving them to the database. Users can also delete events by their ID and get events from the database based on their privilege.
+
 ### Dependencies
 
 1. fastapi: A modern, fast web framework for building APIs with Python.
 2. pydantic: A data validation and settings management library.
-3. google-auth: Library for Google OAuth2 authentication.
-4. google-api-python-client: A library for accessing Google APIs.
-5. typing: A module for supporting type hints.
+3. starlette: A lightweight ASGI framework/toolkit for building high-performance asyncio services.
+
+
+### Create Events
+This endpoint creates an event for the user. If there are no errors, it returns the event model that was created with status code 201. If there is an error, it returns the error message in a JSON object with status code 500.
+
+#### Endpoint
+```
+POST /events
+```
+
+#### Request Body
+```json
+{
+    email: str,
+    privilege: str,
+    start_time: str,
+    end_time: str,
+    title: str,
+    description: Optional[str],
+    guests: Optional[str],
+    room: str,
+    room_url: str
+}
+```
+
+#### Response Success Code 201
+```
+Returns the event model that was created.
+```
+#### Example Response Error Code 500
+```json
+{
+    message: "Internal Server Error"
+}
+```
+
+### Finalize Events
+
+This endpoint finalizes an event by sending out the emails to the guests and saving the event in the database. If there are no errors, it returns with status code 200 and the success message. If there is an error, it returns the error message in a JSON object with status code 500.
+
+#### Endpoint
+
+```
+PUT /events/finalize
+```
+
+#### Request Body
+```json
+{
+    room: str,
+    event_id: str,
+    event: dict,
+    google_auth_token: str,
+    email: str,
+    privilege: str
+}
+```
+
+#### Response Success Code 200
+```
+success
+```
+
+#### Response Error Code 500
+```json
+{
+    message: "Internal Server Error"
+}
+```
+
+### Get Events
+
+This endpoint gets all the events from the database based on the privilege. If there are no errors, it returns with status code 200 and the list of events based on the privilege. For students, it would only return events from other students. For the other privileges, it will return the entire list of events from the time it was called. If there is an error, it returns the error message in a JSON object with status code 500.
+
+#### Endpoint
+```
+GET /events
+```
+
+#### Request Body
+```json
+{
+    privilege: str
+}
+```
+
+#### Response Success Code 200
+```json
+[
+    {
+        id: int,
+        title: str,
+        description: Optional[str],
+        start_time: str,
+        end_time: str,
+        guests: Optional[str],
+        room: str,
+        room_url: str,
+        email: str,
+        created_at: str
+    },
+    {...},
+    {...},
+    ...
+]
+```
+
+#### Response Error Code 500
+```json
+{
+    message: "Internal Server Error"
+}
+```
+
+### Delete Events
+
+This endpoint deletes the event with the given event_id from the database.
+
+#### Endpoint
+```
+DELETE /events/{event_id}
+```
+
+#### Example Request
+```
+DELETE /events/12345678
+```
+
+#### Example Reponse Success Code 200
+```
+success
+```
+
+#### Response Error Code 500
+```json
+{
+    message: "Internal Server Error"
+}
+```
 
 
 
