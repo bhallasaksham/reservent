@@ -55,7 +55,7 @@ Redirect to the frontend URL with cookies set.
 ```
 
 #### Response Error Code 500
-```json
+```
 {
     message: "Error creating user"
 }
@@ -76,7 +76,7 @@ GET /logout
 
 #### Response
 
-```json
+```
 {
     message: "Logged out successfully"
 }
@@ -94,7 +94,7 @@ GET /users/privileges
 #### Response
 
 ##### Code 200 Success
-````json
+````
 {
     user: "user@andrew.cmu.edu",
     privilege: "admin"
@@ -102,7 +102,7 @@ GET /users/privileges
 ````
 
 ##### Code 500 Error
-````json
+````
 {
     message: "Error getting user privilege"
 }
@@ -151,7 +151,7 @@ GET /rooms/available
 #### Example Response
 ```json
 {
-    "available_rooms": [
+    available_rooms: [
         {
             name: "Rm-116",
             calendar_id: "abcd1234",
@@ -283,7 +283,7 @@ POST /events
 Returns the event model that was created.
 ```
 #### Example Response Error Code 500
-```json
+```
 {
     message: "Internal Server Error"
 }
@@ -300,7 +300,7 @@ PUT /events/finalize
 ```
 
 #### Request Body
-```json
+```
 {
     room: str,
     event_id: str,
@@ -317,7 +317,7 @@ success
 ```
 
 #### Response Error Code 500
-```json
+```
 {
     message: "Internal Server Error"
 }
@@ -333,14 +333,14 @@ GET /events
 ```
 
 #### Request Body
-```json
+```
 {
     privilege: str
 }
 ```
 
 #### Response Success Code 200
-```json
+```
 [
     {
         id: int,
@@ -361,7 +361,7 @@ GET /events
 ```
 
 #### Response Error Code 500
-```json
+```
 {
     message: "Internal Server Error"
 }
@@ -387,12 +387,115 @@ success
 ```
 
 #### Response Error Code 500
-```json
+```
 {
     message: "Internal Server Error"
 }
 ```
 
+## ADMIN SERVICE
 
+The Admin Service allows administrators to manage users by changing their privilege levels. It also allows the administrators to delete users.
+
+### Dependencies
+
+1. fastapi: A Python web framework used to build the API endpoints.
+2. uvicorn: A lightning-fast ASGI server for running the FastAPI application.
+
+### Get Users
+
+This endpoint returns a list of all the users.
+
+#### Endpoint
+
+```
+GET /admin/users
+```
+
+#### Response
+```
+{
+   users: [
+      {
+         "username": "user1",
+         "email": "user1@andrew.cmu.edu",
+         "privilege": "ADMIN"
+      },
+      {
+         "username": "user2",
+         "email": "user2@andrew.cmu.edu",
+         "privilege": "STAFF"
+      },
+      {
+         "username": "user3",
+         "email": "user3@andrew.cmu.edu",
+         "privilege": "USER"
+      },
+      ...
+   ]
+}
+```
+
+### Delete User
+
+This endpoint deletes a user with the given email address.
+
+#### Endpoint
+```
+DELETE /admin/users
+```
+
+#### Example Request
+```
+{
+   target_user_email: "user1@andrew.cmu.edu"
+}
+```
+
+#### Response Success Code 200
+```
+{
+   message: "User deleted"
+}
+```
+
+#### Response Error Code 500
+```
+{
+   message: "Error deleting user"
+}
+```
+
+### Update User Privilege
+
+This endpoint updates a user's privilege between USER, STAFF or ADMIN with the given email address.
+
+#### Endpoint
+```
+PUT /admin/users/privilege
+```
+
+#### Example Request
+```
+{
+   target_user_email: "user2@andrew.cmu.edu",
+   privilege: "ADMIN"
+}
+```
+
+#### Response Success Code 200
+```
+{
+   user: "user2@andrew.cmu.edu",
+   privilege: "ADMIN"
+}
+```
+
+#### Response Error Code 500
+```
+{
+   message: "Error updating user privilege"
+}
+```
 
 
