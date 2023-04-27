@@ -137,7 +137,7 @@ GET /rooms/available
 ```
 
 #### Example Request Body
-```json
+```
 {
     email: "user@andrew.cmu.edu",
     google_auth_token: "valid_oauth_token",
@@ -149,7 +149,7 @@ GET /rooms/available
 ```
 
 #### Example Response
-```json
+```
 {
     available_rooms: [
         {
@@ -176,7 +176,7 @@ POST /rooms/reserve
 ```
 
 #### Example Request Body
-```json
+```
 {
     email: "user@example.com",
     google_auth_token: "valid_oauth_token",
@@ -198,14 +198,14 @@ POST /rooms/reserve
 ```
 
 #### Example Response Success Code 201
-```json
+```
 {
     event_id: "1234567890"
 }
 ```
 
 #### Example Response Error Code 500
-```json
+```
 {
     message: "Internal Server Error"
 }
@@ -221,7 +221,7 @@ DELETE /rooms/reservation/{event_id}
 ```
 
 #### Example Request Body
-```json
+```
 {
     email: "user@andrew.cmu.edu",
     google_auth_token: "valid_oauth_token",
@@ -235,7 +235,7 @@ Nothing will be returned.
 ```
 
 #### Example Response Error Code 500
-```json
+```
 {
     message: "Internal Server Error"
 }
@@ -264,7 +264,7 @@ POST /events
 ```
 
 #### Request Body
-```json
+```
 {
     email: str,
     privilege: str,
