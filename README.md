@@ -89,3 +89,9 @@ npm start
 ```
 psql -U postgres -p 5432 -h sda-s06.cozm4z1zuevq.us-east-1.rds.amazonaws.com -W
 ```
+
+## Docker Setup
+Run the following commands to setup the docker environment and run the services:
+```
+docker-compose up --build
+```

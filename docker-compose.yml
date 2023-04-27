@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "1024:1024"
+      - "4000:4000"
+      - "8000:8000"
+      - "8080:8080"
+      - "9000:9000"
+
+    volumes:
+      - ./backend:/backend
+    environment:
+      - ENV_VARIABLE=value
+
+  frontend:
+    build:
+      context: ./front-end
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front-end:/frontend
+    environment:
+      - ENV_VARIABLE=value
