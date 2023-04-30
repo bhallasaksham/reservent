@@ -16,7 +16,7 @@ if SECRET_KEY is None:
 def decode_jwt(encoded_token):
     return jwt.decode(encoded_token, SECRET_KEY, algorithms=['HS256'])
 
-
+# Get the user privilege from the user management service
 async def get_privilege(headers):
     jwt_token = headers["authorization"].split(" ")[1]
     decoded_token = decode_jwt(jwt_token)
@@ -26,6 +26,7 @@ async def get_privilege(headers):
     return data['privilege']
 
 
+# This method is used to call the services from the facade layer
 async def facade(url: str, http_verb: str, headers: {}, params: Optional[dict] = None,
                  body: Optional[str] = None) -> object:
     if headers is None:

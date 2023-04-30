@@ -13,19 +13,21 @@ from starlette.middleware.sessions import SessionMiddleware
 from adminService.middlewares.auth import authentication
 from userManagementService.utils.constants import FRONT_END_URL
 
+# setting up the apps
 user_management_app = FastAPI()
 room_reservation_app = FastAPI()
 event_app = FastAPI()
 admin_app = FastAPI()
 reservation_facade_app = FastAPI()
 
-    # setting up the routers
+# setting up the routers
 user_management_app.include_router(userRoutes)
 room_reservation_app.include_router(roomRoutes)
 event_app.include_router(eventRoutes)
 admin_app.include_router(adminRoutes)
 reservation_facade_app.include_router(facadeRoutes)
 
+# setting up the middlewares
 admin_app.middleware("http")(authentication)
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or None
