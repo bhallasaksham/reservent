@@ -13,18 +13,35 @@ if GOOGLE_CLIENT_ID is None or GOOGLE_CLIENT_SECRET is None:
     raise BaseException('Missing env variables')
 
 
+'''
+This interface defines the methods that the GetRoomsHandler class must implement
+
+Also, this interface is used to GetRoomDecorator class to decorate the GetRoomsHandler class
+'''
 class GetRoomsInterface:
     def get_rooms(self):
         pass
 
 
+'''
+This class is a room handler that adds the ability to get rooms.
+
+This class is decorated by the GetRoomDecorator class
+'''
 class GetRoomsHandler:
 
+    '''
+    Initialize the GetRoomsHandler class
+    '''
     def __init__(self, request):
         self.roomDao = RoomDao()
         self.available_rooms = []
         self.request = request
 
+    '''
+    Get all events from google calendar
+    We use OAuth to get the events from google calendar
+    '''
     def get_events_from_google_calendar(self, calendar_id):
         user_info = {
             'client_id': GOOGLE_CLIENT_ID,
@@ -38,6 +55,9 @@ class GetRoomsHandler:
                                               orderBy='startTime').execute()
         return events_result['items']
 
+    '''
+    Check if the room is available by its start time and end time
+    '''
     def is_room_available(self, room, event):
         start_dt = get_datetime_from_time_string(self.request.start_time)
         end_dt = get_datetime_from_time_string(self.request.end_time)
@@ -48,6 +68,9 @@ class GetRoomsHandler:
             return True
         return False
 
+    '''
+    Get all the available rooms for a given time period
+    '''
     def get_rooms(self):
         self.request.start_time = get_time_in_google_api_compatible_format(self.request.start_time)
         self.request.end_time = get_time_in_google_api_compatible_format(self.request.end_time)
@@ -64,6 +87,9 @@ class GetRoomsHandler:
         return self.available_rooms
 
 
+'''
+This class is a decorator class that adds the ability to get rooms for staff and faculty
+'''
 class GetRoomsDecorator(GetRoomsInterface):
     _interface: GetRoomsInterface = None
 
@@ -80,6 +106,9 @@ class GetRoomsDecorator(GetRoomsInterface):
         return self._interface.getRooms()
 
 
+'''
+This class is a decorator class that adds the ability to get rooms for staff and faculty.
+'''
 class GetRoomsDecoratorImpl(GetRoomsDecorator):
     def __init__(self, interface, request):
         super().__init__(interface)
@@ -101,10 +130,19 @@ class GetRoomsDecoratorImpl(GetRoomsDecorator):
         return rooms
 
 
+'''
+This is a handler class that adds the ability to reserve a room
+'''
 class ReserveRoomHandler:
+    '''
+    Initialize the ReserveRoomHandler class
+    '''
     def __init__(self, reservation):
         self.reservation = reservation
 
+    '''
+    Initialize the google calendar service
+    '''
     def init_service(self):
         user_info = {
             'client_id': GOOGLE_CLIENT_ID,
@@ -115,6 +153,9 @@ class ReserveRoomHandler:
         service = build('calendar', 'v3', credentials=creds)
         return service
 
+    '''
+    Build the event object
+    '''
     def build_event(self):
         # Create event object
         event = {
@@ -135,7 +176,9 @@ class ReserveRoomHandler:
         }
         return event
 
-    # Function to create a new event
+    '''
+    Function to create a new event
+    '''
     def create_event(self):
         # Authenticate with Google Calendar API
         service = self.init_service()
@@ -145,6 +188,9 @@ class ReserveRoomHandler:
         print(inserted.get('id'))
         return inserted.get('id')
 
+    '''
+    Function to delete an event
+    '''
     def delete_event(self, event_id):
         service = self.init_service()
         deleted = service.events().delete(calendarId='primary', eventId=event_id).execute()

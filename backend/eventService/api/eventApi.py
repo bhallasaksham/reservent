@@ -9,6 +9,9 @@ from starlette.responses import JSONResponse
 eventRoutes = APIRouter()
 
 
+'''
+This class is a Pydantic model for the request body of the create event endpoint.
+'''
 class CreateEventRequest(BaseModel):
     email: str
     privilege: str
@@ -21,6 +24,9 @@ class CreateEventRequest(BaseModel):
     room_url: str
 
 
+'''
+This class is a Pydantic model for the request body of the finalize event endpoint.
+'''
 class FinalizeEventRequest(BaseModel):
     room: str
     event_id: str
@@ -29,6 +35,9 @@ class FinalizeEventRequest(BaseModel):
     email: str
     privilege: str
 
+'''
+This class is a Pydantic model for the request body of the get events endpoint.
+'''
 class GetEventsRequest(BaseModel):
     privilege: str
 
@@ -43,9 +52,11 @@ Otherwise, if there's an HTTP exception, the error message will be returned in a
 @eventRoutes.post("/events")
 async def create_event(request: CreateEventRequest):
     try:
+        # Return the event model if there are no errors
         return JSONResponse(status_code=201, content=EventHandler().create_event(request))
     except Exception as e:
         print(e)
+        # Return error message if there was an error creating the event
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 
@@ -62,6 +73,7 @@ async def finalize_event(request: FinalizeEventRequest):
         return JSONResponse(status_code=200, content='success')
     except Exception as e:
         print(e)
+        # Return error message if there was an error finalizing the event
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 
@@ -75,9 +87,11 @@ it was called. If there's an HTTP exception, the error message will be returned 
 @eventRoutes.get("/events")
 async def get_events(request: GetEventsRequest):
     try:
+        # Return the list of events based on the privilege
         return JSONResponse(status_code=200, content=EventHandler().get_events(request.privilege))
     except Exception as e:
         print(e)
+        # Return error message if there was an error getting the events
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
 
@@ -91,7 +105,9 @@ Otherwise, if there's an HTTP exception, the error message will be returned in a
 async def delete_event(event_id: str):
     try:
         EventHandler().delete_event_by_id(event_id)
+        # Return success message if the event was deleted successfully
         return JSONResponse(status_code=200, content='success')
     except Exception as e:
         print(e)
+        # Return error message if there was an error deleting the event
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})

@@ -20,6 +20,10 @@ config_data = {'GOOGLE_CLIENT_ID': GOOGLE_CLIENT_ID, 'GOOGLE_CLIENT_SECRET': GOO
 starlette_config = Config(environ=config_data)
 oauth = None
 
+
+'''
+This function returns the oauth object
+'''
 def get_oauth():
     global oauth
     if oauth is None:
